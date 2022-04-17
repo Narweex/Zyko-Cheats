@@ -17,6 +17,6 @@ To build BigBaseV2 you need:
 
 To set up the build environment, run the following commands in a terminal:
 ```dos
-git clone https://github.com/Sixthworks/gir_menu_v2.git
+https://github.com/THEERROR2002/Zyko-Cheats.git
 ```
 Now, you will be able to open the solution, and simply build it in Visual Studio.
