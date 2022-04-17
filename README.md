@@ -1,6 +1,5 @@
-# BigBaseV2
-A mod menu base for Grand Theft Auto V.
-Strictly for educational purposes.
+# Zyko-Cheats
+Paid GTA-V hack.
 
 ## Features
 * ImGui–based user interface
@@ -13,13 +12,11 @@ Strictly for educational purposes.
 
 ## Building
 To build BigBaseV2 you need:
-* Visual Studio 2019
-* [Premake 5.0](https://premake.github.io/download.html) in your PATH
+* Visual Studio 2019 or newer
+
 
 To set up the build environment, run the following commands in a terminal:
 ```dos
-git clone https://gir489@bitbucket.org/gir489/bigbasev2-fix.git --recurse-submodules
-cd BigBaseV2-fix
-GenerateProjects.bat
+git clone https://github.com/Sixthworks/gir_menu_v2.git
 ```
 Now, you will be able to open the solution, and simply build it in Visual Studio.
