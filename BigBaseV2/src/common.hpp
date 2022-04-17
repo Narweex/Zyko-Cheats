@@ -51,6 +51,7 @@
 #include "logger.hpp"
 #include "core/xor_string.hpp"
 #include "core/config.h"
+#include "CPed.hpp"
 
 #define _PTR_MAX_VALUE ((PVOID)0x000F000000000000)
 
@@ -85,4 +86,6 @@ namespace big
 	inline HANDLE g_main_thread{};
 	inline DWORD g_main_thread_id{};
 	inline std::atomic_bool g_running{ true };
+	inline CPed* g_local_player;
+	inline bool g_first{ false };
 }

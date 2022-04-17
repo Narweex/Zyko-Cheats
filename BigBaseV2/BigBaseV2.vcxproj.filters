@@ -13,6 +13,9 @@
     <Filter Include="core">
       <UniqueIdentifier>{ca74b178-d3ad-4d56-b5e1-fde24958256b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="helpers">
+      <UniqueIdentifier>{3a55af54-2ac3-4278-b835-f73c899b3f39}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.hpp" />
@@ -156,6 +159,9 @@
     <ClInclude Include="src\core\xor_string.hpp">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="src\helpers\player_info.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\common.cpp" />
@@ -191,6 +197,9 @@
     <ClCompile Include="src\vmt_hook.cpp" />
     <ClCompile Include="src\core\fonts.cpp">
       <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\helpers\player_info.cpp">
+      <Filter>helpers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

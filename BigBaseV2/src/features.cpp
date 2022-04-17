@@ -6,6 +6,14 @@
 
 namespace big
 {
+	void features::on_present()
+	{
+		TRY_CLAUSE
+		{
+		}
+		EXCEPT_CLAUSE
+	}
+
 	void features::run_tick()
 	{
 	}

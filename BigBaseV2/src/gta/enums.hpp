@@ -1,14 +1,9 @@
 #pragma once
 #include <cstdint>
 
-enum eGameState : std::uint32_t
-{
-	Playing = 0
-};
-
 constexpr auto MAX_PLAYERS = 32;
 
-enum ControllerInputs : std::uint32_t
+enum class ControllerInputs : std::uint32_t
 {
 	INPUT_NEXT_CAMERA,
 	INPUT_LOOK_LR,
@@ -377,48 +372,96 @@ enum ControllerInputs : std::uint32_t
 	SCRIPTED_INPUT_LAST
 };
 
-enum ExplosionTypes : std::uint32_t
+enum eExplosionType
 {
-	EXPLOSION_GRENADE,
-	EXPLOSION_GRENADELAUNCHER,
-	EXPLOSION_STICKYBOMB,
-	EXPLOSION_MOLOTOV,
-	EXPLOSION_ROCKET,
-	EXPLOSION_TANKSHELL,
-	EXPLOSION_HI_OCTANE,
-	EXPLOSION_CAR,
-	EXPLOSION_PLANE,
-	EXPLOSION_PETROL_PUMP,
-	EXPLOSION_BIKE,
-	EXPLOSION_DIR_STEAM,
-	EXPLOSION_DIR_FLAME,
-	EXPLOSION_DIR_WATER_HYDRANT,
-	EXPLOSION_DIR_GAS_CANISTER,
-	EXPLOSION_BOAT,
-	EXPLOSION_SHIP_DESTROY,
-	EXPLOSION_TRUCK,
-	EXPLOSION_BULLET,
-	EXPLOSION_SMOKEGRENADELAUNCHER,
-	EXPLOSION_SMOKEGRENADE,
-	EXPLOSION_BZGAS,
-	EXPLOSION_FLARE,
-	EXPLOSION_GAS_CANISTER,
-	EXPLOSION_EXTINGUISHER,
-	EXPLOSION_PROGRAMMABLEAR,
-	EXPLOSION_TRAIN,
-	EXPLOSION_BARREL,
-	EXPLOSION_PROPANE,
-	EXPLOSION_BLIMP,
-	EXPLOSION_DIR_FLAME_EXPLODE,
-	EXPLOSION_TANKER,
-	EXPLOSION_PLANE_ROCKET,
-	EXPLOSION_VEHICLE_BULLET,
-	EXPLOSION_GAS_TANK,
-	EXPLOSION_BIRD_CRAP,
-	EXPLOSION_SNOWBALL = 39
+	DONTCARE = -1,
+	GRENADE,
+	GRENADELAUNCHER,
+	STICKYBOMB,
+	MOLOTOV,
+	ROCKET,
+	TANKSHELL,
+	HI_OCTANE,
+	CAR,
+	PLANE,
+	PETROL_PUMP,
+	BIKE,
+	DIR_STEAM,
+	DIR_FLAME,
+	DIR_WATER_HYDRANT,
+	DIR_GAS_CANISTER,
+	BOAT,
+	SHIP_DESTROY,
+	TRUCK,
+	BULLET,
+	SMOKEGRENADELAUNCHER,
+	SMOKEGRENADE,
+	BZGAS,
+	FLARE,
+	GAS_CANISTER,
+	EXTINGUISHER,
+	PROGRAMMABLEAR,
+	TRAIN,
+	BARREL,
+	PROPANE,
+	BLIMP,
+	DIR_FLAME_EXPLODE,
+	TANKER,
+	PLANE_ROCKET,
+	VEHICLE_BULLET,
+	GAS_TANK,
+	BIRD_CRAP,
+	RAILGUN,
+	BLIMP2,
+	FIREWORK,
+	SNOWBALL,
+	PROXMINE,
+	VALKYRIE_CANNON,
+	AIR_DEFENCE,
+	PIPEBOMB,
+	VEHICLEMINE,
+	EXPLOSIVEAMMO,
+	APCSHELL,
+	BOMB_CLUSTER,
+	BOMB_GAS,
+	BOMB_INCENDIARY,
+	BOMB_STANDARD,
+	TORPEDO,
+	TORPEDO_UNDERWATER,
+	BOMBUSHKA_CANNON,
+	BOMB_CLUSTER_SECONDARY,
+	HUNTER_BARRAGE,
+	HUNTER_CANNON,
+	ROGUE_CANNON,
+	MINE_UNDERWATER,
+	ORBITAL_CANNON,
+	BOMB_STANDARD_WIDE,
+	EXPLOSIVEAMMO_SHOTGUN,
+	OPPRESSOR2_CANNON,
+	MORTAR_KINETIC,
+	VEHICLEMINE_KINETIC,
+	VEHICLEMINE_EMP,
+	VEHICLEMINE_SPIKE,
+	VEHICLEMINE_SLICK,
+	VEHICLEMINE_TAR,
+	SCRIPT_DRONE,
+	RAYGUN,
+	BURIEDMINE,
+	SCRIPT_MISSILE,
+	RCTANK_ROCKET,
+	BOMB_WATER,
+	BOMB_WATER_SECONDARY,
+	_0xF728C4A9,
+	_0xBAEC056F,
+	FLASHGRENADE,
+	STUNGRENADE,
+	_0x763D3B3B,
+	SCRIPT_MISSILE_LARGE,
+	SUBMARINE_BIG,
+	EMPLAUNCHER_EMP
 };
 
-enum HudColor : std::uint32_t
+enum class HudColor : std::uint32_t
 {
 	HUD_COLOUR_PURE_WHITE,
 	HUD_COLOUR_WHITE,
@@ -638,7 +681,7 @@ enum HudColor : std::uint32_t
 	HUD_COLOUR_STUNT_2
 };
 
-enum RadioStationIndexes : std::uint32_t
+enum class RadioStationIndexes : std::uint32_t
 {
 	RADIO_LSROCKRADIO,
 	RADIO_NONSTOPPOPFM,
@@ -664,7 +707,7 @@ enum RadioStationIndexes : std::uint32_t
 	RADIO_OFF
 };
 
-enum NetObjEntityType : uint16_t
+enum class NetObjEntityType : uint16_t
 {
 	NetObjEntityType_Automobile,
 	NetObjEntityType_Bike,
@@ -683,7 +726,7 @@ enum NetObjEntityType : uint16_t
 	NetObjEntityType_Max
 };
 
-enum RockstarEvent : uint16_t
+enum class RockstarEvent : uint16_t
 {
 	OBJECT_ID_FREED_EVENT,
 	OBJECT_ID_REQUEST_EVENT,
@@ -775,7 +818,7 @@ enum RockstarEvent : uint16_t
 	NETWORK_CHECK_CATALOG_CRC
 };
 
-enum BlipIcons
+enum class BlipIcons
 {
 	Null,
 	Circle,
@@ -1235,7 +1278,7 @@ enum BlipIcons
 	ZR380
 };
 
-enum BlipColors
+enum class BlipColors
 {
 	None,
 	Red,
@@ -1255,7 +1298,7 @@ enum BlipColors
 	WaypointColor = 0x54
 };
 
-enum BlipDisplayBits
+enum class BlipDisplayBits
 {
 	BlipIsBright = (1 << 1),
 	BlipEngageFlashing = (1 << 3),
@@ -1275,12 +1318,12 @@ enum BlipDisplayBits
 	BlipIsSelected = (1 << 22),
 };
 
-enum BlipRenderBits
+enum class BlipRenderBits
 {
 	BlipIsOnScreen = (1 << 6)
 };
 
-enum eFrameFlags : std::uint32_t
+enum class eFrameFlags : std::uint32_t
 {
 	eFrameFlagExplosiveAmmo = 1 << 11,
 	eFrameFlagFireAmmo = 1 << 12,
@@ -1288,7 +1331,7 @@ enum eFrameFlags : std::uint32_t
 	eFrameFlagSuperJump = 1 << 14,
 };
 
-enum eNetObjType
+enum class eNetObjType
 {
 	NET_OBJ_TYPE_AUTOMOBILE,
 	NET_OBJ_TYPE_BIKE,
@@ -1306,13 +1349,13 @@ enum eNetObjType
 	NET_OBJ_TYPE_TRAIN
 };
 
-enum eNetObjectFlags : std::uint16_t
+enum class eNetObjectFlags : std::uint16_t
 {
 	NET_OBJ_FLAGS_FROM_SCRIPT = 1 << 2,
 	NET_OBJ_FLAGS_SCRIPTED = 1 << 6,
 };
 
-enum eAckCode : std::uint32_t
+enum class eAckCode : std::uint32_t
 {
 	ACKCODE_SUCCESS,
 	ACKCODE_FAIL,
@@ -1325,7 +1368,7 @@ enum eAckCode : std::uint32_t
 	ACKCODE_NONE
 };
 
-enum PedBones : std::uint32_t
+enum class PedBones : std::uint32_t
 {
 	SKEL_ROOT = 0x0,
 	SKEL_Pelvis = 0x2E28,

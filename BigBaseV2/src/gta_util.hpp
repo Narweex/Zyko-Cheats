@@ -1,8 +1,7 @@
 #pragma once
-#include "common.hpp"
 #include "gta/array.hpp"
-#include "gta/ped_factory.hpp"
-#include "gta/player.hpp"
+#include "CPedFactory.hpp"
+#include "CNetworkPlayerMgr.hpp"
 #include "gta/script_thread.hpp"
 #include "gta/tls_context.hpp"
 #include "pointers.hpp"
@@ -25,7 +24,7 @@ namespace big::gta_util
 		{
 			if (auto ped = ped_factory->m_local_ped)
 			{
-				return ped->m_playerinfo;
+				return ped->m_player_info;
 			}
 		}
 
