@@ -17,6 +17,6 @@ To build BigBaseV2 you need:
 
 To set up the build environment, run the following commands in a terminal:
 ```dos
-git clone https://github.com/THEERROR2002/Zyko-Cheats.git
+git clone https://github.com/THEERROR2002/Zyko-Cheats.git --recursive
 ```
 Now, you will be able to open the solution, and simply build it in Visual Studio.
