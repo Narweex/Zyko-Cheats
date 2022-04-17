@@ -59,13 +59,13 @@ namespace big
 
 			if ((m_console_handle = GetStdHandle(STD_OUTPUT_HANDLE)) != nullptr)
 			{
-				SetConsoleTitleA("BigBaseV2");
+				SetConsoleTitleA("Zyko-Cheats");
 				SetConsoleOutputCP(CP_UTF8);
 
 				m_console_out.open("CONOUT$", std::ios_base::out | std::ios_base::app);
 			}
 
-			m_file_path /= "BigBaseV2";
+			m_file_path /= "Zyko";
 			std::filesystem::path m_backup_path = m_file_path;
 			m_backup_path /= "Backup";
 			try
@@ -90,7 +90,7 @@ namespace big
 				}
 
 				m_event_file_path = m_file_path;
-				m_file_path /= "BigBaseV2.log";
+				m_file_path /= "Zyko.log";
 				m_event_file_path /= "GTAEvents.log";
 
 				if (std::filesystem::exists(m_file_path))
@@ -99,7 +99,7 @@ namespace big
 					auto timet = to_time_t(file_time);
 					auto local_time = std::localtime(&timet);
 
-					auto bigbase_timestamp = fmt::format("{:0>2}-{:0>2}-{}-{:0>2}-{:0>2}-{:0>2} BigBaseV2.log", local_time->tm_mon + 1, local_time->tm_mday, local_time->tm_year + 1900, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
+					auto bigbase_timestamp = fmt::format("{:0>2}-{:0>2}-{}-{:0>2}-{:0>2}-{:0>2} Zyko.log", local_time->tm_mon + 1, local_time->tm_mday, local_time->tm_year + 1900, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
 					auto gta_events_timestamp = fmt::format("{:0>2}-{:0>2}-{}-{:0>2}-{:0>2}-{:0>2} GTAEvents.log", local_time->tm_mon + 1, local_time->tm_mday, local_time->tm_year + 1900, local_time->tm_hour, local_time->tm_min, local_time->tm_sec);
 
 					std::filesystem::copy_file(m_file_path, m_backup_path / bigbase_timestamp);

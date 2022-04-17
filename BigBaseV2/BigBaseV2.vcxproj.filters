@@ -15,7 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\benchmark.h" />
     <ClInclude Include="src\common.hpp" />
     <ClInclude Include="src\crossmap.hpp" />
     <ClInclude Include="src\detour_hook.hpp" />
@@ -147,9 +146,11 @@
     <ClInclude Include="src\script_hook.hpp" />
     <ClInclude Include="src\script_local.hpp" />
     <ClInclude Include="src\script_mgr.hpp" />
-    <ClInclude Include="src\settings.h" />
     <ClInclude Include="src\vmt_hook.hpp" />
     <ClInclude Include="src\core\fonts.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\config.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
