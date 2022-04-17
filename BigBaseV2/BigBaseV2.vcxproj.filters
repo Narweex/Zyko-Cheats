@@ -117,7 +117,6 @@
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="src\hooking.hpp" />
-    <ClInclude Include="src\imguibitfield.h" />
     <ClInclude Include="src\invoker.hpp" />
     <ClInclude Include="src\logger.hpp" />
     <ClInclude Include="src\memory\all.hpp">

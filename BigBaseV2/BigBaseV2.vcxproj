@@ -211,7 +211,6 @@
     <ClInclude Include="src\gui\base_tab.h" />
     <ClInclude Include="src\helpers\player_info.h" />
     <ClInclude Include="src\hooking.hpp" />
-    <ClInclude Include="src\imguibitfield.h" />
     <ClInclude Include="src\invoker.hpp" />
     <ClInclude Include="src\logger.hpp" />
     <ClInclude Include="src\memory\all.hpp" />
