@@ -3,7 +3,7 @@
 #include "logger.hpp"
 #include "natives.hpp"
 #include "script.hpp"
-//
+
 namespace big
 {
 	void features::run_tick()

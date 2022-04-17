@@ -1,5 +1,5 @@
 #include "common.hpp"
-#include "fonts.hpp"
+#include "core/fonts.hpp"
 #include "logger.hpp"
 #include "gui.hpp"
 #include "pointers.hpp"
