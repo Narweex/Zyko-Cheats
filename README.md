@@ -13,7 +13,7 @@ Paid GTA-V hack.
 ## Building
 To build BigBaseV2 you need:
 * Visual Studio 2019 or newer
-
+* V142 Build set
 
 To set up the build environment, run the following commands in a terminal:
 ```dos
