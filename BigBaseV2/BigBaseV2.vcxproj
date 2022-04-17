@@ -170,6 +170,7 @@
     <ClInclude Include="src\common.hpp" />
     <ClInclude Include="src\core\config.h" />
     <ClInclude Include="src\core\fonts.hpp" />
+    <ClInclude Include="src\core\xor_string.hpp" />
     <ClInclude Include="src\crossmap.hpp" />
     <ClInclude Include="src\detour_hook.hpp" />
     <ClInclude Include="src\features.hpp" />

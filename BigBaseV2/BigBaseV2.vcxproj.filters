@@ -153,6 +153,9 @@
     <ClInclude Include="src\core\config.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="src\core\xor_string.hpp">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\common.cpp" />
