@@ -5,6 +5,7 @@
 #include "fiber_pool.hpp"
 #include "natives.hpp"
 #include "gta_util.hpp"
+#include "gui/list/UIManager.hpp"
 
 namespace big
 {
@@ -30,7 +31,8 @@ namespace big
 			}
 			if (ImGui::Button("List Mode"))
 			{
-				g_running = false;
+				//g_list = true;
+				g_UiManager->m_Opened = true;
 			}
 			ImGui::Separator();
 

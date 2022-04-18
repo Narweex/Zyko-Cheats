@@ -12,4 +12,7 @@ namespace big::features
 	inline int g_current_tick_job{};
 
 	/* Self */
+
+	/* Online */
+	inline std::uint32_t g_selected_player{};
 }

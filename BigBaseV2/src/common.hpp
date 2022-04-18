@@ -88,4 +88,5 @@ namespace big
 	inline std::atomic_bool g_running{ true };
 	inline CPed* g_local_player;
 	inline bool g_first{ false };
+	inline bool g_list{ false };
 }

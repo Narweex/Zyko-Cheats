@@ -1,4 +1,4 @@
-#include "../common.hpp"
+#include "common.hpp"
 #include "module.hpp"
 
 namespace memory

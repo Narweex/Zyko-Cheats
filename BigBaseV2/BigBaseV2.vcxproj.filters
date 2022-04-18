@@ -16,6 +16,12 @@
     <Filter Include="helpers">
       <UniqueIdentifier>{3a55af54-2ac3-4278-b835-f73c899b3f39}</UniqueIdentifier>
     </Filter>
+    <Filter Include="gui\list">
+      <UniqueIdentifier>{08e75769-4bf5-4fd3-b621-54504169987a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui\list\script">
+      <UniqueIdentifier>{aafe0e69-d6d4-4247-976a-f209e3abcbbc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.hpp" />
@@ -161,6 +167,57 @@
     <ClInclude Include="src\helpers\player_info.h">
       <Filter>helpers</Filter>
     </ClInclude>
+    <ClInclude Include="src\gui\list\AbstractOption.hpp">
+      <Filter>gui\list</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\list\AbstractSubmenu.hpp">
+      <Filter>gui\list</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\list\BaseOption.hpp">
+      <Filter>gui\list</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\list\BaseSubmenu.hpp">
+      <Filter>gui\list</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\list\BoolOption.hpp">
+      <Filter>gui\list</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\list\ChooseOption.hpp">
+      <Filter>gui\list</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\list\NumberOption.hpp">
+      <Filter>gui\list</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\list\PlayerSubmenu.hpp">
+      <Filter>gui\list</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\list\RegularOption.hpp">
+      <Filter>gui\list</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\list\RegularSubmenu.hpp">
+      <Filter>gui\list</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\list\SubOption.hpp">
+      <Filter>gui\list</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\list\TextBox.hpp">
+      <Filter>gui\list</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\list\UIManager.hpp">
+      <Filter>gui\list</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\list\script\MainScript.hpp">
+      <Filter>gui\list\script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\list\script\Timer.hpp">
+      <Filter>gui\list\script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\list\Lists.hpp">
+      <Filter>gui\list</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\list\script\Util.hpp">
+      <Filter>gui\list\script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\common.cpp" />
@@ -199,6 +256,12 @@
     </ClCompile>
     <ClCompile Include="src\helpers\player_info.cpp">
       <Filter>helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\list\UIManager.cpp">
+      <Filter>gui\list</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\list\script\MainScript.cpp">
+      <Filter>gui\list\script</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
