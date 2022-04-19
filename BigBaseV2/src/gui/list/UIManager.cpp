@@ -5,6 +5,16 @@
 #
 namespace big::UserInterface
 {
+	UIManager::UIManager()
+	{
+		g_UiManager = this;
+	}
+
+	UIManager::~UIManager()
+	{
+		g_UiManager = nullptr;
+	}
+
 	void UIManager::OnTick()
 	{
 		std::lock_guard lock(m_Mutex);
@@ -63,7 +73,7 @@ namespace big::UserInterface
 	{
 		ResetInput();
 
-		m_OpenKeyPressed = gta_util::IsKeyPressed(VK_MULTIPLY);
+		m_OpenKeyPressed = gta_util::IsKeyPressed(VK_MULTIPLY) || gta_util::IsKeyPressed(VK_F8);
 		m_BackKeyPressed = gta_util::IsKeyPressed(VK_BACK);
 		m_EnterKeyPressed = gta_util::IsKeyPressed(VK_RETURN);
 		m_UpKeyPressed = gta_util::IsKeyPressed(VK_UP);

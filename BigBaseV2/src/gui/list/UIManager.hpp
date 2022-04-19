@@ -43,17 +43,12 @@ namespace big::UserInterface
 			return true;
 		}
 	};
-
 	class UIManager
 	{
 	public:
-		explicit UIManager() = default;
-		~UIManager() noexcept = default;
-		UIManager(UIManager const&) = delete;
-		UIManager(UIManager&&) = delete;
-		UIManager& operator=(UIManager const&) = delete;
-		UIManager& operator=(UIManager&&) = delete;
-	
+		explicit UIManager();
+		~UIManager() noexcept;
+
 		template <typename SubmenuType, typename ...TArgs>
 		void AddSubmenu(TArgs&&... args)
 		{
@@ -185,5 +180,5 @@ namespace big::UserInterface
 
 namespace big
 {
-	inline std::unique_ptr<UserInterface::UIManager> g_UiManager;
+	inline UserInterface::UIManager* g_UiManager{};
 }

@@ -8,6 +8,7 @@
 #include "renderer.hpp"
 #include "script_mgr.hpp"
 #include "gui/list/script/MainScript.hpp"
+#include "gui/list/UIManager.hpp"
 
 BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 {
@@ -46,6 +47,9 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 				auto hooking_instance = std::make_unique<hooking>();
 				LOG(INFO) << "Hooking initialized.";
 
+				auto uimanager_instance = std::make_unique<UserInterface::UIManager>();
+				LOG(INFO) << "UIManager initialized.";
+
 				g_settings.load();
 				LOG(INFO) << "Settings Loaded.";
 
@@ -69,6 +73,9 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 
 				g_script_mgr.remove_all_scripts();
 				LOG(INFO) << "Scripts unregistered.";
+
+				uimanager_instance.reset();
+				LOG(INFO) << "UIManager uninitialized.";
 
 				hooking_instance.reset();
 				LOG(INFO) << "Hooking uninitialized.";
