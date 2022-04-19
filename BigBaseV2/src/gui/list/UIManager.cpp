@@ -25,12 +25,7 @@ namespace big::UserInterface
 			ShowCursor(true);
 			SetCursor(LoadCursorA(NULL, (LPCSTR)IDC_ARROW));
 		}
-		/*
-		if (g_UiManager->m_Opened && g_Settings.m_LockMouse)
-		{
-			PAD::DISABLE_ALL_CONTROL_ACTIONS(0);
-		}
-		*/
+
 		CheckForInput();
 		HandleInput();
 
