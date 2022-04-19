@@ -34,10 +34,8 @@ namespace big::UserInterface
 		CheckForInput();
 		HandleInput();
 
-		if (m_Opened)
+		if (m_Opened && g_list)
 		{
-			PAD::DISABLE_CONTROL_ACTION(0, 27, true); // Disable phone
-
 			m_DrawBaseY = m_PosY;
 			DrawHeader();
 			if (!m_SubmenuStack.empty())

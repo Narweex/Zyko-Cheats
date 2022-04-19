@@ -11,6 +11,7 @@
 #include "../RegularSubmenu.hpp"
 #include "../PlayerSubmenu.hpp"
 #include "features.hpp"
+#include "gui.hpp"
 
 namespace big
 {
@@ -55,6 +56,7 @@ namespace big
 			sub->AddOption<RegularOption>("Switch GUI", "Switches to regular UI.", []
 			{
 				g_list = false;
+				g_gui.m_opened = true;
 			});
 			sub->AddOption<RegularOption>("Unload", "Unload the menu.", []
 			{

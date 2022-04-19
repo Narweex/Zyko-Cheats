@@ -31,7 +31,7 @@ namespace big
 			}
 			if (ImGui::Button("List Mode"))
 			{
-				//g_list = true;
+				g_list = true;
 				g_UiManager->m_Opened = true;
 			}
 			ImGui::Separator();

@@ -118,7 +118,7 @@ namespace big
 	{
 		TRY_CLAUSE
 		{
-			if (g_gui.m_opened)
+			if (g_gui.m_opened && !g_list)
 			{
 				PAD::DISABLE_ALL_CONTROL_ACTIONS(0);
 			}

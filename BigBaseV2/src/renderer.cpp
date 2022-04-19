@@ -72,7 +72,7 @@ namespace big
 
 	void renderer::on_present()
 	{
-		if (g_gui.m_opened)
+		if (g_gui.m_opened && !g_list)
 		{
 			ImGui::GetIO().MouseDrawCursor = true;
 			ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
@@ -89,7 +89,7 @@ namespace big
 
 		features::on_present();
 
-		if (g_gui.m_opened)
+		if (g_gui.m_opened && !g_list)
 		{
 			g_gui.dx_on_tick();
 		}
