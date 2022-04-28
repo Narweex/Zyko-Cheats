@@ -307,6 +307,12 @@ namespace big::UserInterface
 
 	void UIManager::DrawFooter()
 	{
+		DrawLeftText("0.0.1.Beta", m_PosX + 0.08f,
+			m_DrawBaseY,
+			m_OptionTextSize,
+			m_DescriptionFont,
+			rage::rgbaColor(255 ,255, 255, 255),
+			false, false);
 		DrawRect(
 			m_PosX,
 			m_DrawBaseY + (m_FooterHeight / 2.f),

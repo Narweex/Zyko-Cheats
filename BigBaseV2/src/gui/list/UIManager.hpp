@@ -86,11 +86,11 @@ namespace big::UserInterface
 		bool m_Sounds = true;
 		
 		// Input
-		std::int32_t m_OpenDelay = 200;
-		std::int32_t m_BackDelay = 300;
-		std::int32_t m_EnterDelay = 300;
-		std::int32_t m_VerticalDelay = 120;
-		std::int32_t m_HorizontalDelay = 120;
+		std::int32_t m_OpenDelay = 350;
+		std::int32_t m_BackDelay = 150;
+		std::int32_t m_EnterDelay = 150;
+		std::int32_t m_VerticalDelay = 150;
+		std::int32_t m_HorizontalDelay = 150;
 
 		// Header
 		float m_HeaderHeight = 0.1f;
@@ -109,28 +109,28 @@ namespace big::UserInterface
 		rage::rgbaColor m_HeaderGradientColorRight{ 252, 0, 255, 255 };
 
 		// Submenu bar
-		float m_SubmenuBarHeight = 0.04f;
-		float m_SubmenuBarTextSize = 0.4f;
+		float m_SubmenuBarHeight = 0.03f;
+		float m_SubmenuBarTextSize = 0.26f;
 		Font m_SubmenuBarFont = Font::ChaletLondon;
 		float m_SubmenuBarPadding = 2.1f;
-		rage::rgbaColor m_SubmenuBarBackgroundColor{ 0, 0, 0, 220 };
+		rage::rgbaColor m_SubmenuBarBackgroundColor{ 0, 0, 0, 250 };
 		rage::rgbaColor m_SubmenuBarTextColor{ 255, 255, 255, 255 };
 
 		// Options
-		float m_OptionHeight = 0.04f;
-		float m_OptionTextSize = 0.35f;
+		float m_OptionHeight = 0.035f;
+		float m_OptionTextSize = 0.25f;
 		Font m_OptionFont = Font::ChaletLondon;
 		float m_OptionPadding = 2.1f;
 		rage::rgbaColor m_OptionSelectedTextColor{ 10, 10, 10, 255 };
 		rage::rgbaColor m_OptionUnselectedTextColor{ 255, 255, 255, 255 };
 		rage::rgbaColor m_OptionSelectedBackgroundColor{ 255, 255, 255, 255 };
-		rage::rgbaColor m_OptionUnselectedBackgroundColor{ 0, 0, 0, 160 };
+		rage::rgbaColor m_OptionUnselectedBackgroundColor{ 10, 10, 10, 180 };
 
 		// Footer
-		float m_FooterHeight = 0.04f;
-		float m_FooterSpriteSize = 0.025f;
-		rage::rgbaColor m_FooterBackgroundColor{ 10, 10, 10, 200 };
-		rage::rgbaColor m_FooterSpriteColor{ 255, 255, 255, 255 };
+		float  m_FooterHeight = 0.020f;
+		float  m_FooterSpriteSize = 0.025f;
+		rage::rgbaColor  m_FooterBackgroundColor{ 0, 0, 0, 250 };
+		rage::rgbaColor  m_FooterSpriteColor{ 255, 255, 255, 250 };
 
 		// Description
 		float m_DescriptionHeightPadding = 0.01f;
