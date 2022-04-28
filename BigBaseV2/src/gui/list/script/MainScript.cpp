@@ -31,7 +31,46 @@ namespace big
 		SubmenuSettingsLanguage,
 		SubmenuSelectedPlayer,
 		SubmenuPlayerList,
-		SubmenuTest
+		SubmenuTest,
+		SubmenuSelf,
+		SubmenuVehicleMultipliers,
+		SubmenuNetwork,
+		SubmenuSpawner,
+		vis,
+		SubmenuVehicle,
+		SubmenuVehicleSpawner,
+		SubmenuWeapons,
+		SubmenuWorld,
+		SubmenuTeleport,
+		SubmenuMiscellaneous,
+		Weaponz,
+		money,
+		stats,
+		unlocks,
+		SubmenuVehicleColors,
+		OnlineSubmenu,
+		VehicleOptions,
+		teleports,
+		WorldOptions,
+		SelectedPlayerAbuse,
+		SelectedPlayerFriendly,
+		SelectedPlayerTeleport,
+		SelectedPlayerTrolling,
+		recovery,
+		SubmenuVehicleMovement,
+		misc,
+		Protections,
+		WaterSubmenu,
+		TimeSubmenu,
+		WeatherSubmenu,
+		landmarks,
+		shops,
+		air,
+		ipls,
+		gar,
+		safehouse,
+		ClearSubmenu,
+		SessionInfoSubmenu
 	};
 
 	void MainScript::gui_init()
@@ -50,9 +89,16 @@ namespace big
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Home", SubmenuHome, [](RegularSubmenu* sub)
 		{
-			sub->AddOption<SubOption>(xorstr_("Demo_sub"), nullptr, SubmenuTest);
-			sub->AddOption<SubOption>("Players", nullptr, SubmenuPlayerList);
-			sub->AddOption<SubOption>("Settings", nullptr, SubmenuSettings);
+				sub->AddOption<SubOption>("Self", "Self Options", SubmenuSelf);
+				sub->AddOption<SubOption>("Vehicle Options", "Vehicle Options", SubmenuVehicle);
+				sub->AddOption<SubOption>("Weapons", "Weapon Options", Weaponz);
+				sub->AddOption<SubOption>("Online", "Online Options", OnlineSubmenu);
+				sub->AddOption<SubOption>("Teleport", "Teleport Options", teleports);
+				sub->AddOption<SubOption>("World Options", "World Options", WorldOptions);
+				sub->AddOption<SubOption>("Recovery", "Recovery Options", recovery);
+				sub->AddOption<SubOption>("Misc Options", "Other Options", misc);
+				sub->AddOption<SubOption>("Protections", "Protection Options", Protections);
+				sub->AddOption<SubOption>("Settings", "Menu settings", SubmenuSettings);
 			sub->AddOption<RegularOption>("Switch GUI", "Switches to regular UI.", []
 			{
 				g_list = false;
@@ -64,15 +110,189 @@ namespace big
 			});
 		});
 
-		g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Demo_sub"), SubmenuTest, [](RegularSubmenu* sub)
-		{
+		g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Demo_sub"), SubmenuSelf, [](RegularSubmenu* sub)
+			{
+				sub->AddOption<SubOption>("Visions", "Change Player Visions", vis);
+				sub->AddOption<BoolOption<bool>>("God Mode", "You Cannot Die", &features::godmode, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Never Wanted", "Police Wont Start Coming AFter You", &features::neverWanted, BoolDisplay::OnOff);
+				if (!features::neverWanted) {
+					sub->AddOption<NumberOption<int>>("Wanted Level", nullptr, &features::wantedLevel, 0, 5, 1, 3, true, "", "", []
+						{
+							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
+							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
+						});
+				}
+
+				sub->AddOption<BoolOption<bool>>("Super Run - Override", "Run Boiiiiiii", &features::superrunbool, BoolDisplay::OnOff);
+				if (features::superrunbool) {
+					sub->AddOption<NumberOption<float>>("Run Speed", nullptr, &features::runspeed, 0.1, 5.0, 0.1, 3, true, "", "", [] {});
+				}
+				sub->AddOption<BoolOption<bool>>("Super Run - Force", "Run Boiiiiiii", &features::ultrarunbool, BoolDisplay::OnOff);
+				if (features::ultrarunbool) {
+					sub->AddOption<NumberOption<float>>("Run Speed", nullptr, &features::runspeed1, 0.1, 5.0, 0.1, 3, true, "", "", [] {});
+				}
+				sub->AddOption<BoolOption<bool>>("Flash Mode", "Run Like Flash", &features::flashrun, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Super Jump", "Ever wanted to jump higher?", &features::superjumpbool, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Ultra Jump", "Jump Really High", &features::ultrajumpbool, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Forcefield", "Push everyone", &features::forcefield, BoolDisplay::OnOff);
+				sub->AddOption<RegularOption>("Clear Wanted", "Clear Player Wanted Level", []	
+				{
+					PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
+				});
+					
+				sub->AddOption<RegularOption>("Max Health", "Adds Health To The Player", []
+					{
+						ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 400, 100);
+					});
+				sub->AddOption<RegularOption>("Max Armour", "Adds Armour To The Player", []
+					{
+						PED::ADD_ARMOUR_TO_PED(PLAYER::PLAYER_PED_ID(), 200);
+					});
+				sub->AddOption<BoolOption<bool>>("InfiniteStamina", "You Can Just Run Forever", &features::unlimitedstamina, BoolDisplay::OnOff);
+				sub->AddOption<RegularOption>("Clean Ped", "Clean Player", []
+					{
+						PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID());
+					});
+				sub->AddOption<RegularOption>("Randomise Clothes", "Randomises Players Clothes", []
+					{
+						PED::SET_PED_RANDOM_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID(), true);
+					});
+				sub->AddOption<RegularOption>("Reset Ped", "Reset Player", []
+					{
+						PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
+						PED::SET_PED_DEFAULT_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID());
+						PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID());
+					});
+				sub->AddOption<RegularOption>("Suicide", "Kills Ped", []
+					{
+						ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0, 0);
+					});
 			sub->AddOption<RegularOption>(xorstr_("RegularOption_demo"), "A regular option.", []
 			{
 				LOG(INFO) << "Test Option pressed";
 			});
+			g_UiManager->AddSubmenu<RegularSubmenu>("Visions", vis, [](RegularSubmenu* sub)
+				{
+					sub->AddOption<RegularOption>("Clear", "Clears Vision", []
+						{
+							GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+						});
+					sub->AddOption<RegularOption>("Bank HLWD", "Bank HLWD Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("Bank_HLWD");
+						});
+					sub->AddOption<RegularOption>("Barry Stoned", "Barry Stoned Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("Barry1_Stoned");
+						});
+					sub->AddOption<RegularOption>("Barry Fade Out", "Barry Fade Out Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("BarryFadeOut");
+						});
+					sub->AddOption<RegularOption>("Bloom Light", "Bloom Light Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("BloomLight");
+						});
+					sub->AddOption<RegularOption>("Building Top", "Building Top Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("buildingTOP");
+						});
+					sub->AddOption<RegularOption>("Bullet Time Dark", "Bullet Time Dark Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("BulletTimeDark");
+						});
+					sub->AddOption<RegularOption>("Building Time Light", "Building Time Light Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("BulletTimeLight");
+						});
+					sub->AddOption<RegularOption>("Camera ", "Camera Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("CAMERA_BW");
+						});
+					sub->AddOption<RegularOption>("Camera 2", "Camera 2 Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("CAMERA_secuirity");
+						});
+					sub->AddOption<RegularOption>("Camera 3", "Camera 3 Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("CAMERA_secuirity_FUZZ");
+						});
+					sub->AddOption<RegularOption>("Canyon Mission", "Canyon Mission Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("canyon_mission");
+						});
+					sub->AddOption<RegularOption>("Chop", "Chop Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("CHOP");
+						});
+					sub->AddOption<RegularOption>("Cinema", "Cinema Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("cinema");
+						});
+					sub->AddOption<RegularOption>("Cinema 2", "Cinema 2 Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("cinema_001");
+						});
+					sub->AddOption<RegularOption>("Night Lighting", "Night Lighting Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("whitenightlighting");
+						});
+					sub->AddOption<RegularOption>("White Out", "White Out Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("WhiteOut");
+						});
+					sub->AddOption<RegularOption>("Tunnel", "Tunnel Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("Tunnel");
+						});
+					sub->AddOption<RegularOption>("Drugs 1", "Drugs 1 Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("drug_drive_blend01");
+						});
+					sub->AddOption<RegularOption>("Drugs 2", "Drugs 2 Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("drug_drive_blend02");
+						});
+					sub->AddOption<RegularOption>("Drugs 3", "Drugs 3 Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("drug_flying_01");
+						});
+					sub->AddOption<RegularOption>("Race Turbo Dark", "Race Turbo Dark Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("RaceTurboDark");
+						});
+					sub->AddOption<RegularOption>("Race Turbo Flash", "Race Turbo Flash Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("RaceTurboFlash");
+						});
+					sub->AddOption<RegularOption>("Race Turbo Light", "Race Turbo Light Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("RaceTurboLight");
+						});
+					sub->AddOption<RegularOption>("Prologue Reflection", "prologue Reflection Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("prologue_reflection_opt");
+						});
+					sub->AddOption<RegularOption>("Prologue Shootout", "prologue Shootout Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("prologue_shootout");
+						});
+					sub->AddOption<RegularOption>("Prologue Shootout 2", "prologue Shootout 2 Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("Prologue_shootout_opt");
+						});
+					sub->AddOption<RegularOption>("Prologue", "prologue Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("prologue");
+						});
+					sub->AddOption<RegularOption>("Pulse", "pulse Vision", []
+						{
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("pulse");
+						});
+				});
 
-			static bool testBool1{};
-			sub->AddOption<BoolOption<bool>>(xorstr_("BoolOnOff_demo"), nullptr, &testBool1, BoolDisplay::OnOff);
+			
+			sub->AddOption<BoolOption<bool>>(xorstr_("BoolOnOff_demo"), nullptr, &features::godmode, BoolDisplay::OnOff);
 			static bool testBool2{};
 			sub->AddOption<BoolOption<bool>>(xorstr_("BoolYesNo_demo"), nullptr, &testBool2, BoolDisplay::YesNo);
 
@@ -91,6 +311,7 @@ namespace big
 			sub->AddOption<ChooseOption<const char*, std::size_t>>("Array", nullptr, &Lists::DemoList, &Lists::DemoListPos);
 			sub->AddOption<ChooseOption<std::uint64_t, std::size_t>>("Vector", nullptr, &vector, &vectorPos);
 		});
+
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Settings", SubmenuSettings, [](RegularSubmenu* sub)
 		{
