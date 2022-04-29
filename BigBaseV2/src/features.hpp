@@ -46,6 +46,13 @@ namespace big::features
 	inline bool nophone = false;
 	inline float runspeed = 3.0;
 	inline float runspeed1 = 3.0;
+	inline int red = 0;
+	inline int green = 0;
+	inline int blue = 0;
+	inline int red2 = 0;
+	inline int green2 = 0;
+	inline int blue2 = 0;
+
 	/* Online */
 	inline std::uint32_t g_selected_player{};
 }
