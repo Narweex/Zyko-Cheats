@@ -15,6 +15,10 @@ namespace big::features
 	inline bool godmode = false;
 	inline bool neverWanted = false;
 	inline bool sessioninfo;
+	void set_rank(int rpvalue);
+	inline int level{};
+	void set_crew_rank(int rpvalue);
+	inline int crew_level{};
 	inline int SessionInfoX = 0.020f;
 	inline int SessionInfoText = 0.4f;
 	inline bool speedometer = true;
@@ -55,4 +59,6 @@ namespace big::features
 
 	/* Online */
 	inline std::uint32_t g_selected_player{};
+
+	void basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items);
 }

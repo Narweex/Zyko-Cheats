@@ -20,7 +20,7 @@ namespace big
 
 	void drawstring(char* text, float X, float Y)
 	{
-		HUD::_SET_TEXT_ENTRY("STRING");
+		//HUD::_SET_TEXT_ENTRY("STRING");
 		HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(text);
 		HUD::SET_TEXT_FONT(0);
 		HUD::SET_TEXT_SCALE(0.3, 0.3f);
@@ -30,7 +30,7 @@ namespace big
 		HUD::SET_TEXT_DROPSHADOW(0, 0, 0, 0, 0);
 		HUD::SET_TEXT_EDGE(0, 0, 0, 0, 0);
 		HUD::SET_TEXT_OUTLINE();
-		HUD::_DRAW_TEXT(X, Y);
+		//HUD::_DRAW_TEXT(X, Y);
 	}
 	void setupdraw()
 	{
@@ -56,12 +56,58 @@ namespace big
 		sprintf_s(buff2, "%s", buf);
 
 		HUD::SET_TEXT_OUTLINE();
-		HUD::_SET_NOTIFICATION_TEXT_ENTRY("STRING");
+		//HUD::_SET_NOTIFICATION_TEXT_ENTRY("STRING");
 		HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(buff2);
-		HUD::_DRAW_NOTIFICATION(FALSE, FALSE);
+		//HUD::_DRAW_NOTIFICATION(FALSE, FALSE);
 	}	void notifyMap(std::string str) { notifyMap(&str[0]); }
 
-	
+	void features::basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items)
+	{
+		if (NETSHOPPING::NET_GAMESERVER_BASKET_END())
+			NETSHOPPING::_NET_GAMESERVER_BASKET_DELETE();
+
+		int transaction = -1;
+
+		if (g_pointers->m_construct_basket(*g_pointers->m_transact_queue, &transaction, cat, action, flag))
+		{
+			for (auto& item : items)
+			{
+				g_pointers->m_add_item_to_basket(*g_pointers->m_transact_queue, item.data());
+			}
+			g_pointers->m_process_transaction(*g_pointers->m_transact_queue, transaction, 69420);
+		}
+	}
+
+	void features::set_rank(int rpvalue)
+	{
+		if (rpvalue > 0) {
+			if (rpvalue > 8000)
+			{
+				rpvalue = 8000;
+			}
+
+			STATS::STAT_SET_INT(RAGE_JOAAT("MP0_CHAR_SET_RP_GIFT_ADMIN"), leveltable[rpvalue], TRUE);
+			STATS::STAT_SET_INT(RAGE_JOAAT("MP1_CHAR_SET_RP_GIFT_ADMIN"), leveltable[rpvalue], TRUE);
+		}
+	}
+
+	void features::set_crew_rank(int rpvalue)
+	{
+		if (rpvalue > 0) {
+			if (rpvalue > 1000)
+			{
+				rpvalue = 1000;
+			}
+
+			STATS::STAT_SET_INT(RAGE_JOAAT("MPPLY_CREW_LOCAL_XP_0"), leveltable[rpvalue], TRUE);
+			STATS::STAT_SET_INT(RAGE_JOAAT("MPPLY_CREW_LOCAL_XP_1"), leveltable[rpvalue], TRUE);
+			STATS::STAT_SET_INT(RAGE_JOAAT("MPPLY_CREW_LOCAL_XP_2"), leveltable[rpvalue], TRUE);
+			STATS::STAT_SET_INT(RAGE_JOAAT("MPPLY_CREW_LOCAL_XP_3"), leveltable[rpvalue], TRUE);
+			STATS::STAT_SET_INT(RAGE_JOAAT("MPPLY_CREW_LOCAL_XP_4"), leveltable[rpvalue], TRUE);
+			script::get_current()->yield(100ms);
+			STATS::STAT_SAVE(0, 0, 3, 0);
+		}
+	}
 
 	void features::run_tick()
 	{
@@ -141,7 +187,7 @@ namespace big
 
 				MISC::SET_TIME_SCALE(0.5);
 				STREAMING::REQUEST_NAMED_PTFX_ASSET("scr_trevor1");
-				GRAPHICS::_USE_PARTICLE_FX_ASSET_NEXT_CALL("scr_trevor1");
+				//GRAPHICS::_USE_PARTICLE_FX_ASSET_NEXT_CALL("scr_trevor1");
 				GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("scr_trev1_trailer_boosh", PLAYER::PLAYER_PED_ID(), 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 1.0, false, false, false);
 			}
 			else
@@ -170,7 +216,7 @@ namespace big
 					VEHICLE::SET_VEHICLE_FORWARD_SPEED(Veh, ENTITY::GET_ENTITY_SPEED(Veh) + 1);
 					if (hornboosteffect)
 					{
-						GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 0, 0);
+						//GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 0, 0);
 					}
 				}
 			}
@@ -186,7 +232,7 @@ namespace big
 					VEHICLE::SET_VEHICLE_FORWARD_SPEED(Veh, hornboostvalue);
 					if (hornboosteffect)
 					{
-						GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 0, 0);
+						//GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 0, 0);
 					}
 				}
 			}

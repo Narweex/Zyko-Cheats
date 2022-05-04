@@ -89,3 +89,13 @@ using Blip = std::int32_t;
 using Camera = Entity;
 using ScrHandle = Entity;
 using Vector3 = rage::scrVector;
+
+struct dates {
+	uint64_t y;
+	uint64_t mo;
+	uint64_t d;
+	uint64_t h;
+	uint64_t mi;
+	uint64_t s;
+	uint64_t ms;
+};

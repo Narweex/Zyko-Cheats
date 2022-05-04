@@ -34,6 +34,11 @@ namespace big
 		IDXGISwapChain **m_swapchain{};
 
 		PVOID m_model_spawn_bypass;
+
+		transaction_queue** m_transact_queue{};
+		functions::construct_basket_t m_construct_basket{};
+		functions::add_item_to_basket_t m_add_item_to_basket{};
+		functions::process_transaction m_process_transaction{};
 	};
 
 	inline pointers *g_pointers{};

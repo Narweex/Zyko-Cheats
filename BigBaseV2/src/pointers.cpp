@@ -71,6 +71,26 @@ namespace big
 			m_model_spawn_bypass = ptr.add(8).as<PVOID>();
 		});
 
+		main_batch.add("TQ", "48 8B 0D ? ? ? ? 41 8A D9", [this](memory::handle ptr)
+		{
+			m_transact_queue = ptr.add(3).rip().as<decltype(m_transact_queue)>();
+		});
+
+		main_batch.add("CB", "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 56 41 57 48 83 EC 30 45 8B F9 41 8B E8 4C 8B F2 48 8B", [this](memory::handle ptr)
+		{
+			m_construct_basket = ptr.as<decltype(m_construct_basket)>();
+		});
+
+		main_batch.add("AITB", "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC 20 48 8B F2 48 8D 54 24", [this](memory::handle ptr)
+		{
+			m_add_item_to_basket = ptr.as<decltype(m_add_item_to_basket)>();
+		});
+
+		main_batch.add("PT", "48 89 5C 24 ? 57 48 83 EC 20 48 8B 59 20 45", [this](memory::handle ptr)
+		{
+			m_process_transaction = ptr.as<decltype(m_process_transaction)>();
+		});
+
 		main_batch.run(memory::module(nullptr));
 
 		m_hwnd = FindWindowW(L"grcWindow", nullptr);

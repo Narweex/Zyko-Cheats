@@ -4799,9 +4799,10 @@ namespace SOCIALCLUB
 
 namespace STATS
 {
+	NATIVE_DECL BOOL _SET_PACKED_STAT_BOOL(int index, bool value, int character) { return invoke<BOOL>(0xDB8A58AEAA67CD07, index, value, character); } // set packed Bool /
 	NATIVE_DECL Any STAT_CLEAR_SLOT_FOR_RELOAD(int statSlot) { return invoke<Any>(0xEB0A72181D4AA4AD, statSlot); } // 0xEB0A72181D4AA4AD 0x84BDD475 b323
 	NATIVE_DECL BOOL STAT_LOAD(int p0) { return invoke<BOOL>(0xA651443F437B1CE6, p0); } // 0xA651443F437B1CE6 0x9E5629F4 b323
-	NATIVE_DECL BOOL STAT_SAVE(int p0, BOOL p1, int p2) { return invoke<BOOL>(0xE07BCA305B82D2FD, p0, p1, p2); } // 0xE07BCA305B82D2FD 0xE10A7CA4 b323
+	NATIVE_DECL BOOL STAT_SAVE(int p0, BOOL p1, int p2, int p3) { return invoke<BOOL>(0xE07BCA305B82D2FD, p0, p1, p2, p3); } // 0xE07BCA305B82D2FD 0xE10A7CA4 b323
 	NATIVE_DECL void _0x5688585E6D563CD8(int p0) { invoke<Void>(0x5688585E6D563CD8, p0); } // 0x5688585E6D563CD8 0xC62406A6 b323
 	NATIVE_DECL BOOL STAT_LOAD_PENDING(Any p0) { return invoke<BOOL>(0xA1750FFAFA181661, p0); } // 0xA1750FFAFA181661 0x4E9AC983 b323
 	NATIVE_DECL BOOL STAT_SAVE_PENDING() { return invoke<BOOL>(0x7D3A583856F2C5AC); } // 0x7D3A583856F2C5AC 0xC3FD3822 b323
@@ -4820,7 +4821,7 @@ namespace STATS
 	NATIVE_DECL BOOL STAT_SET_FLOAT(Hash statName, float value, BOOL save) { return invoke<BOOL>(0x4851997F37FE9B3C, statName, value, save); } // 0x4851997F37FE9B3C 0x6CEA96F2 b323
 	NATIVE_DECL BOOL STAT_SET_BOOL(Hash statName, BOOL value, BOOL save) { return invoke<BOOL>(0x4B33C4243DE0C432, statName, value, save); } // 0x4B33C4243DE0C432 0x55D79DFB b323
 	NATIVE_DECL BOOL STAT_SET_GXT_LABEL(Hash statName, const char* value, BOOL save) { return invoke<BOOL>(0x17695002FD8B2AE0, statName, value, save); } // 0x17695002FD8B2AE0 0xC1224AA7 b323
-	NATIVE_DECL BOOL STAT_SET_DATE(Hash statName, Any* value, int numFields, BOOL save) { return invoke<BOOL>(0x2C29BFB64F4FCBE4, statName, value, numFields, save); } // 0x2C29BFB64F4FCBE4 0x36BE807B b323
+	NATIVE_DECL BOOL STAT_SET_DATE(Hash statName, dates* value, int numFields, BOOL save) { return invoke<BOOL>(0x2C29BFB64F4FCBE4, statName, value, numFields, save); } // 0x2C29BFB64F4FCBE4 0x36BE807B b323
 	NATIVE_DECL BOOL STAT_SET_STRING(Hash statName, const char* value, BOOL save) { return invoke<BOOL>(0xA87B2335D12531D7, statName, value, save); } // 0xA87B2335D12531D7 0xB1EF2E21 b323
 	NATIVE_DECL BOOL STAT_SET_POS(Hash statName, float x, float y, float z, BOOL save) { return invoke<BOOL>(0xDB283FDE680FE72E, statName, x, y, z, save); } // 0xDB283FDE680FE72E 0x1192C9A3 b323
 	NATIVE_DECL BOOL STAT_SET_MASKED_INT(Hash statName, Any p1, Any p2, int p3, BOOL save) { return invoke<BOOL>(0x7BBB1B54583ED410, statName, p1, p2, p3, save); } // 0x7BBB1B54583ED410 0x2CBAA739 b323
