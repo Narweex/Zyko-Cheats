@@ -60,7 +60,7 @@ namespace big::features
 	/*Vehicle spawner*/
 	void spawn_veh(Hash hash);
 	inline bool vehicle_godmode = false;
-	inline bool vehicle_blip = true;
+	inline bool vehicle_blip = false;
 	inline bool in_vehicle = true;
 	inline bool full_stats = true;
 
