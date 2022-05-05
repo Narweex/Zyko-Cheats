@@ -117,8 +117,8 @@ namespace big::UserInterface
 		rage::rgbaColor m_SubmenuBarTextColor{ 255, 255, 255, 255 };
 
 		// Options
-		float m_OptionHeight = 0.035f;
-		float m_OptionTextSize = 0.25f;
+		float m_OptionHeight = 0.030f;
+		float m_OptionTextSize = 0.22f;
 		Font m_OptionFont = Font::ChaletLondon;
 		float m_OptionPadding = 2.1f;
 		rage::rgbaColor m_OptionSelectedTextColor{ 10, 10, 10, 255 };
