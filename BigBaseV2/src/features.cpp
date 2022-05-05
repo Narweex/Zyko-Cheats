@@ -43,6 +43,102 @@ namespace big
 		HUD::SET_TEXT_EDGE(0, 0, 0, 0, 0);
 		HUD::SET_TEXT_OUTLINE();
 	}
+	void features::spawn_veh(Hash vehicle)
+	{
+		Hash hash = vehicle;
+		while (!STREAMING::HAS_MODEL_LOADED(hash))
+		{
+			STREAMING::REQUEST_MODEL(hash);
+			script::get_current()->yield();
+		}
+
+		auto pos = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+		*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x9090;
+		auto veh = VEHICLE::CREATE_VEHICLE(hash, pos.x, pos.y, pos.z, 0.f, TRUE, FALSE, FALSE);
+		*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x0574;
+
+		script::get_current()->yield();
+		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(hash);
+		if (*g_pointers->m_is_session_started)
+		{
+			DECORATOR::DECOR_SET_INT(veh, xorstr_("MPBitset"), 0);
+			ENTITY::_SET_ENTITY_SOMETHING(veh, TRUE);
+			auto networkId = NETWORK::VEH_TO_NET(veh);
+			if (NETWORK::NETWORK_GET_ENTITY_IS_NETWORKED(veh))
+				NETWORK::SET_NETWORK_ID_EXISTS_ON_ALL_MACHINES(networkId, true);
+			VEHICLE::SET_VEHICLE_IS_STOLEN(veh, FALSE);
+		}
+
+		if (features::in_vehicle) {
+			if (VEHICLE::IS_THIS_MODEL_A_HELI(hash) || VEHICLE::IS_THIS_MODEL_A_PLANE(hash))
+				VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, true, true);
+			VEHICLE::SET_HELI_BLADES_FULL_SPEED(veh);
+
+			if (VEHICLE::IS_THIS_MODEL_A_PLANE(hash))
+			{
+				VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, true, true);
+				VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(veh, true);
+			}
+			PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), veh, -1);
+		}
+		else
+			VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(veh, 0.0f);
+
+		if (features::full_stats) {
+			VEHICLE::SET_VEHICLE_MOD_KIT(veh, 0);
+			for (int i = 0; i < 999; i++)
+			{
+				if (i > 16 && i < 23)
+					continue;
+
+				VEHICLE::SET_VEHICLE_MOD(veh, i, VEHICLE::GET_NUM_VEHICLE_MODS(veh, i) - 1, false);
+				GRAPHICS::USE_PARTICLE_FX_ASSET(xorstr_("scr_rcbarry2"));
+			}
+		}
+
+		if (features::vehicle_godmode) {
+			ENTITY::SET_ENTITY_INVINCIBLE(veh, true);
+			ENTITY::SET_ENTITY_PROOFS(veh, true, true, true, true, true, true, true, true);
+			VEHICLE::SET_DISABLE_VEHICLE_PETROL_TANK_DAMAGE(veh, true);
+			VEHICLE::SET_DISABLE_VEHICLE_PETROL_TANK_FIRES(veh, true);
+			VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(veh, false);
+			VEHICLE::SET_VEHICLE_CAN_BREAK(veh, false);
+			VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(veh, false);
+			VEHICLE::SET_VEHICLE_EXPLODES_ON_HIGH_EXPLOSION_DAMAGE(veh, false);
+			VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, false);
+			VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(veh, false);
+		}
+
+		//if (strong) {
+		//	VEHICLE::SET_VEHICLE_STRONG(veh, true);
+		//}
+
+		if (features::vehicle_blip) {
+			Hash Model = ENTITY::GET_ENTITY_MODEL(veh);
+			Blip last = HUD::GET_BLIP_FROM_ENTITY(veh);
+			HUD::REMOVE_BLIP(&last);
+			Blip vBlip = HUD::ADD_BLIP_FOR_ENTITY(veh);
+			HUD::SET_BLIP_SCALE(vBlip, 1);
+			if (VEHICLE::IS_THIS_MODEL_A_CAR(Model))
+				HUD::SET_BLIP_SPRITE(vBlip, 225);
+			else if (VEHICLE::IS_THIS_MODEL_A_HELI(Model))
+				HUD::SET_BLIP_SPRITE(vBlip, 64);
+			else if (VEHICLE::IS_THIS_MODEL_A_PLANE(Model))
+				HUD::SET_BLIP_SPRITE(vBlip, 16);
+			else if (VEHICLE::IS_THIS_MODEL_A_BIKE(Model))
+				HUD::SET_BLIP_SPRITE(vBlip, 226);
+			else
+				HUD::SET_BLIP_SPRITE(vBlip, 225);
+
+			HUD::SET_BLIP_NAME_FROM_TEXT_FILE(vBlip, xorstr_("Pinned Vehicle"));
+			HUD::SET_BLIP_COLOUR(vBlip, 0);
+			HUD::SET_BLIP_FLASHES(vBlip, false);
+			HUD::SET_BLIP_DISPLAY(vBlip, 2);
+			HUD::SET_BLIP_CATEGORY(vBlip, 1);
+			HUD::BEGIN_TEXT_COMMAND_SET_BLIP_NAME(xorstr_("Alliance's Vehicle"));
+			HUD::END_TEXT_COMMAND_SET_BLIP_NAME(vBlip);
+		}
+	}
 	void notifyMap(char* fmt, ...)
 	{
 		char buf[2048] = { 0 };
@@ -120,14 +216,7 @@ namespace big
 			g_player_info.player_id = PLAYER::PLAYER_ID();
 			g_player_info.player_ped = PLAYER::PLAYER_PED_ID();
 		}
-		if (godmode)
-		{
-			ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), godmode);
-		}
-		else
-		{
-			ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), false);
-		}
+		
 		
 		if (stoptime)
 		{
@@ -216,7 +305,7 @@ namespace big
 					VEHICLE::SET_VEHICLE_FORWARD_SPEED(Veh, ENTITY::GET_ENTITY_SPEED(Veh) + 1);
 					if (hornboosteffect)
 					{
-						//GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 0, 0);
+						GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 0, 0);
 					}
 				}
 			}
@@ -232,7 +321,7 @@ namespace big
 					VEHICLE::SET_VEHICLE_FORWARD_SPEED(Veh, hornboostvalue);
 					if (hornboosteffect)
 					{
-						//GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 0, 0);
+						GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 0, 0);
 					}
 				}
 			}
@@ -314,6 +403,20 @@ namespace big
 				{
 				case 0:
 					//50ms
+					if (godmode)
+					{
+						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), godmode);
+					}
+					else
+					{
+						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), false);
+					}
+					if (neverWanted)
+					{
+						PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_PED_ID());
+		
+					}
+					
 					break;
 				case 1:
 					//250ms

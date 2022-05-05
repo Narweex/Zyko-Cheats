@@ -14,7 +14,7 @@ namespace big::features
 	/* Self */
 	inline bool godmode = false;
 	inline bool neverWanted = false;
-	inline bool sessioninfo;
+	inline bool sessioninfo = false;
 	void set_rank(int rpvalue);
 	inline int level{};
 	void set_crew_rank(int rpvalue);
@@ -56,6 +56,13 @@ namespace big::features
 	inline int red2 = 0;
 	inline int green2 = 0;
 	inline int blue2 = 0;
+
+	/*Vehicle spawner*/
+	void spawn_veh(Hash hash);
+	inline bool vehicle_godmode = false;
+	inline bool vehicle_blip = true;
+	inline bool in_vehicle = true;
+	inline bool full_stats = true;
 
 	/* Online */
 	inline std::uint32_t g_selected_player{};
