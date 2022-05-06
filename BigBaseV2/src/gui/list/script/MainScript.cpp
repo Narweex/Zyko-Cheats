@@ -868,7 +868,7 @@ namespace big
 							char Buffer[255]; sprintf(Buffer, "%s   ~p~[SESSION HOST]", PLAYER::GET_PLAYER_NAME(i));  /////// HOST 
 							sub->AddOption<SubOption>(Buffer, nullptr, SubmenuSelectedPlayer, [=]
 								{
-									//NULL = i;
+									features::g_selected_player = i;
 								});
 						}
 						else if (PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i) == PLAYER::PLAYER_PED_ID())
@@ -876,21 +876,21 @@ namespace big
 							char Buffer[255]; sprintf(Buffer, "%s   ~b~[SELF]", PLAYER::GET_PLAYER_NAME(i));
 							sub->AddOption<SubOption>(Buffer, nullptr, SubmenuSelectedPlayer, [=]
 								{
-									//NULL = i;
+									features::g_selected_player = i;
 								});
 						}
 						else if (PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i) == NETWORK::NETWORK_IS_FRIEND_IN_MULTIPLAYER(PLAYER::GET_PLAYER_NAME(i))) {
 							char Buffer[255]; sprintf(Buffer, "%s   ~g~[FRIEND]", PLAYER::GET_PLAYER_NAME(i));
 							sub->AddOption<SubOption>(Buffer, nullptr, SubmenuSelectedPlayer, [=]
 								{
-									//NULL = i;
+									features::g_selected_player = i;
 								});
 						}
 						else if (PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i) == NETWORK::NETWORK_IS_IN_SPECTATOR_MODE()) {
 							char Buffer[255]; sprintf(Buffer, "%s   ~b~[SPECTATING]", PLAYER::GET_PLAYER_NAME(i));
 							sub->AddOption<SubOption>(Buffer, nullptr, SubmenuSelectedPlayer, [=]
 								{
-									//NULL = i;
+									features::g_selected_player = i;
 								});
 						}
 						// 
@@ -898,12 +898,18 @@ namespace big
 						{
 							sub->AddOption<SubOption>(PLAYER::GET_PLAYER_NAME(i), nullptr, SubmenuSelectedPlayer, [=]
 								{
-									//NULL = i;
+									features::g_selected_player = i;
 								});
 						}
 					}
 				}
 			});
+
+		g_UiManager->AddSubmenu<PlayerSubmenu>(&features::g_selected_player, SubmenuSelectedPlayer, [](PlayerSubmenu* sub)
+			{
+
+			});
+
 		//GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.25, 0.25, 0.25, 200, 94, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 
 		//g_UiManager->AddSubmenu<PlayerSubmenu>(features::g_selected_player, SubmenuSelectedPlayer, [](PlayerSubmenu* sub)
