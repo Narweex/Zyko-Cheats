@@ -18,6 +18,7 @@ namespace big::features
 	void set_rank(int rpvalue);
 	inline int level{};
 	void set_crew_rank(int rpvalue);
+	void teleport(int x, int y, int z);
 	inline int crew_level{};
 	inline int SessionInfoX = 0.020f;
 	inline int SessionInfoText = 0.4f;

@@ -54,7 +54,7 @@ namespace big
 
 		auto pos = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x9090;
-		auto veh = VEHICLE::CREATE_VEHICLE(hash, pos.x, pos.y, pos.z, 0.f, TRUE, FALSE, FALSE);
+		auto veh = VEHICLE::CREATE_VEHICLE(hash, pos.x+5, pos.y+5, pos.z, 0.f, TRUE, FALSE, FALSE);
 		*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x0574;
 
 		script::get_current()->yield();
@@ -139,6 +139,7 @@ namespace big
 			HUD::END_TEXT_COMMAND_SET_BLIP_NAME(vBlip);
 		}
 	}
+	
 	void notifyMap(char* fmt, ...)
 	{
 		char buf[2048] = { 0 };
@@ -203,6 +204,11 @@ namespace big
 			script::get_current()->yield(100ms);
 			STATS::STAT_SAVE(0, 0, 3, 0);
 		}
+	}
+
+	void features::teleport(int x, int y, int z)
+	{
+		PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), x, y, z);
 	}
 
 	void features::run_tick()
@@ -305,7 +311,10 @@ namespace big
 					VEHICLE::SET_VEHICLE_FORWARD_SPEED(Veh, ENTITY::GET_ENTITY_SPEED(Veh) + 1);
 					if (hornboosteffect)
 					{
-						GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 0, 0);
+						if (PLAYER::IS_PLAYER_PRESSING_HORN(PLAYER::PLAYER_ID()))
+						{
+						GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 1, false);
+						}
 					}
 				}
 			}
@@ -414,6 +423,7 @@ namespace big
 					if (neverWanted)
 					{
 						PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_PED_ID());
+						PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_PED_ID(), 0, true);
 		
 					}
 					
