@@ -2,9 +2,13 @@
 #include "script/Timer.hpp"
 #include "natives.hpp"
 #include "gta_util.hpp"
+#include <imgui.h>
 #
 namespace big::UserInterface
 {
+
+	
+
 	UIManager::UIManager()
 	{
 		g_UiManager = this;
@@ -181,7 +185,7 @@ namespace big::UserInterface
 	}
 
 	void UIManager::DrawHeader()
-	{
+	{		
 		switch (m_HeaderType)
 		{
 		case HeaderType::Static:
@@ -221,7 +225,7 @@ namespace big::UserInterface
 		if (m_HeaderText)
 		{
 			DrawCenteredText(
-				"MENU_TITLE",
+				"Zyko",
 				m_PosX,
 				m_DrawBaseY + (m_HeaderHeight / 2.f) - (GetTextHeight(m_HeaderFont, m_HeaderTextSize) / 2.f),
 				m_HeaderTextSize,
@@ -237,7 +241,8 @@ namespace big::UserInterface
 	{
 		char leftText[64] = {};
 		std::strncpy(&leftText[0], sub->GetName(), sizeof(leftText) - 1);
-		std::transform(std::begin(leftText), std::end(leftText), std::begin(leftText), [](char c) { return static_cast<char>(toupper(c)); });
+		std::transform(std::begin(leftText), std::end(leftText), std::begin(leftText), [](char c) { return static_cast<char>(c); });
+		//static_cast<char>(toupper(c));
 
 		char rightText[32] = {};
 		std::snprintf(rightText, sizeof(rightText) - 1, "%zu / %zu", sub->GetSelectedOption() + 1, sub->GetNumOptions());
@@ -249,7 +254,7 @@ namespace big::UserInterface
 			m_SubmenuBarBackgroundColor);
 		DrawLeftText(
 			&leftText[0],
-			m_PosX - (m_Width / m_SubmenuBarPadding),
+			m_PosX + 0.003f,
 			m_DrawBaseY + (m_SubmenuBarHeight / 2.f) - (GetTextHeight(m_SubmenuBarFont, m_SubmenuBarTextSize) / 1.5f),
 			m_SubmenuBarTextSize, m_SubmenuBarFont,
 			m_SubmenuBarTextColor,
@@ -309,7 +314,7 @@ namespace big::UserInterface
 	{
 		DrawLeftText("0.0.1.Beta", m_PosX + 0.08f,
 			m_DrawBaseY,
-			m_OptionTextSize,
+			0.24f,
 			m_DescriptionFont,
 			rage::rgbaColor(255 ,255, 255, 255),
 			false, false);

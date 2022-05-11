@@ -96,7 +96,7 @@ namespace big::UserInterface
 		float m_HeaderHeight = 0.1f;
 		bool m_HeaderText = true;
 		float m_HeaderTextSize = 1.f;
-		Font m_HeaderFont = Font::HouseScript;
+		Font m_HeaderFont = Font::ChaletLondon;
 		rage::rgbaColor m_HeaderBackgroundColor{ 2, 130, 53, 255 };
 		rage::rgbaColor m_HeaderTextColor{ 255, 255, 255, 255 };
 		HeaderType m_HeaderType = HeaderType::Gradient;
@@ -135,7 +135,7 @@ namespace big::UserInterface
 		// Description
 		float m_DescriptionHeightPadding = 0.01f;
 		float m_DescriptionHeight = 0.033f;
-		float m_DescriptionTextSize = 0.28f;
+		float m_DescriptionTextSize = 0.25f;
 		Font m_DescriptionFont = Font::ChaletLondon;
 		rage::rgbaColor m_DescriptionBackgroundColor{ 0, 0, 0, 120 };
 		rage::rgbaColor m_DescriptionTextColor{ 255, 255, 255, 255 };
