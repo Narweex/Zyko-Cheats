@@ -72,7 +72,29 @@ namespace big
 		gar,
 		safehouse,
 		ClearSubmenu,
-		SessionInfoSubmenu
+		SessionInfoSubmenu,
+		SubmenuVehSpawnerSettings,
+		SubmenuVehSpawnerSports,
+		SubmenuVehSpawnerMuscle,
+		SubmenuVehSpawnerSuper,
+		SubmenuVehSpawnerSportClassics,
+		SubmenuVehSpawnerSedans,
+		SubmenuVehSpawnerSUVs,
+		SubmenuVehSpawnerCompacts,
+		SubmenuVehSpawnerCoupes,
+		SubmenuVehSpawnerMotorcycles,
+		SubmenuVehSpawnerOffRoad,
+		SubmenuVehSpawnerCycles,
+		SubmenuVehSpawnerVans,
+		SubmenuVehSpawnerUltility,
+		SubmenuVehSpawnerIndustrial,
+		SubmenuVehSpawnerService,
+		SubmenuVehSpawnerCommercial,
+		SubmenuVehSpawnerEmergency,
+		SubmenuVehSpawnerMilitary,
+		SubmenuVehSpawnerBoats,
+		SubmenuVehSpawnerPlanes,
+		SubmenuVehSpawnerHelicopters
 	};
 
 	void MainScript::gui_init()
@@ -397,6 +419,228 @@ namespace big
 							VEHICLE::SET_VEHICLE_FORWARD_SPEED(Veh, 0);
 						}
 					});
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Vehicle Spawner", SubmenuVehicleSpawner, [&](RegularSubmenu* sub)
+			{
+				sub->AddOption<SubOption>("Spawner Settings", nullptr, SubmenuVehSpawnerSettings);
+				sub->AddOption<SubOption>("Sports", nullptr, SubmenuVehSpawnerSports);
+				sub->AddOption<SubOption>("Muscle", nullptr, SubmenuVehSpawnerMuscle);
+				sub->AddOption<SubOption>("Super", nullptr, SubmenuVehSpawnerSuper);
+				sub->AddOption<SubOption>("Sport Classics", nullptr, SubmenuVehSpawnerSportClassics);
+				sub->AddOption<SubOption>("Sedans", nullptr, SubmenuVehSpawnerSedans);
+				sub->AddOption<SubOption>("SUVs", nullptr, SubmenuVehSpawnerSUVs);
+				sub->AddOption<SubOption>("Compacts", nullptr, SubmenuVehSpawnerCompacts);
+				sub->AddOption<SubOption>("Coupes", nullptr, SubmenuVehSpawnerCoupes);
+				sub->AddOption<SubOption>("Motorcycles", nullptr, SubmenuVehSpawnerMotorcycles);
+				sub->AddOption<SubOption>("Off-Road", nullptr, SubmenuVehSpawnerOffRoad);
+				sub->AddOption<SubOption>("Cycles", nullptr, SubmenuVehSpawnerCycles);
+				sub->AddOption<SubOption>("Vans", nullptr, SubmenuVehSpawnerVans);
+				sub->AddOption<SubOption>("Ultility", nullptr, SubmenuVehSpawnerUltility);
+				sub->AddOption<SubOption>("Industrial", nullptr, SubmenuVehSpawnerIndustrial);
+				sub->AddOption<SubOption>("Service", nullptr, SubmenuVehSpawnerService);
+				sub->AddOption<SubOption>("Commercial", nullptr, SubmenuVehSpawnerCommercial);
+				sub->AddOption<SubOption>("Emergency", nullptr, SubmenuVehSpawnerEmergency);
+				sub->AddOption<SubOption>("Military", nullptr, SubmenuVehSpawnerMilitary);
+				sub->AddOption<SubOption>("Boats", nullptr, SubmenuVehSpawnerBoats);
+				sub->AddOption<SubOption>("Planes", nullptr, SubmenuVehSpawnerPlanes);
+				sub->AddOption<SubOption>("Helicopters", nullptr, SubmenuVehSpawnerHelicopters);
+				
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Spawner Settings", SubmenuVehSpawnerSettings, [&](RegularSubmenu* sub)
+			{
+				sub->AddOption<BoolOption<bool>>("Spawn Invincible", "Vehicle Will Be Spawned With Godmode", &features::vehicle_godmode, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Spawn Inside", "You Will Be Spawned Inside Vehicle", &features::in_vehicle, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Spawn Max Tuned", "Vehicle Will HAve Max Tuning", &features::full_stats, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Spawn With Blip", "You Will See The Vehicle On Map", &features::vehicle_blip, BoolDisplay::OnOff);
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Sports", SubmenuVehSpawnerSports, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Sports1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Muscle", SubmenuVehSpawnerMuscle, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Muscle1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Super", SubmenuVehSpawnerSuper, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Super1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Sport Classics", SubmenuVehSpawnerSportClassics, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::SportsClassics1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Sedans", SubmenuVehSpawnerSedans, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Sedans1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("SUVs", SubmenuVehSpawnerSUVs, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::SUVs1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Compacts", SubmenuVehSpawnerCompacts, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Compacts1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Coupes", SubmenuVehSpawnerCoupes, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Coupes1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Motorcycles", SubmenuVehSpawnerMotorcycles, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Motorcycles1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Off-Road", SubmenuVehSpawnerOffRoad, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::OffRoad1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Cycles", SubmenuVehSpawnerCycles, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Cycles1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Vans", SubmenuVehSpawnerVans, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Vans1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Utility", SubmenuVehSpawnerUltility, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Utility1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Industrial", SubmenuVehSpawnerIndustrial, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Industrial1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Sevice", SubmenuVehSpawnerService, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Service1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Commercial", SubmenuVehSpawnerCommercial, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Commercial1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Emergency", SubmenuVehSpawnerEmergency, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Emergency1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Military", SubmenuVehSpawnerMilitary, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Military1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Boats", SubmenuVehSpawnerBoats, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Boats1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Planes", SubmenuVehSpawnerPlanes, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Planes1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Helicopters", SubmenuVehSpawnerHelicopters, [&](RegularSubmenu* sub)
+			{
+				for (auto& car : Lists::Helicopters1) {
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+						{
+							features::spawn_veh(rage::joaat(car));
+						});
+				}
 			});
 				
 		g_UiManager->AddSubmenu<RegularSubmenu>("Online", OnlineSubmenu, [&](RegularSubmenu* sub)
