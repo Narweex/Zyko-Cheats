@@ -13,6 +13,7 @@ namespace big
 		~pointers();
 	public:
 		HWND m_hwnd{};
+		functions::file_register_t m_file_register{};
 
 		eGameState *m_game_state{};
 		bool *m_is_session_started{};

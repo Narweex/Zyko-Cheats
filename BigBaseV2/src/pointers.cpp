@@ -91,6 +91,11 @@ namespace big
 			m_process_transaction = ptr.as<decltype(m_process_transaction)>();
 		});
 
+		main_batch.add("FR", "48 89 5C 24 ? 48 89 6C 24 ? 48 89 7C 24 ? 41 54 41 56 41 57 48 83 EC 50 48 8B EA 4C 8B FA 48 8B D9 4D 85 C9", [this](memory::handle ptr)
+		{
+			m_file_register = ptr.as<functions::file_register_t>();
+		});
+
 		main_batch.run(memory::module(nullptr));
 
 		m_hwnd = FindWindowW(L"grcWindow", nullptr);

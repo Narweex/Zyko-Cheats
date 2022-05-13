@@ -94,7 +94,7 @@ namespace big::UserInterface
 
 		// Header
 		float m_HeaderHeight = 0.1f;
-		bool m_HeaderText = true;
+		bool m_HeaderText = false;
 		float m_HeaderTextSize = 1.f;
 		Font m_HeaderFont = Font::ChaletLondon;
 		rage::rgbaColor m_HeaderBackgroundColor{ 2, 130, 53, 255 };

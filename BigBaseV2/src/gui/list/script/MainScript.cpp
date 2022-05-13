@@ -14,6 +14,7 @@
 #include "gui.hpp"
 #include "gta/joaat.hpp"
 #include "script_global.hpp"
+#include "helpers/other.h"
 
 namespace big
 {
@@ -99,12 +100,14 @@ namespace big
 
 	void MainScript::gui_init()
 	{
+		register_ytd();
 	}
 
 	void MainScript::gui_on_tick()
 	{
 		g_UiManager->OnTick();
 	}
+
 	void teleport(float x, float y, float z)
 	{
 		PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), x, y, z);
@@ -1451,7 +1454,7 @@ namespace big
 			sub->AddOption<NumberOption<std::uint8_t>>("B2", nullptr, &g_UiManager->m_HeaderGradientColorRight.b, '\0', static_cast<std::uint8_t>(255));
 			sub->AddOption<NumberOption<std::uint8_t>>("A2", nullptr, &g_UiManager->m_HeaderGradientColorRight.a, '\0', static_cast<std::uint8_t>(255));
 		});
-
+		/*
 		g_UiManager->AddSubmenu<RegularSubmenu>("Header Text", SubmenuSettingsHeaderText, [](RegularSubmenu* sub)
 		{
 			sub->AddOption<BoolOption<bool>>("Enable", nullptr, &g_UiManager->m_HeaderText, BoolDisplay::OnOff);
@@ -1461,7 +1464,7 @@ namespace big
 			sub->AddOption<NumberOption<std::uint8_t>>("B", nullptr, &g_UiManager->m_HeaderTextColor.b, '\0', static_cast<std::uint8_t>(255));
 			sub->AddOption<NumberOption<std::uint8_t>>("A", nullptr, &g_UiManager->m_HeaderTextColor.a, '\0', static_cast<std::uint8_t>(255));
 		});
-
+		*/
 		g_UiManager->AddSubmenu<RegularSubmenu>("Description", SubmenuSettingsDescription, [](RegularSubmenu* sub)
 		{
 			sub->AddOption<NumberOption<float>>("Padding", "Padding before the description rect.", &g_UiManager->m_DescriptionHeightPadding, 0.01f, 1.f, 0.001f,
@@ -1513,6 +1516,7 @@ namespace big
 
 	void MainScript::script_func()
 	{
+		g_MainScript.gui_init();
 		while (true)
 		{
 			TRY_CLAUSE

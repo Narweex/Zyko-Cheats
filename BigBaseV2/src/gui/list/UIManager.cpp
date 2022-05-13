@@ -189,11 +189,14 @@ namespace big::UserInterface
 		switch (m_HeaderType)
 		{
 		case HeaderType::Static:
-			DrawRect(
+			DrawSprite(
+				"logo",
+				"header",
 				m_PosX,
 				m_DrawBaseY + (m_HeaderHeight / 2.f), m_Width,
 				m_HeaderHeight,
-				m_HeaderBackgroundColor);
+				m_HeaderBackgroundColor,
+				0.f);
 			break;
 		case HeaderType::Gradient:
 			for (std::size_t i = 0; i < (m_HeaderGradientTransparent ? 1 : 20); ++i)

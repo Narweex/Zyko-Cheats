@@ -15,7 +15,7 @@ namespace big::Lists
 		UserInterface::HeaderType::Gradient
 	};
 
-	inline std::size_t HeaderTypesPosition = 1;
+	inline std::size_t HeaderTypesPosition = 0;
 
 	inline const char* DemoList[10]
 	{

@@ -22,4 +22,5 @@ namespace big::functions
 	using construct_basket_t = bool (*)(transaction_queue* transact_helper, int* transaction_id, int category_type, int action_type, int target);
 	using add_item_to_basket_t = bool (*)(transaction_queue* tq, int* item);
 	using process_transaction = bool (*)(transaction_queue* tq, int transaction, int64_t unk3);
+	using file_register_t = uint32_t(*)(int* texture_id, const char* path, bool, const char* file_name, bool);
 }

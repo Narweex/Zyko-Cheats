@@ -226,6 +226,7 @@
     <ClInclude Include="src\gui\list\SubOption.hpp" />
     <ClInclude Include="src\gui\list\TextBox.hpp" />
     <ClInclude Include="src\gui\list\UIManager.hpp" />
+    <ClInclude Include="src\helpers\other.h" />
     <ClInclude Include="src\helpers\player_info.h" />
     <ClInclude Include="src\hooking.hpp" />
     <ClInclude Include="src\invoker.hpp" />
@@ -259,6 +260,7 @@
     <ClCompile Include="src\gui\base_tab.cpp" />
     <ClCompile Include="src\gui\list\script\MainScript.cpp" />
     <ClCompile Include="src\gui\list\UIManager.cpp" />
+    <ClCompile Include="src\helpers\other.cpp" />
     <ClCompile Include="src\helpers\player_info.cpp" />
     <ClCompile Include="src\hooking.cpp" />
     <ClCompile Include="src\invoker.cpp" />

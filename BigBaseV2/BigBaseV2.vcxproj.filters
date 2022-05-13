@@ -218,6 +218,9 @@
     <ClInclude Include="src\gui\list\script\Util.hpp">
       <Filter>gui\list\script</Filter>
     </ClInclude>
+    <ClInclude Include="src\helpers\other.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\common.cpp" />
@@ -262,6 +265,9 @@
     </ClCompile>
     <ClCompile Include="src\gui\list\script\MainScript.cpp">
       <Filter>gui\list\script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\helpers\other.cpp">
+      <Filter>helpers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
