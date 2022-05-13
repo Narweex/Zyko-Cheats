@@ -1151,142 +1151,142 @@ namespace big
 
 		g_UiManager->AddSubmenu<PlayerSubmenu>(&features::g_selected_player, SubmenuSelectedPlayer, [](PlayerSubmenu* sub)
 			{
+			GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 
+			sub->AddOption<BoolOption<bool>>("Spectate", nullptr, &features::spectateplayer, BoolDisplay::OnOff);
+			sub->AddOption<SubOption>("Teleport Options", nullptr, SelectedPlayerTeleport);
+			sub->AddOption<SubOption>("Abuse", nullptr, SelectedPlayerAbuse);
+			sub->AddOption<SubOption>("Trolling Options", nullptr, SelectedPlayerTrolling);
+			sub->AddOption<SubOption>("Friendly Options", nullptr, SelectedPlayerFriendly);
 			});
 
-		//GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.25, 0.25, 0.25, 200, 94, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 
-		//g_UiManager->AddSubmenu<PlayerSubmenu>(features::g_selected_player, SubmenuSelectedPlayer, [](PlayerSubmenu* sub)
-		//	{
-		//		sub->AddOption<BoolOption<bool>>("Spectate", nullptr, &features::spectateplayer, BoolDisplay::OnOff);
-		//		sub->AddOption<SubOption>("Teleport Options", nullptr, SelectedPlayerTeleport);
-		//		sub->AddOption<SubOption>("Abuse", nullptr, SelectedPlayerAbuse);
-		//		sub->AddOption<SubOption>("Trolling Options", nullptr, SelectedPlayerTrolling);
-		//		sub->AddOption<SubOption>("Friendly Options", nullptr, SelectedPlayerFriendly);
+	
 
-		//		g_UiManager->AddSubmenu<RegularSubmenu>("Player Teleports", SelectedPlayerTeleport, [](RegularSubmenu* sub)
-		//			{
-		//				sub->AddOption<RegularOption>("Teleport To Player", "tp to Player", []
-		//					{
-		//						Entity handle;
-		//						PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) ? handle = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()) : handle = PLAYER::PLAYER_PED_ID();
-		//						ENTITY::SET_ENTITY_COORDS(handle, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), false).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), false).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), false).z, false, false, false, false);
-		//					});
-		//				sub->AddOption<RegularOption>("Teleport To Player's Vehicle", "tp to Players vehicle", []
-		//					{
-		//						if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::GET_PLAYER_PED(NULL), true))
-		//						{
-		//							PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(NULL)), VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(NULL)), -1, true));
-		//						}
-		//					});
-		//			});
+				g_UiManager->AddSubmenu<RegularSubmenu>("Player Teleports", SelectedPlayerTeleport, [](RegularSubmenu* sub)
+					{
+						sub->AddOption<RegularOption>("Teleport To Player", "tp to Player", []
+							{
+								Entity handle;
+								PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) ? handle = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()) : handle = PLAYER::PLAYER_PED_ID();
+								ENTITY::SET_ENTITY_COORDS(handle, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).z, false, false, false, false);
+							});
+						sub->AddOption<RegularOption>("Teleport To Player's Vehicle", "tp to Players vehicle", []
+							{
+								if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::GET_PLAYER_PED(NULL), true))
+								{
+									PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(features::g_selected_player)), VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(NULL)), -1, true));
+								}
+							});
+					});
 
-		//		g_UiManager->AddSubmenu<RegularSubmenu>("Abuse", SelectedPlayerAbuse, [](RegularSubmenu* sub)
-		//			{
-		//				if (NETWORK::NETWORK_GET_HOST_OF_SCRIPT("Freemode", -1, 0) == PLAYER::PLAYER_PED_ID())
-		//				{
-		//					sub->AddOption<RegularOption>("Host Kick", "Kick From Session", []
-		//						{
-		//							NETWORK::NETWORK_SESSION_KICK_PLAYER(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL));
-		//							int hostkick[69] = { 1885259, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL) };
-		//							SCRIPT::TRIGGER_SCRIPT_EVENT(1, hostkick, 4, 1 << NULL);
-		//							//1885259 host kick global
-		//						});
-		//				}
-		//				
-		//				sub->AddOption<RegularOption>("Crash", "Trap In cage", []
-		//					{
-		//						Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), true);
-		//						Object crashobject = OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY("v_ilev_chair02_ped"), pos.x, pos.y, pos.z, 1, 1, 1);
+				g_UiManager->AddSubmenu<RegularSubmenu>("Abuse", SelectedPlayerAbuse, [](RegularSubmenu* sub)
+					{
+						if (NETWORK::NETWORK_GET_HOST_OF_SCRIPT("Freemode", -1, 0) == PLAYER::PLAYER_PED_ID())
+						{
+							sub->AddOption<RegularOption>("Host Kick", "Kick From Session", []
+								{
+									NETWORK::NETWORK_SESSION_KICK_PLAYER(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
+									int hostkick[69] = { 1885259, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player) };
+									SCRIPT::TRIGGER_SCRIPT_EVENT(1, hostkick, 4, 1 << features::g_selected_player);
+									//1885259 host kick global
+								});
+						}
+						
+						sub->AddOption<RegularOption>("Crash", "Trap In cage", []
+							{
+								Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
+								Object crashobject = OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY("v_ilev_chair02_ped"), pos.x, pos.y, pos.z, 1, 1, 1);
 
-		//						
-		//					});
-		//				sub->AddOption<RegularOption>("Non Host Kick", "Kick From Session", []
-		//					{
+								
+							});
+						sub->AddOption<RegularOption>("Non Host Kick", "Kick From Session", []
+							{
 
-		//						/*std::uint64_t args_6[] = { 1770262894, NULL, 0, 0 };
-		//						SCRIPT::TRIGGER_SCRIPT_EVENT(1, args_6, 4, NULL);*/
-		//					});
-		//				sub->AddOption<RegularOption>("Test Crash", "Test Crash From Session", []
-		//					{
-		//						/*std::uint64_t args_5[] = { -1386010354, NULL, 0, 0 };
-		//						SCRIPT::TRIGGER_SCRIPT_EVENT(1, args_5, 4, 1 << NULL);*/
+								/*std::uint64_t args_6[] = { 1770262894, NULL, 0, 0 };
+								SCRIPT::TRIGGER_SCRIPT_EVENT(1, args_6, 4, NULL);*/
+							});
+						sub->AddOption<RegularOption>("Test Crash", "Test Crash From Session", []
+							{
+								 Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
+								*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x9090;
+								auto veh = VEHICLE::CREATE_VEHICLE(-1041692462, pos.x + 5, pos.y + 5, pos.z, 0.f, TRUE, FALSE, FALSE);
 
-		//					});
-		//				sub->AddOption<RegularOption>("Script Kick", "Kick From Session", []
-		//					{
-		//						/*std::uint64_t args[] = { -145306724, NULL, 0, 0 };
-		//						SCRIPT::TRIGGER_SCRIPT_EVENT(1, args, 4, 1 << NULL);*/
+							});
+						sub->AddOption<RegularOption>("Script Kick", "Kick From Session", []
+							{
+								std::uint64_t args_1[] = { -145306724, 1, 0, 0 };
+								
+								g_pointers->m_TriggerScriptEvent(1, args_1, 4, NULL);
+								
+							});
+					});
 
-		//						
-		//					});
-		//			});
+				g_UiManager->AddSubmenu<RegularSubmenu>("Trolling", SelectedPlayerTrolling, [](RegularSubmenu* sub)
+					{
+						sub->AddOption<RegularOption>("Clone Player", "Clones Player", []
+							{
+								PED::CLONE_PED(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 1, 1, 1);
+							});
+						sub->AddOption<RegularOption>("Attach To Player", "Attaches You To Player", []
+							{
+								if (PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player) == PLAYER::PLAYER_PED_ID())
+								{
 
-		//		g_UiManager->AddSubmenu<RegularSubmenu>("Trolling", SelectedPlayerTrolling, [](RegularSubmenu* sub)
-		//			{
-		//				sub->AddOption<RegularOption>("Clone Player", "Clones Player", []
-		//					{
-		//						PED::CLONE_PED(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), 1, 1, 1);
-		//					});
-		//				sub->AddOption<RegularOption>("Attach To Player", "Attaches You To Player", []
-		//					{
-		//						if (PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL) == PLAYER::PLAYER_PED_ID())
-		//						{
+								}
+								else
+								{
+									ENTITY::ATTACH_ENTITY_TO_ENTITY(PLAYER::PLAYER_PED_ID(), PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, true, true, false, true, false, true);
+								}
+							});
+						sub->AddOption<RegularOption>("Detach Off Player", "Detach You From Player", []
+							{
+								ENTITY::DETACH_ENTITY(PLAYER::PLAYER_PED_ID(), true, true);
+							});
+						sub->AddOption<RegularOption>("Explode Player", "Blow Up Player", []
+							{
+								Vector3 targetCords = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false);
+								FIRE::ADD_EXPLOSION(targetCords.x, targetCords.y, targetCords.z, 29, 9999.0f, true, false, 0.0f, false);
+							});
+						sub->AddOption<RegularOption>("Airstrike Player", "Blow Up Player With Airstrike", []
+							{
+								if (PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL) == PLAYER::PLAYER_PED_ID())
+								{
+									NULL;
+								}
+								else
+								{
+									Ped selectedplayer = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL);
+									Ped playerPed = PLAYER::PLAYER_PED_ID();
+									Vector3 coords = ENTITY::GET_ENTITY_COORDS(selectedplayer, 1);
+									Hash airStrike = RAGE_JOAAT("WEAPON_AIRSTRIKE_ROCKET");
+									WEAPON::REQUEST_WEAPON_ASSET(airStrike, 31, false);
+									while (!WEAPON::HAS_WEAPON_ASSET_LOADED(airStrike)) {}
+									MISC::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(coords.x, coords.y, coords.z + 50.f, coords.x, coords.y, coords.z, 250, 1, airStrike, playerPed, 1, 0, -1.0);
+								}
+							});
+						sub->AddOption<RegularOption>("Cage Player", "Trap In cage", []
+							{
+								OBJECT::CREATE_OBJECT(959275690, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).z - 1.f, true, false, false);
+							});
+						sub->AddOption<RegularOption>("Tube Player", "Trap In Tube", []
+							{
+								Vector3 remotePos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0);
+								Object obj = OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY("stt_prop_stunt_tube_fn_01"), remotePos.x, remotePos.y, remotePos.z - 1.f, true, false, true);
+								ENTITY::SET_ENTITY_ROTATION(obj, 0.0f, 90.0f, 0.0f, 0, true);
+							});
+						sub->AddOption<RegularOption>("Tree Player", "Trap In Tree", []
+							{
+								Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
+								Object obj1 = OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY("prop_xmas_tree_int"), pos.x, pos.y, pos.z, 1, 1, 1);
+							});
 
-		//						}
-		//						else
-		//						{
-		//							ENTITY::ATTACH_ENTITY_TO_ENTITY(PLAYER::PLAYER_PED_ID(), PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), 0, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, true, true, false, true, false, true);
-		//						}
-		//					});
-		//				sub->AddOption<RegularOption>("Detach Off Player", "Detach You From Player", []
-		//					{
-		//						ENTITY::DETACH_ENTITY(PLAYER::PLAYER_PED_ID(), true, true);
-		//					});
-		//				sub->AddOption<RegularOption>("Explode Player", "Blow Up Player", []
-		//					{
-		//						Vector3 targetCords = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), false);
-		//						FIRE::ADD_EXPLOSION(targetCords.x, targetCords.y, targetCords.z, 29, 9999.0f, true, false, 0.0f, false);
-		//					});
-		//				sub->AddOption<RegularOption>("Airstrike Player", "Blow Up Player With Airstrike", []
-		//					{
-		//						if (PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL) == PLAYER::PLAYER_PED_ID())
-		//						{
-		//							NULL;
-		//						}
-		//						else
-		//						{
-		//							Ped selectedplayer = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL);
-		//							Ped playerPed = PLAYER::PLAYER_PED_ID();
-		//							Vector3 coords = ENTITY::GET_ENTITY_COORDS(selectedplayer, 1);
-		//							Hash airStrike = RAGE_JOAAT("WEAPON_AIRSTRIKE_ROCKET");
-		//							WEAPON::REQUEST_WEAPON_ASSET(airStrike, 31, false);
-		//							while (!WEAPON::HAS_WEAPON_ASSET_LOADED(airStrike)) {}
-		//							MISC::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(coords.x, coords.y, coords.z + 50.f, coords.x, coords.y, coords.z, 250, 1, airStrike, playerPed, 1, 0, -1.0);
-		//						}
-		//					});
-		//				sub->AddOption<RegularOption>("Cage Player", "Trap In cage", []
-		//					{
-		//						OBJECT::CREATE_OBJECT(959275690, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), false).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), false).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), false).z - 1.f, true, false, false);
-		//					});
-		//				sub->AddOption<RegularOption>("Tube Player", "Trap In Tube", []
-		//					{
-		//						Vector3 remotePos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), 0);
-		//						Object obj = OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY("stt_prop_stunt_tube_fn_01"), remotePos.x, remotePos.y, remotePos.z - 1.f, true, false, true);
-		//						ENTITY::SET_ENTITY_ROTATION(obj, 0.0f, 90.0f, 0.0f, 0, true);
-		//					});
-		//				sub->AddOption<RegularOption>("Tree Player", "Trap In Tree", []
-		//					{
-		//						Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL), true);
-		//						Object obj1 = OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY("prop_xmas_tree_int"), pos.x, pos.y, pos.z, 1, 1, 1);
-		//					});
+					});
 
-		//			});
+				g_UiManager->AddSubmenu<RegularSubmenu>("Friendly", SelectedPlayerFriendly, [](RegularSubmenu* sub)
+					{
 
-		//		g_UiManager->AddSubmenu<RegularSubmenu>("Friendly", SelectedPlayerFriendly, [](RegularSubmenu* sub)
-		//			{
-
-		//			});
+					});
 
 
 
@@ -1341,12 +1341,12 @@ namespace big
 					{
 						g_running = false;
 					});
-			sub->AddOption<SubOption>("Header", nullptr, SubmenuSettingsHeader);
+			//sub->AddOption<SubOption>("Header", nullptr, SubmenuSettingsHeader);
 			sub->AddOption<SubOption>("Infobar", nullptr, SubmenuSettingsSubmenuBar);
 			sub->AddOption<SubOption>("Options", nullptr, SubmenuSettingsOption);
 			sub->AddOption<SubOption>("Footer", nullptr, SubmenuSettingsFooter);
 			sub->AddOption<SubOption>("Description", nullptr, SubmenuSettingsDescription);
-			sub->AddOption<SubOption>("Input", nullptr, SubmenuSettingsInput);
+			//sub->AddOption<SubOption>("Input", nullptr, SubmenuSettingsInput);
 			sub->AddOption<SubOption>("Language", nullptr, SubmenuSettingsLanguage);
 			sub->AddOption<NumberOption<float>>("X Position", nullptr, &g_UiManager->m_PosX, 0.f, 1.f, 0.01f, 2);
 			sub->AddOption<NumberOption<float>>("Y Position", nullptr, &g_UiManager->m_PosY, 0.f, 1.f, 0.01f, 2);
@@ -1470,14 +1470,7 @@ namespace big
 			sub->AddOption<NumberOption<float>>("Text Size", "Size of the description text.", &g_UiManager->m_DescriptionTextSize, 0.1f, 2.f, 0.01f, 2);
 		});
 
-		g_UiManager->AddSubmenu<RegularSubmenu>("Input", SubmenuSettingsInput, [](RegularSubmenu* sub)
-		{
-			sub->AddOption<NumberOption<std::int32_t>>("Open Delay", nullptr, &g_UiManager->m_OpenDelay, 10, 1000, 10, 0);
-			sub->AddOption<NumberOption<std::int32_t>>("Back Delay", nullptr, &g_UiManager->m_BackDelay, 10, 1000, 10, 0);
-			sub->AddOption<NumberOption<std::int32_t>>("Enter Delay", nullptr, &g_UiManager->m_EnterDelay, 10, 1000, 10, 0);
-			sub->AddOption<NumberOption<std::int32_t>>("Vertical Delay", nullptr, &g_UiManager->m_VerticalDelay, 10, 1000, 10, 0);
-			sub->AddOption<NumberOption<std::int32_t>>("Horizontal Delay", nullptr, &g_UiManager->m_HorizontalDelay, 10, 1000, 10, 0);
-		});
+		
 
 		/*g_UiManager->AddSubmenu<RegularSubmenu>("Players", SubmenuPlayerList, [](RegularSubmenu* sub)
 		{
