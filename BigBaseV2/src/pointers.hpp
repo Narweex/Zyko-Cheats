@@ -14,6 +14,9 @@ namespace big
 	public:
 		HWND m_hwnd{};
 
+		using TriggerScriptEvent = int(int unk0, uint64_t* args, int argCount, int bitFlags);
+		TriggerScriptEvent* m_TriggerScriptEvent;
+
 		eGameState *m_game_state{};
 		bool *m_is_session_started{};
 
@@ -34,6 +37,8 @@ namespace big
 		IDXGISwapChain **m_swapchain{};
 
 		PVOID m_model_spawn_bypass;
+
+		
 
 		transaction_queue** m_transact_queue{};
 		functions::construct_basket_t m_construct_basket{};
