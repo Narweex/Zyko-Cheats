@@ -257,7 +257,7 @@ namespace big::UserInterface
 			m_SubmenuBarBackgroundColor);
 		DrawLeftText(
 			&leftText[0],
-			m_PosX + 0.003f,
+			m_PosX - 0.019f,
 			m_DrawBaseY + (m_SubmenuBarHeight / 2.f) - (GetTextHeight(m_SubmenuBarFont, m_SubmenuBarTextSize) / 1.5f),
 			m_SubmenuBarTextSize, m_SubmenuBarFont,
 			m_SubmenuBarTextColor,

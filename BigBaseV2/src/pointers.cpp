@@ -66,6 +66,11 @@ namespace big
 			m_swapchain = ptr.add(3).rip().as<IDXGISwapChain**>();
 		});
 
+		main_batch.add("TriggerScriptEvent", "48 8B C4 48 89 58 08 48 89 68 10 48 89 70 18 48 89 78 20 41 56 48 81 EC ? ? ? ? 45 8B F0 41 8B F9", [this](memory::handle ptr)
+			{
+				m_TriggerScriptEvent = ptr.as<decltype(m_TriggerScriptEvent)>();
+			});
+
 		main_batch.add("Model Spawn Bypass", "48 8B C8 FF 52 30 84 C0 74 05 48", [this](memory::handle ptr)
 		{
 			m_model_spawn_bypass = ptr.add(8).as<PVOID>();
