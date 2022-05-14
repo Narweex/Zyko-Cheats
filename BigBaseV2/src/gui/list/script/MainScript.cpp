@@ -15,6 +15,7 @@
 #include "gta/joaat.hpp"
 #include "script_global.hpp"
 #include "helpers/other.h"
+#include "../../list/script/Translation.hpp"
 
 namespace big
 {
@@ -133,7 +134,7 @@ namespace big
 			
 		});
 
-		g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Demo_sub"), SubmenuSelf, [](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Self Options"), SubmenuSelf, [](RegularSubmenu* sub)
 			{
 				sub->AddOption<SubOption>("Visions", "Change Player Visions", vis);
 				sub->AddOption<BoolOption<bool>>("God Mode", "You Cannot Die", &features::godmode, BoolDisplay::OnOff);
@@ -158,6 +159,7 @@ namespace big
 				sub->AddOption<BoolOption<bool>>("Super Jump", "Ever wanted to jump higher?", &features::superjumpbool, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Ultra Jump", "Jump Really High", &features::ultrajumpbool, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Forcefield", "Push everyone", &features::forcefield, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Off Radar", "Players wont see you on minimap", &features::offradar, BoolDisplay::OnOff);
 				sub->AddOption<RegularOption>("Clear Wanted", "Clear Player Wanted Level", []	
 				{
 					PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
@@ -337,6 +339,8 @@ namespace big
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Vehicle Movement", SubmenuVehicleMovement, [&](RegularSubmenu* sub)
 			{
+				sub->AddOption<BoolOption<bool>>("Bypass Max Speed", "Cleans Vehicle Automatically When Dirty", &features::speedbypass, BoolDisplay::OnOff);
+
 				sub->AddOption<SubOption>("Vehicle Multipliers", nullptr, SubmenuVehicleMultipliers);
 				if (features::smoothhornboost) {
 					features::hornboost = false;
@@ -397,12 +401,24 @@ namespace big
 				sub->AddOption<SubOption>("Vehicle Movement", nullptr, SubmenuVehicleMovement);
 				sub->AddOption<SubOption>("Vehicle Colors", nullptr, SubmenuVehicleColors);
 				//sub->AddOption<BoolOption<bool>>("Vehicle Godmode", nullptr, &g_MainScript->vehiclegodmode, BoolDisplay::OnOff);
+				sub->AddOption<RegularOption>("Max Tuning", "Tune the Vehicle To Maximum", []
+					{
+						Entity veh = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true));
+						for (int i = 0; i < 999; i++)
+						{
+							if (i > 16 && i < 23)
+								continue;
 
+							VEHICLE::SET_VEHICLE_MOD(veh, i, VEHICLE::GET_NUM_VEHICLE_MODS(veh, i) - 1, false);
+						}
+					});
 				sub->AddOption<RegularOption>("Repair Vehicle", "Repair Damages To Currnet Vehicle", []
 					{
 						VEHICLE::SET_VEHICLE_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
 						VEHICLE::SET_VEHICLE_DEFORMATION_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
 					});
+				sub->AddOption<BoolOption<bool>>("Repair Vehicle Loop", "Repair Vehicle Automatically When Demaged", &features::fixloop, BoolDisplay::OnOff);
+
 				//sub->AddOption<RegularOption>("Set License Plate", "Set Custom Text", []
 				//	{
 				//		CharKeyboard("Text", 21, "nig");
@@ -413,6 +429,8 @@ namespace big
 					{
 						VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())), 0);
 					});
+				sub->AddOption<BoolOption<bool>>("Clean Vehicle Loop", "Cleans Vehicle Automatically When Dirty", &features::cleanloop, BoolDisplay::OnOff);
+
 				sub->AddOption<RegularOption>("Stop Vehicle", "Set Vehicle Stationary", []
 					{
 						Vehicle Veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID()), false);
@@ -459,7 +477,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Sports", SubmenuVehSpawnerSports, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Sports1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -468,7 +486,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Muscle", SubmenuVehSpawnerMuscle, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Muscle1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -477,7 +495,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Super", SubmenuVehSpawnerSuper, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Super1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -486,7 +504,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Sport Classics", SubmenuVehSpawnerSportClassics, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::SportsClassics1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -495,7 +513,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Sedans", SubmenuVehSpawnerSedans, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Sedans1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -504,7 +522,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("SUVs", SubmenuVehSpawnerSUVs, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::SUVs1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -513,7 +531,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Compacts", SubmenuVehSpawnerCompacts, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Compacts1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -522,7 +540,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Coupes", SubmenuVehSpawnerCoupes, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Coupes1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -531,7 +549,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Motorcycles", SubmenuVehSpawnerMotorcycles, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Motorcycles1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -540,7 +558,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Off-Road", SubmenuVehSpawnerOffRoad, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::OffRoad1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -549,7 +567,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Cycles", SubmenuVehSpawnerCycles, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Cycles1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -558,7 +576,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Vans", SubmenuVehSpawnerVans, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Vans1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -567,7 +585,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Utility", SubmenuVehSpawnerUltility, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Utility1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -576,7 +594,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Industrial", SubmenuVehSpawnerIndustrial, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Industrial1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -585,7 +603,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Sevice", SubmenuVehSpawnerService, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Service1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -594,7 +612,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Commercial", SubmenuVehSpawnerCommercial, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Commercial1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -603,7 +621,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Emergency", SubmenuVehSpawnerEmergency, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Emergency1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -612,7 +630,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Military", SubmenuVehSpawnerMilitary, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Military1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -621,7 +639,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Boats", SubmenuVehSpawnerBoats, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Boats1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -630,7 +648,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Planes", SubmenuVehSpawnerPlanes, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Planes1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -639,7 +657,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Helicopters", SubmenuVehSpawnerHelicopters, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Helicopters1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Clean Currnet Vehicle", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -680,6 +698,8 @@ namespace big
 					{
 						WEAPON::REMOVE_ALL_PED_WEAPONS(PLAYER::PLAYER_PED_ID(), true);
 					});
+				sub->AddOption<BoolOption<bool>>("Delete Gun", "Your gun will never be empty", &features::deletegun, BoolDisplay::OnOff);
+
 			});
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("World_Options", WorldOptions, [](RegularSubmenu* sub)
@@ -1317,8 +1337,9 @@ namespace big
 		//	});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Miscellaneous", misc, [](RegularSubmenu* sub)
 			{
-				sub->AddOption<BoolOption<bool>>("Mobile_Radio", "Vibe to the music everywhere!", &features::mobileradio, BoolDisplay::OnOff);
-				sub->AddOption<BoolOption<bool>>("Disable_Phone", "English Dave wont bother you", &features::nophone, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Mobile Radio", "Vibe to the music everywhere!", &features::mobileradio, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Free Camera", "Vibe to the music everywhere!", &features::freecam, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Disable Phone", "English Dave wont bother you", &features::nophone, BoolDisplay::OnOff);
 				sub->AddOption<RegularOption>("Skip Cutscene", "Skips current cutscene", []
 					{
 						
@@ -1330,6 +1351,29 @@ namespace big
 						MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("Freemode");
 						//
 					});
+			});
+
+		g_UiManager->AddSubmenu<RegularSubmenu>("Language", SubmenuSettingsLanguage, [](RegularSubmenu* sub)
+			{
+				namespace fs = std::filesystem;
+				fs::directory_iterator dirIt{ g_TranslationManager->GetTranslationDirectory() };
+				
+				
+				for (auto&& dirEntry : dirIt)
+				{
+					if (dirEntry.is_regular_file())
+					{
+						auto path = dirEntry.path();
+						if (path.has_filename())
+						{
+							sub->AddOption<RegularOption>(path.stem().u8string().c_str(), nullptr, [=]
+								{
+									g_TranslationManager->LoadTranslations(path.stem().u8string().c_str());
+								});
+						}
+					}
+				}
+
 			});
 
 
