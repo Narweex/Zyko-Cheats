@@ -19,6 +19,7 @@ namespace big::features
 	inline int level{};
 	void set_crew_rank(int rpvalue);
 	void teleport(int x, int y, int z);
+	void spawn_obj(const char* object);
 	inline bool deletegun = false;
 	inline bool offradar = false;
 	inline bool fixloop = false;

@@ -10,6 +10,8 @@
 #include "../../BigBaseV2/math.hpp"
 #include <control.h>
 #include <script_local.hpp>
+#include <sstream>
+
 
 namespace big
 {
@@ -57,6 +59,13 @@ namespace big
 		HUD::SET_TEXT_DROPSHADOW(0, 0, 0, 0, 0);
 		HUD::SET_TEXT_EDGE(0, 0, 0, 0, 0);
 		HUD::SET_TEXT_OUTLINE();
+	}
+
+	void features::spawn_obj(const char* object)
+	{
+		const char* obj = (const char*)object;
+		Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
+		OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY(obj), pos.x + 5, pos.y + 5, pos.z + 3, 1, 1, 1);
 	}
 	void features::spawn_veh(Hash vehicle)
 	{
@@ -164,23 +173,10 @@ namespace big
 		}
 	}
 	
-	void notifyMap(char* fmt, ...)
+	void notifyMap(std::string content)
 	{
-		char buf[2048] = { 0 };
-		va_list va_alist;
-
-		va_start(va_alist, fmt);
-		vsprintf_s(buf, fmt, va_alist);
-		va_end(va_alist);
-
-		char buff2[2048] = { 0 };
-		sprintf_s(buff2, "%s", buf);
-
-		HUD::SET_TEXT_OUTLINE();
-		//HUD::_SET_NOTIFICATION_TEXT_ENTRY("STRING");
-		HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(buff2);
-		//HUD::_DRAW_NOTIFICATION(FALSE, FALSE);
-	}	void notifyMap(std::string str) { notifyMap(&str[0]); }
+		NULL;
+	}	
 
 	void features::basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items)
 	{
