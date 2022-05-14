@@ -19,6 +19,12 @@ namespace big::features
 	inline int level{};
 	void set_crew_rank(int rpvalue);
 	void teleport(int x, int y, int z);
+	inline bool deletegun = false;
+	inline bool offradar = false;
+	inline bool fixloop = false;
+	inline bool cleanloop = false;
+	inline bool speedbypass = true;
+	inline bool freecam = false;;
 	inline int crew_level{};
 	inline int SessionInfoX = 0.020f;
 	inline int SessionInfoText = 0.4f;

@@ -7,6 +7,9 @@
 #include "helpers/player_info.h"
 #include "script_global.hpp"
 #include "gta_util.hpp"
+#include "../../BigBaseV2/math.hpp"
+#include <control.h>
+#include <script_local.hpp>
 
 namespace big
 {
@@ -32,6 +35,18 @@ namespace big
 		HUD::SET_TEXT_OUTLINE();
 		//HUD::_DRAW_TEXT(X, Y);
 	}
+
+	static bool bLastFreeCam = false;
+
+	static float speed = 0.5f;
+	static float mult = 0.f;
+
+	static Cam cCam = -1;
+	static Vector3 vecPosition;
+	static Vector3 vecRot;
+
+	
+
 	void setupdraw()
 	{
 		HUD::SET_TEXT_FONT(0);
@@ -57,6 +72,8 @@ namespace big
 		auto veh = VEHICLE::CREATE_VEHICLE(hash, pos.x+5, pos.y+5, pos.z, 0.f, TRUE, FALSE, FALSE);
 		*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x0574;
 
+		
+
 		script::get_current()->yield();
 		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(hash);
 		if (*g_pointers->m_is_session_started)
@@ -67,6 +84,7 @@ namespace big
 			if (NETWORK::NETWORK_GET_ENTITY_IS_NETWORKED(veh))
 				NETWORK::SET_NETWORK_ID_EXISTS_ON_ALL_MACHINES(networkId, true);
 			VEHICLE::SET_VEHICLE_IS_STOLEN(veh, FALSE);
+			VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, "Zyko");
 		}
 
 		if (features::in_vehicle) {
@@ -78,8 +96,13 @@ namespace big
 			{
 				VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, true, true);
 				VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(veh, true);
+				Vector3 position = (ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID()), true));
+				teleport(position.x, position.y, position.z + 50);
+
 			}
 			PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), veh, -1);
+			Entity entity = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false));
+			ENTITY::SET_ENTITY_MAX_SPEED(entity, 5000);
 		}
 		else
 			VEHICLE::SET_VEHICLE_ON_GROUND_PROPERLY(veh, 0.0f);
@@ -94,6 +117,7 @@ namespace big
 				VEHICLE::SET_VEHICLE_MOD(veh, i, VEHICLE::GET_NUM_VEHICLE_MODS(veh, i) - 1, false);
 				GRAPHICS::USE_PARTICLE_FX_ASSET(xorstr_("scr_rcbarry2"));
 			}
+			
 		}
 
 		if (features::vehicle_godmode) {
@@ -426,17 +450,156 @@ namespace big
 						PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_PED_ID(), 0, true);
 		
 					}
+					if (freecam)
+					{
+						if (g_local_player == nullptr) return;
+
+						Entity ent = PLAYER::PLAYER_PED_ID();
+						if (!bLastFreeCam) return;
+
+						if (!bLastFreeCam)
+						{
+							cCam = CAM::CREATE_CAM("DEFAULT_SCRIPTED_CAMERA", 0);
+
+							vecPosition = CAM::GET_GAMEPLAY_CAM_COORD();
+							vecRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
+
+							ENTITY::FREEZE_ENTITY_POSITION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), true);
+							CAM::SET_CAM_COORD(cCam, vecPosition.x, vecPosition.y, vecPosition.z);
+							CAM::SET_CAM_ROT(cCam, vecRot.x, vecRot.y, vecRot.z, 2);
+							CAM::SET_CAM_ACTIVE(cCam, true);
+							CAM::RENDER_SCRIPT_CAMS(true, true, 500, true, true, 0);
+
+							bLastFreeCam = true;
+						}
+						else if (bLastFreeCam)
+						{
+							ENTITY::FREEZE_ENTITY_POSITION(PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()), false);
+							CAM::SET_CAM_ACTIVE(cCam, false);
+							CAM::RENDER_SCRIPT_CAMS(false, true, 500, true, true, 0);
+							CAM::DESTROY_CAM(cCam, false);
+							STREAMING::SET_FOCUS_ENTITY(PLAYER::PLAYER_PED_ID());
+
+							bLastFreeCam = false;
+
+							return;
+						}
+
+						PAD::DISABLE_ALL_CONTROL_ACTIONS(0);
+						const int controls[] = { 1, 2, 3, 4, 5, 6, 270, 271, 272, 273 };
+						for (int control : controls)
+							PAD::ENABLE_CONTROL_ACTION(2, control, true);
+
+						Vector3 vecChange = { 0.f, 0.f, 0.f };
+
+						// Left Shift
+						if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 21))
+							vecChange.z += speed / 2;
+						// Left Control
+						if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 36))
+							vecChange.z -= speed / 2;
+						// Forward
+						if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 32))
+							vecChange.y += speed;
+						// Backward
+						if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 33))
+							vecChange.y -= speed;
+						// Left
+						if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 34))
+							vecChange.x -= speed;
+						// Right
+						if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 35))
+							vecChange.x += speed;
+
+						if (vecChange.x == 0.f && vecChange.y == 0.f && vecChange.z == 0.f)
+							mult = 0.f;
+						else if (mult < 10)
+							mult += 0.15f;
+
+						Vector3 rot = CAM::GET_CAM_ROT(cCam, 2);
+						//float pitch = math::deg_to_rad(rot.x); // vertical
+						//float roll = rot.y;
+						float yaw = math::deg_to_rad(rot.z); // horizontal
+
+						vecPosition.x += (vecChange.x * cos(yaw) - vecChange.y * sin(yaw)) * mult;
+						vecPosition.y += (vecChange.x * sin(yaw) + vecChange.y * cos(yaw)) * mult;
+						vecPosition.z += vecChange.z * mult;
+
+						CAM::SET_CAM_COORD(cCam, vecPosition.x, vecPosition.y, vecPosition.z);
+						STREAMING::SET_FOCUS_POS_AND_VEL(vecPosition.x, vecPosition.y, vecPosition.z, 0.f, 0.f, 0.f);
+
+						vecRot = CAM::GET_GAMEPLAY_CAM_ROT(2);
+						CAM::SET_CAM_ROT(cCam, vecRot.x, vecRot.y, vecRot.z, 2);
+					}
+					if (deletegun)
+					{
+
+						
+							if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 25))
+							{
+								PLAYER::DISABLE_PLAYER_FIRING(PLAYER::GET_PLAYER_INDEX(), true);
+
+								if (PAD::IS_DISABLED_CONTROL_JUST_RELEASED(0, 24))
+								{
+									Entity entity;
+									
+											Vector3 entLoc = ENTITY::GET_ENTITY_COORDS(entity, true);
+
+											NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(entity);
+								
+												
+													ENTITY::DETACH_ENTITY(entity, 1, 1);
+													ENTITY::SET_ENTITY_VISIBLE(entity, false, false);
+													ENTITY::SET_ENTITY_COORDS_NO_OFFSET(entity, 0, 0, 0, 0, 0, 0);
+													ENTITY::SET_ENTITY_AS_MISSION_ENTITY(entity, 1, 1);
+													ENTITY::SET_ENTITY_AS_NO_LONGER_NEEDED(&entity);
+													ENTITY::DELETE_ENTITY(&entity);
+												
+											
+										
+									
+								}
+							}					
+					}
+					
 					
 					break;
 				case 1:
 					//250ms
-					
+					if (offradar)
+					{
+						*script_global(2426865).at((PLAYER::GET_PLAYER_INDEX(), 451)).at(207).as<int*>() = 1;
+						
+						*script_global(2703660).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;
+						
+
+					}
+					if (fixloop)
+					{
+						VEHICLE::SET_VEHICLE_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
+						VEHICLE::SET_VEHICLE_DEFORMATION_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
+					}
+					if (cleanloop)
+					{
+						VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())), 0);
+					}
 					break;
 				case 2:
 					//2000ms
 					break;
 				case 3:
 					//25003ms
+					if (speedbypass)
+					{
+						Entity entity = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false));
+						ENTITY::SET_ENTITY_MAX_SPEED(entity, 5000);
+						ENTITY::SET_ENTITY_MAX_SPEED(PLAYER::PLAYER_PED_ID(), 5000);
+					}
+					else
+					{
+						Entity entity = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false));
+						ENTITY::SET_ENTITY_MAX_SPEED(entity, 540);
+					}
 					break;
 				}
 
