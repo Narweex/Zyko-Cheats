@@ -47,6 +47,7 @@ namespace big
 		SubmenuWorld,
 		SubmenuTeleport,
 		SubmenuMiscellaneous,
+		SubmenuSettingsObjectSpanwer,
 		Weaponz,
 		money,
 		stats,
@@ -1337,6 +1338,7 @@ namespace big
 		//	});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Miscellaneous", misc, [](RegularSubmenu* sub)
 			{
+				sub->AddOption<SubOption>("Pbject Spawner", nullptr, SubmenuSettingsObjectSpanwer);
 				sub->AddOption<BoolOption<bool>>("Mobile Radio", "Vibe to the music everywhere!", &features::mobileradio, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Free Camera", "Vibe to the music everywhere!", &features::freecam, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Disable Phone", "English Dave wont bother you", &features::nophone, BoolDisplay::OnOff);
@@ -1374,6 +1376,18 @@ namespace big
 					}
 				}
 
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Object Spawner", SubmenuSettingsObjectSpanwer, [](RegularSubmenu* sub)
+			{
+				for (auto& obj : Lists::Objects1) {
+					sub->AddOption<RegularOption>(obj, "Spawn this car", [obj]
+						{
+							features::spawn_obj(obj);
+						});
+				}
+				
+
+				
 			});
 
 
