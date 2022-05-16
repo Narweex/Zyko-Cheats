@@ -65,7 +65,13 @@ namespace big
 	{
 		const char* obj = (const char*)object;
 		Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
-		OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY(obj), pos.x + 5, pos.y + 5, pos.z + 3, 1, 1, 1);
+		OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY(obj), pos.x + 1, pos.y + 1, pos.z, 1, 1, 1);
+	}
+	void features::play_particle(const char* particle)
+	{
+		GRAPHICS::_USE_PARTICLE_FX_ASSET_NEXT_CALL(particle);
+		//GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY(particle, PLAYER::PLAYER_PED_ID(), 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 1.0, false, false, false);
+
 	}
 	void features::spawn_veh(Hash vehicle)
 	{

@@ -20,6 +20,7 @@ namespace big::features
 	void set_crew_rank(int rpvalue);
 	void teleport(int x, int y, int z);
 	void spawn_obj(const char* object);
+	void play_particle(const char* particle);
 	inline bool deletegun = false;
 	inline bool offradar = false;
 	inline bool fixloop = false;
