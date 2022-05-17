@@ -75,6 +75,7 @@ namespace big
 		gar,
 		safehouse,
 		ClearSubmenu,
+		SubmenuSettingsParticles,
 		SessionInfoSubmenu,
 		SubmenuVehSpawnerSettings,
 		SubmenuVehSpawnerSports,
@@ -160,6 +161,7 @@ namespace big
 				sub->AddOption<BoolOption<bool>>("Super Jump", "Ever wanted to jump higher?", &features::superjumpbool, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Ultra Jump", "Jump Really High", &features::ultrajumpbool, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Forcefield", "Push everyone", &features::forcefield, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Super Man", "Just Fly", &features::superman, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Off Radar", "Players wont see you on minimap", &features::offradar, BoolDisplay::OnOff);
 				sub->AddOption<RegularOption>("Clear Wanted", "Clear Player Wanted Level", []	
 				{
@@ -673,7 +675,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Session Info", SessionInfoSubmenu, [&](RegularSubmenu* sub)
 			{
 				sub->AddOption<BoolOption<bool>>("Session Info", "Displays Session Info", &features::sessioninfo, BoolDisplay::OnOff);
-				
+				sub->AddOption<BoolOption<bool>>("Infinite ammo", "Your gun will never be empty", &features::playeresp, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Speedometer", "Displays Session Info", &features::speedometer, BoolDisplay::OnOff);
 			});
 
@@ -695,11 +697,14 @@ namespace big
 						WEAPON::SET_PED_AMMO(PLAYER::PLAYER_PED_ID(), Ammo, 9999, 9999);
 					});
 				sub->AddOption<BoolOption<bool>>("Infinite ammo", "Your gun will never be empty", &features::infiniteammo, BoolDisplay::OnOff);
+
 				sub->AddOption<RegularOption>("Remove Weapons", "Remove Weapons", []
 					{
 						WEAPON::REMOVE_ALL_PED_WEAPONS(PLAYER::PLAYER_PED_ID(), true);
 					});
 				sub->AddOption<BoolOption<bool>>("Delete Gun", "Your gun will never be empty", &features::deletegun, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Aimbot", "Are you a noob?", &features::aimbot, BoolDisplay::OnOff);
+
 
 			});
 
@@ -1272,6 +1277,7 @@ namespace big
 								Vector3 targetCords = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false);
 								FIRE::ADD_EXPLOSION(targetCords.x, targetCords.y, targetCords.z, 29, 9999.0f, true, false, 0.0f, false);
 							});
+						sub->AddOption<BoolOption<bool>>("Fuck Their Camera", "Just a Little Trolling", &features::fucktheircam, BoolDisplay::OnOff);
 						sub->AddOption<RegularOption>("Airstrike Player", "Blow Up Player With Airstrike", []
 							{
 								if (PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL) == PLAYER::PLAYER_PED_ID())
@@ -1338,7 +1344,9 @@ namespace big
 		//	});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Miscellaneous", misc, [](RegularSubmenu* sub)
 			{
-				sub->AddOption<SubOption>("Pbject Spawner", nullptr, SubmenuSettingsObjectSpanwer);
+				sub->AddOption<SubOption>("Object Spawner", nullptr, SubmenuSettingsObjectSpanwer);
+				sub->AddOption<SubOption>("Particles", nullptr, SubmenuSettingsParticles);
+				sub->AddOption<BoolOption<bool>>("Money Drop On Self [~r~RISKY]", "Vibe to the music everywhere!", &features::selfdrop, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Mobile Radio", "Vibe to the music everywhere!", &features::mobileradio, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Free Camera", "Vibe to the music everywhere!", &features::freecam, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Disable Phone", "English Dave wont bother you", &features::nophone, BoolDisplay::OnOff);
@@ -1386,9 +1394,18 @@ namespace big
 						});
 				}
 				
-
-				
 			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Particles", SubmenuSettingsParticles, [](RegularSubmenu* sub)
+			{
+				for (auto& particle : Lists::Particles1) {
+					sub->AddOption<RegularOption>(particle, "Play This Particle", [particle]
+						{
+							features::play_particle(particle);
+						});
+				}
+
+			});
+
 
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Settings", SubmenuSettings, [](RegularSubmenu* sub)
