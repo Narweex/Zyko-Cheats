@@ -1,4 +1,5 @@
 #include <gta/joaat.hpp>
+#include <filesystem>
 namespace big
 {
 	class TranslationManager
@@ -6,7 +7,7 @@ namespace big
 	public:
 		explicit TranslationManager()
 		{
-			std::snprintf(&m_TranslationDir[0], sizeof(m_TranslationDir) - 1, "C:\\Zyko\\Translations\\");
+			std::snprintf(&m_TranslationDir[0], sizeof(m_TranslationDir) - 1, "%s\\Zyko\\Translations\\", std::getenv("appdata"));
 			
 				if (!std::filesystem::exists(&m_TranslationDir[0]))
 					std::filesystem::create_directory(&m_TranslationDir[0]);

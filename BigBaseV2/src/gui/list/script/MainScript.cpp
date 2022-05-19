@@ -406,14 +406,9 @@ namespace big
 				//sub->AddOption<BoolOption<bool>>("Vehicle Godmode", nullptr, &g_MainScript->vehiclegodmode, BoolDisplay::OnOff);
 				sub->AddOption<RegularOption>("Max Tuning", "Tune the Vehicle To Maximum", []
 					{
-						Entity veh = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true));
-						for (int i = 0; i < 999; i++)
-						{
-							if (i > 16 && i < 23)
-								continue;
-
-							VEHICLE::SET_VEHICLE_MOD(veh, i, VEHICLE::GET_NUM_VEHICLE_MODS(veh, i) - 1, false);
-						}
+						int Vehicle;
+						Vehicle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::GET_PLAYER_PED(features::g_selected_player), 0);
+						features::maxvehicle(Vehicle);
 					});
 				sub->AddOption<RegularOption>("Repair Vehicle", "Repair Damages To Currnet Vehicle", []
 					{
@@ -1132,6 +1127,8 @@ namespace big
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Players", SubmenuPlayerList, [](RegularSubmenu* sub)
 			{
+				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+
 				for (std::uint32_t i = 0; i < 32; ++i)
 				{
 					if (auto ped = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i))
@@ -1388,7 +1385,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Object Spawner", SubmenuSettingsObjectSpanwer, [](RegularSubmenu* sub)
 			{
 				for (auto& obj : Lists::Objects1) {
-					sub->AddOption<RegularOption>(obj, "Spawn this car", [obj]
+					sub->AddOption<RegularOption>(obj, "Spawn this object", [obj]
 						{
 							features::spawn_obj(obj);
 						});
