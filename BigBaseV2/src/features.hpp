@@ -21,6 +21,7 @@ namespace big::features
 	void teleport(int x, int y, int z);
 	void spawn_obj(const char* object);
 	void play_particle(const char* particle);
+	void maxvehicle(int VehicleHandle);
 	inline bool superman = false;
 	inline bool playeresp = false;
 	inline bool fucktheircam = false;

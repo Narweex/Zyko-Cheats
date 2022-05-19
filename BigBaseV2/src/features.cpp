@@ -83,6 +83,36 @@ namespace big
 	{
 		return degs * 3.141592653589793f / 180.f;
 	}
+	void features::maxvehicle(int VehicleHandle)
+	{
+		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(VehicleHandle, "Zyko");
+		VEHICLE::SET_VEHICLE_DIRT_LEVEL(VehicleHandle, 0.0f);
+		VEHICLE::SET_VEHICLE_MOD_KIT(VehicleHandle, 0);
+		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT_INDEX(VehicleHandle, 5);
+		VEHICLE::TOGGLE_VEHICLE_MOD(VehicleHandle, 18, 1);
+		VEHICLE::TOGGLE_VEHICLE_MOD(VehicleHandle, 22, 1);
+		VEHICLE::TOGGLE_VEHICLE_MOD(VehicleHandle, 20, 1);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 16, 5, 0);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 12, 2, 0);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 11, 3, 0);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 14, 57, 0);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 15, 3, 0);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 13, 2, 0);
+		VEHICLE::SET_VEHICLE_WHEEL_TYPE(VehicleHandle, 6);
+		VEHICLE::SET_VEHICLE_WINDOW_TINT(VehicleHandle, 5);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 23, 19, 1);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 0, 1, 0);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 1, 1, 0);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 2, 1, 0);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 3, 1, 0);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 4, 1, 0);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 5, 1, 0);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 6, 1, 0);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 7, 1, 0);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 8, 1, 0);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 9, 1, 0);
+		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 10, 1, 0);
+	}
 	///////////////////////////////////////////////////////   SPAWN VOIDS   ///////////////////////////////////////////////////////
 	void features::spawn_obj(const char* object)
 	{
@@ -92,7 +122,7 @@ namespace big
 	}
 	void features::play_particle(const char* particle)
 	{
-		GRAPHICS::_USE_PARTICLE_FX_ASSET_NEXT_CALL(particle);
+		//GRAPHICS::_USE_PARTICLE_FX_ASSET_NEXT_CALL(particle);
 		//GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY(particle, PLAYER::PLAYER_PED_ID(), 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 1.0, false, false, false);
 
 	}
@@ -313,80 +343,99 @@ namespace big
 					if (forcefield) {
 						
 						Player playerPed = PLAYER::PLAYER_PED_ID();
-						PED::SET_PED_CAN_RAGDOLL(playerPed, false);
+						PED::SET_PED_CAN_RAGDOLL(playerPed, false); 
 						Vector3 pCoords = ENTITY::GET_ENTITY_COORDS(playerPed, 0);
-						FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z+0.1f, 7, 9.0f, false, true, 0.0f, 1);
-						FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z+0.1f, 7, 9.0f, false, true, 0.0f, 1);
-						FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z+0.1f, 7, 9.0f, false, true, 0.0f, 1);
-						FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z+0.1f, 7, 9.0f, false, true, 0.0f, 1);
-						FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z+0.1f, 7, 9.0f, false, true, 0.0f, 1);
-						FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z+0.1f, 7, 9.0f, false, true, 0.0f, 1);
+						FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z, 16, 50.00f, 0, 1, 0, 0);
 
+					}
+					if (hornboost)
+					{
+						if (PLAYER::IS_PLAYER_PRESSING_HORN(PLAYER::PLAYER_ID()))
+						{
+							Vehicle Veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID()), false);
+							NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(Veh);
+							if (NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(Veh))
+							{
+								VEHICLE::SET_VEHICLE_FORWARD_SPEED(Veh, hornboostvalue);
+								if (hornboosteffect)
+								{
+									GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 0, 0);
+								}
+							}
+						}
+						else {
+							GRAPHICS::
+						}
 					}
 					if (freecam)
 					{
+						float heading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();
 						Ped playerPed = PLAYER::PLAYER_PED_ID();
 						Vector3 pos = ENTITY::GET_ENTITY_COORDS(playerPed, false);
-						ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, pos.x, pos.y, pos.z, false, false, false);
+						ENTITY::SET_ENTITY_COMPLETELY_DISABLE_COLLISION(playerPed, 1, 1);
+						ENTITY::SET_ENTITY_HEADING(playerPed, heading);
+
+
+
+
+
+						
+						
+						
 						if (gta_util::IsKeyPressed(0x53) || PAD::IS_DISABLED_CONTROL_JUST_PRESSED(2, 268)) {
 							float fivef = 5.5f;
-							float heading = ENTITY::GET_ENTITY_HEADING(playerPed);
+							float heading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();
 							float xVec = fivef * sin(degToRad(heading)) * -1.0f;
 							float yVec = fivef * cos(degToRad(heading));
-							ENTITY::SET_ENTITY_HEADING(playerPed, heading);
+							
 
 							pos.x -= xVec, pos.y -= yVec;
 							ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, pos.x, pos.y, pos.z, false, false, false);
 						}
 						if (gta_util::IsKeyPressed(0x57) || PAD::IS_DISABLED_CONTROL_JUST_PRESSED(2, 269)) {
 							float fivef = .5f;
-							float heading = ENTITY::GET_ENTITY_HEADING(playerPed);
+							float heading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();							
 							float xVec = fivef * sin(degToRad(heading)) * -1.0f;
 							float yVec = fivef * cos(degToRad(heading));
-							ENTITY::SET_ENTITY_HEADING(playerPed, heading);
 
 							pos.x += xVec, pos.y += yVec;
 							ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, pos.x, pos.y, pos.z, false, false, false);
 						}
 						if (gta_util::IsKeyPressed(0x41) || PAD::IS_DISABLED_CONTROL_JUST_PRESSED(2, 266)) {
 							float fivef = .5f;
-							float heading = ENTITY::GET_ENTITY_HEADING(playerPed);
-							ENTITY::SET_ENTITY_HEADING(playerPed, heading + 0.5f);
+							float heading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();							
 						}
 						if (gta_util::IsKeyPressed(0x44) || PAD::IS_DISABLED_CONTROL_JUST_PRESSED(2, 271)) {
 							float fivef = .5f;
-							float heading = ENTITY::GET_ENTITY_HEADING(playerPed);
-							ENTITY::SET_ENTITY_HEADING(playerPed, heading - 0.5f);
+							float heading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();							
 						}
 						if (gta_util::IsKeyPressed(VK_SHIFT)) {
-							float heading = ENTITY::GET_ENTITY_HEADING(playerPed);
-							ENTITY::SET_ENTITY_HEADING(playerPed, heading);
+							float heading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();							
 
 							pos.z -= 0.5;
 							ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, pos.x, pos.y, pos.z, false, false, false);
 						}
 						if (gta_util::IsKeyPressed(VK_SPACE)) {
-							float heading = ENTITY::GET_ENTITY_HEADING(playerPed);
-							ENTITY::SET_ENTITY_HEADING(playerPed, heading);
+							float heading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();							
 
 							pos.z += 0.5;
 							ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, pos.x, pos.y, pos.z, false, false, false);
 						}
+
 					}
 					if (deletegun)
 					{
-						Entity EntityTarget;
-						if (PLAYER::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(PLAYER::PLAYER_ID(), &EntityTarget) && gta_util::IsKeyPressed(VK_LBUTTON))
-						{
-							Vector3 EntityTargetPos = ENTITY::GET_ENTITY_COORDS(EntityTarget, 0);
-							PLAYER::DISABLE_PLAYER_FIRING(PLAYER::PLAYER_ID(), true);
-							RequestControlOfEnt(EntityTarget);
-							EntityTarget = PED::GET_VEHICLE_PED_IS_IN(EntityTarget, 0);
-							ENTITY::SET_ENTITY_AS_MISSION_ENTITY(EntityTarget, true, true);
-							VEHICLE::DELETE_VEHICLE(&EntityTarget);
-							ENTITY::DELETE_ENTITY(&EntityTarget);
+						Entity delentity;
+						if (PLAYER::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(PLAYER::PLAYER_ID(), &delentity)) {
+							if (ENTITY::DOES_ENTITY_EXIST(delentity) && NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(delentity)) {
+								if (PED::IS_PED_SHOOTING(PLAYER::PLAYER_PED_ID())) {
+									ENTITY::DETACH_ENTITY(delentity, 1, 1);
+									ENTITY::SET_ENTITY_COORDS_NO_OFFSET(delentity, 0, 0, 0, 0, 0, 0);
+									ENTITY::SET_ENTITY_AS_MISSION_ENTITY(delentity, 0, 1);
+									ENTITY::DELETE_ENTITY(&delentity);
+								}
+							}
 						}
-						PLAYER::DISABLE_PLAYER_FIRING(PLAYER::PLAYER_ID(), false);
 					}
 
 					if (ultrarunbool)
@@ -417,6 +466,25 @@ namespace big
 					{
 						GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 						MISC::SET_TIME_SCALE(1);
+					}
+					if (smoothhornboost)
+					{
+						if (PLAYER::IS_PLAYER_PRESSING_HORN(PLAYER::PLAYER_ID()))
+						{
+							Vehicle Veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID()), false);
+							NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(Veh);
+							if (NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(Veh))
+							{
+								VEHICLE::SET_VEHICLE_FORWARD_SPEED(Veh, ENTITY::GET_ENTITY_SPEED(Veh) + 1);
+								if (hornboosteffect)
+								{
+									if (PLAYER::IS_PLAYER_PRESSING_HORN(PLAYER::PLAYER_ID()))
+									{
+										GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 1, false);
+									}
+								}
+							}
+						}
 					}
 					if (superman)
 					{
@@ -548,48 +616,14 @@ namespace big
 
 
 					if (spectateplayer) {
-						Ped SelectedCoords = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL);
-						//GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(g_SelectedPlayer), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(g_SelectedPlayer), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(g_SelectedPlayer), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.25, 0.25, 0.25, 200, 94, 100, 255, 1, 1, 1, 0, 0, 0, 0);
-						NETWORK::NETWORK_SET_IN_SPECTATOR_MODE(NULL, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL));
+						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.25, 0.25, 0.25, 200, 94, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+						NETWORK::NETWORK_SET_IN_SPECTATOR_MODE(true, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
 					}
 					else {
-						NETWORK::NETWORK_SET_IN_SPECTATOR_MODE(true, PLAYER::PLAYER_PED_ID());
+						NETWORK::NETWORK_SET_IN_SPECTATOR_MODE(false, PLAYER::PLAYER_PED_ID());
 					}
-					if (smoothhornboost)
-					{
-						if (PLAYER::IS_PLAYER_PRESSING_HORN(PLAYER::PLAYER_ID()))
-						{
-							Vehicle Veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID()), false);
-							NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(Veh);
-							if (NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(Veh))
-							{
-								VEHICLE::SET_VEHICLE_FORWARD_SPEED(Veh, ENTITY::GET_ENTITY_SPEED(Veh) + 1);
-								if (hornboosteffect)
-								{
-									if (PLAYER::IS_PLAYER_PRESSING_HORN(PLAYER::PLAYER_ID()))
-									{
-										GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 1, false);
-									}
-								}
-							}
-						}
-					}
-					if (hornboost)
-					{
-						if (PLAYER::IS_PLAYER_PRESSING_HORN(PLAYER::PLAYER_ID()))
-						{
-							Vehicle Veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID()), false);
-							NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(Veh);
-							if (NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(Veh))
-							{
-								VEHICLE::SET_VEHICLE_FORWARD_SPEED(Veh, hornboostvalue);
-								if (hornboosteffect)
-								{
-									GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 0, 0);
-								}
-							}
-						}
-					}
+					
+					
 					if (offradar)
 					{
 						*script_global(2426865).at((PLAYER::GET_PLAYER_INDEX(), 451)).at(207).as<int*>() = 1;
@@ -613,17 +647,32 @@ namespace big
 					//2000ms
 					if (selfdrop)
 					{
-
-
-
 						Ped iPed = PLAYER::PLAYER_PED_ID();
 						Vector3 pCoords = ENTITY::GET_ENTITY_COORDS(iPed, 0);
 						OBJECT::CREATE_AMBIENT_PICKUP(0x1E9A99F8, pCoords.x, pCoords.y, pCoords.z, 0, 2500, -1666779307, FALSE, TRUE);// This works and all but seems to cause native execution errors on slower PC's.  
 						STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(-1666779307);
-
-
-
 					}
+
+					/*if (dropnotify)
+					{
+						
+						inline const char* drophashes[] = {
+							"0xCE6FDD6B", "-1666779307", "0x1E9A99F8"
+						};
+
+
+						Vector3 g_Pos = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), false);
+
+						if (OBJECT::_IS_PICKUP_WITHIN_RADIUS(&drophashes, g_Pos.x, g_Pos.y, g_Pos.z, 9999.0f)) {
+
+							notifyMap("~r~ALERT~s~: Cash Is Being Dropped In This Session!");
+
+						}
+
+						if (OBJECT::_IS_PICKUP_WITHIN_RADIUS(drophashes, g_Pos.x, g_Pos.y, g_Pos.z, 5.0f)) {
+							notifyMap("~r~ALERT~s~: Someone's Attempting To Drop Cash On You!");
+						}
+					}*/
 					break;
 				case 3:
 					//25003ms
