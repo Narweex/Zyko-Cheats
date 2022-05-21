@@ -363,64 +363,98 @@ namespace big
 								}
 							}
 						}
-						else {
-							GRAPHICS::
-						}
+						
 					}
 					if (freecam)
 					{
-						float heading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();
-						Ped playerPed = PLAYER::PLAYER_PED_ID();
-						Vector3 pos = ENTITY::GET_ENTITY_COORDS(playerPed, false);
-						ENTITY::SET_ENTITY_COMPLETELY_DISABLE_COLLISION(playerPed, 1, 1);
-						ENTITY::SET_ENTITY_HEADING(playerPed, heading);
+						
+						static const int controls[] = { 21, 32, 33, 34, 35, 36 };
+						static float speed = 20.f;
+						static float mult = 0.f;
 
+						static bool bLastNoclip = false;
 
-
-
+						static Entity prev = -1;
+						static Vector3 rot{};
 
 						
+							bool bNoclip = features::freecam;
+
+							Entity ent = PLAYER::PLAYER_PED_ID();
+							bool bInVehicle = PED::IS_PED_IN_ANY_VEHICLE(ent, true);
+							if (bInVehicle) ent = PED::GET_VEHICLE_PED_IS_IN(ent, false);
+
+							// cleanup when changing entities
+							if (prev != ent)
+							{
+								ENTITY::FREEZE_ENTITY_POSITION(prev, false);
+								ENTITY::SET_ENTITY_COLLISION(prev, true, true);
+
+								prev = ent;
+							}
+
+							if (bNoclip)
+							{
+								for (int control : controls)
+									PAD::DISABLE_CONTROL_ACTION(0, control, true);
+
+								Vector3 vel = { 0.f, 0.f, 0.f };
+								float heading = 0.f;
+
+								// Left Shift
+								if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 21))
+									vel.z += speed / 2;
+								// Left Control
+								if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 36))
+									vel.z -= speed / 2;
+								// Forward
+								if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 32))
+									vel.y += speed;
+								// Backward
+								if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 33))
+									vel.y -= speed;
+								// Left
+								if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 34))
+									vel.x -= speed;
+								// Right
+								if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 35))
+									vel.x += speed;
+
+								rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
+								ENTITY::SET_ENTITY_ROTATION(ent, 0.f, rot.y, rot.z, 2, 0);
+								ENTITY::SET_ENTITY_COLLISION(ent, false, false);
+								if (vel.x == 0.f && vel.y == 0.f && vel.z == 0.f)
+								{
+									// freeze entity to prevent drifting when standing still
+									ENTITY::FREEZE_ENTITY_POSITION(ent, true);
+
+									mult = 0.f;
+								}
+								else
+								{
+									if (mult < 20.f)
+										mult += 0.15f;
+
+									ENTITY::FREEZE_ENTITY_POSITION(ent, false);
+									Vector3 pos = (ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1));
+									Vector3 offset = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(ent, vel.x, vel.y, 0.f);
+									vel.x = offset.x - pos.x;
+									vel.y = offset.y - pos.y;
+
+									ENTITY::SET_ENTITY_VELOCITY(ent, vel.x * mult, vel.y * mult, vel.z * mult);
+								}
+							}
+							else if (bNoclip != bLastNoclip)
+							{
+								
+								RequestControlOfEnt(PLAYER::PLAYER_PED_ID());
+									ENTITY::FREEZE_ENTITY_POSITION(ent, false);
+									ENTITY::SET_ENTITY_COLLISION(ent, true, false);
+								
+							}
+
+							bLastNoclip = bNoclip;
 						
-						
-						if (gta_util::IsKeyPressed(0x53) || PAD::IS_DISABLED_CONTROL_JUST_PRESSED(2, 268)) {
-							float fivef = 5.5f;
-							float heading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();
-							float xVec = fivef * sin(degToRad(heading)) * -1.0f;
-							float yVec = fivef * cos(degToRad(heading));
-							
-
-							pos.x -= xVec, pos.y -= yVec;
-							ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, pos.x, pos.y, pos.z, false, false, false);
-						}
-						if (gta_util::IsKeyPressed(0x57) || PAD::IS_DISABLED_CONTROL_JUST_PRESSED(2, 269)) {
-							float fivef = .5f;
-							float heading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();							
-							float xVec = fivef * sin(degToRad(heading)) * -1.0f;
-							float yVec = fivef * cos(degToRad(heading));
-
-							pos.x += xVec, pos.y += yVec;
-							ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, pos.x, pos.y, pos.z, false, false, false);
-						}
-						if (gta_util::IsKeyPressed(0x41) || PAD::IS_DISABLED_CONTROL_JUST_PRESSED(2, 266)) {
-							float fivef = .5f;
-							float heading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();							
-						}
-						if (gta_util::IsKeyPressed(0x44) || PAD::IS_DISABLED_CONTROL_JUST_PRESSED(2, 271)) {
-							float fivef = .5f;
-							float heading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();							
-						}
-						if (gta_util::IsKeyPressed(VK_SHIFT)) {
-							float heading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();							
-
-							pos.z -= 0.5;
-							ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, pos.x, pos.y, pos.z, false, false, false);
-						}
-						if (gta_util::IsKeyPressed(VK_SPACE)) {
-							float heading = CAM::GET_GAMEPLAY_CAM_RELATIVE_HEADING();							
-
-							pos.z += 0.5;
-							ENTITY::SET_ENTITY_COORDS_NO_OFFSET(playerPed, pos.x, pos.y, pos.z, false, false, false);
-						}
 
 					}
 					if (deletegun)
@@ -523,7 +557,7 @@ namespace big
 						{
 							Player playerHandle = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i);
 							Vector3 handleCoords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerHandle, 0, 0, 0);
-							char* Name = PLAYER::GET_PLAYER_NAME(PLAYER::INT_TO_PLAYERINDEX(i));
+							const char* Name = PLAYER::GET_PLAYER_NAME(PLAYER::INT_TO_PLAYERINDEX(i));
 
 							if (ENTITY::DOES_ENTITY_EXIST(playerHandle))
 							{
@@ -570,7 +604,7 @@ namespace big
 										BOOL onScreen = GRAPHICS::GET_SCREEN_COORD_FROM_WORLD_COORD(targetPos.x, targetPos.y, targetPos.z, &screenX, &screenY);
 										if (ENTITY::IS_ENTITY_VISIBLE(targetPed) && onScreen)
 										{
-											if (ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(playerPed, targetPed, 17))
+											if (ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(playerPed, targetPed, 17)&& PED::IS_PED_SHOOTING(PLAYER::PLAYER_PED_ID()))
 											{
 												Vector3 targetCoords = PED::GET_PED_BONE_COORDS(targetPed, 31086, 0, 0, 0);
 												PED::SET_PED_SHOOTS_AT_COORD(playerPed, targetCoords.x, targetCoords.y, targetCoords.z, 1);
