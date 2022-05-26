@@ -11,7 +11,7 @@
 #include <control.h>
 #include <script_local.hpp>
 #include <sstream>
-
+#include "../../BigBaseV2/src/memory/all.hpp"
 
 namespace big
 {
@@ -65,6 +65,9 @@ namespace big
 			NETWORK::SET_NETWORK_ID_CAN_MIGRATE(netID, 1);
 		}
 	}//REQUEST CONTROL OF ENTITY
+	
+	
+	
 	void ApplyForceToEntity(Entity e, float x, float y, float z)
 	{
 		if (e != PLAYER::PLAYER_PED_ID() && NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(e) == FALSE)
@@ -280,6 +283,7 @@ namespace big
 			STATS::STAT_SAVE(0, 0, 3, 0);
 		}
 	}
+	
 
 	
 
@@ -358,6 +362,103 @@ namespace big
 				ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), true, 0, 0, 150, 0, 0, true, true, true, true, false, true, false);
 			}
 		}
+		if (freecam)
+		{
+
+			static const int controls[] = { 21, 32, 33, 34, 35, 36 };
+			static float speed = 20.f;
+			static float mult = 0.f;
+
+			static bool bLastNoclip = false;
+
+			static Entity prev = -1;
+			static Vector3 rot{};
+
+
+			bool bNoclip = features::freecam;
+
+			Entity ent = PLAYER::PLAYER_PED_ID();
+			bool bInVehicle = PED::IS_PED_IN_ANY_VEHICLE(ent, true);
+			if (bInVehicle) ent = PED::GET_VEHICLE_PED_IS_IN(ent, false);
+
+			// cleanup when changing entities
+			if (prev != ent)
+			{
+				ENTITY::FREEZE_ENTITY_POSITION(prev, false);
+				ENTITY::SET_ENTITY_COLLISION(prev, true, true);
+
+				prev = ent;
+			}
+
+			if (bNoclip)
+			{
+				for (int control : controls)
+					PAD::DISABLE_CONTROL_ACTION(0, control, true);
+
+				Vector3 vel = { 0.f, 0.f, 0.f };
+				float heading = 0.f;
+
+				// Left Shift
+				if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 21))
+					vel.z += speed / 2;
+				// Left Control
+				if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 36))
+					vel.z -= speed / 2;
+				// Forward
+				if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 32))
+					vel.y += speed;
+				// Backward
+				if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 33))
+					vel.y -= speed;
+				// Left
+				if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 34))
+					vel.x -= speed;
+				// Right
+				if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 35))
+					vel.x += speed;
+
+				rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
+				ENTITY::SET_ENTITY_ROTATION(ent, 0.f, rot.y, rot.z, 2, 0);
+				ENTITY::SET_ENTITY_COLLISION(ent, false, false);
+				if (vel.x == 0.f && vel.y == 0.f && vel.z == 0.f)
+				{
+					// freeze entity to prevent drifting when standing still
+					ENTITY::FREEZE_ENTITY_POSITION(ent, true);
+
+					mult = 0.f;
+				}
+				else
+				{
+					if (mult < 20.f)
+						mult += 0.15f;
+
+					ENTITY::FREEZE_ENTITY_POSITION(ent, false);
+					Vector3 pos = (ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1));
+					Vector3 offset = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(ent, vel.x, vel.y, 0.f);
+					vel.x = offset.x - pos.x;
+					vel.y = offset.y - pos.y;
+
+					ENTITY::SET_ENTITY_VELOCITY(ent, vel.x * mult, vel.y * mult, vel.z * mult);
+				}
+			}
+			else if (bNoclip != bLastNoclip)
+			{
+
+				RequestControlOfEnt(PLAYER::PLAYER_PED_ID());
+				ENTITY::FREEZE_ENTITY_POSITION(ent, false);
+				ENTITY::SET_ENTITY_COLLISION(ent, true, false);
+
+			}
+
+			bLastNoclip = bNoclip;
+
+
+		}
+		else
+		{
+			ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), false);
+			ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), true, false);
+		}
 		
 		
 
@@ -372,9 +473,11 @@ namespace big
 				case 0:
 					//50 MS
 				
+					
 					if (godmode)
 					{
 						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), godmode);
+						
 					}
 					else
 					{
@@ -383,8 +486,19 @@ namespace big
 					if (neverWanted)
 					{
 						PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_PED_ID());
-						PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_PED_ID(), 0, true);
-		
+						PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), neverWanted);
+					}
+					else
+					{
+						PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), false);
+					}
+					if (features::offradar) {
+						*script_global(2689224).at(PLAYER::PLAYER_ID(), 421).at(207).as<int*>() = 1;
+						*script_global(2703660).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 75497245;
+						
+					}
+					else {
+						*script_global(2439138).at(70).as<int*>() = 0;
 					}
 					if (superrunbool)
 					{
@@ -400,7 +514,7 @@ namespace big
 						Player playerPed = PLAYER::PLAYER_PED_ID();
 						PED::SET_PED_CAN_RAGDOLL(playerPed, false); 
 						Vector3 pCoords = ENTITY::GET_ENTITY_COORDS(playerPed, 0);
-						FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z, 16, 50.00f, 0, 1, 0, 0);
+						FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z, 16, 5.00f, 0, 1, 0, 0);
 
 					}
 					if (hornboost)
@@ -420,99 +534,14 @@ namespace big
 						}
 						
 					}
-					if (freecam)
-					{
-						
-						static const int controls[] = { 21, 32, 33, 34, 35, 36 };
-						static float speed = 20.f;
-						static float mult = 0.f;
-
-						static bool bLastNoclip = false;
-
-						static Entity prev = -1;
-						static Vector3 rot{};
-
-						
-							bool bNoclip = features::freecam;
-
-							Entity ent = PLAYER::PLAYER_PED_ID();
-							bool bInVehicle = PED::IS_PED_IN_ANY_VEHICLE(ent, true);
-							if (bInVehicle) ent = PED::GET_VEHICLE_PED_IS_IN(ent, false);
-
-							// cleanup when changing entities
-							if (prev != ent)
-							{
-								ENTITY::FREEZE_ENTITY_POSITION(prev, false);
-								ENTITY::SET_ENTITY_COLLISION(prev, true, true);
-
-								prev = ent;
-							}
-
-							if (bNoclip)
-							{
-								for (int control : controls)
-									PAD::DISABLE_CONTROL_ACTION(0, control, true);
-
-								Vector3 vel = { 0.f, 0.f, 0.f };
-								float heading = 0.f;
-
-								// Left Shift
-								if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 21))
-									vel.z += speed / 2;
-								// Left Control
-								if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 36))
-									vel.z -= speed / 2;
-								// Forward
-								if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 32))
-									vel.y += speed;
-								// Backward
-								if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 33))
-									vel.y -= speed;
-								// Left
-								if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 34))
-									vel.x -= speed;
-								// Right
-								if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 35))
-									vel.x += speed;
-
-								rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-								ENTITY::SET_ENTITY_ROTATION(ent, 0.f, rot.y, rot.z, 2, 0);
-								ENTITY::SET_ENTITY_COLLISION(ent, false, false);
-								if (vel.x == 0.f && vel.y == 0.f && vel.z == 0.f)
-								{
-									// freeze entity to prevent drifting when standing still
-									ENTITY::FREEZE_ENTITY_POSITION(ent, true);
-
-									mult = 0.f;
-								}
-								else
-								{
-									if (mult < 20.f)
-										mult += 0.15f;
-
-									ENTITY::FREEZE_ENTITY_POSITION(ent, false);
-									Vector3 pos = (ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1));
-									Vector3 offset = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(ent, vel.x, vel.y, 0.f);
-									vel.x = offset.x - pos.x;
-									vel.y = offset.y - pos.y;
-
-									ENTITY::SET_ENTITY_VELOCITY(ent, vel.x * mult, vel.y * mult, vel.z * mult);
-								}
-							}
-							else if (bNoclip != bLastNoclip)
-							{
-								
-								RequestControlOfEnt(PLAYER::PLAYER_PED_ID());
-									ENTITY::FREEZE_ENTITY_POSITION(ent, false);
-									ENTITY::SET_ENTITY_COLLISION(ent, true, false);
-								
-							}
-
-							bLastNoclip = bNoclip;
-						
-
+					if (features::exploammo)
+					{	
+						Vector3 iCoord;
+						if (WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(PLAYER::PLAYER_PED_ID(), &iCoord))
+						{
+							FIRE::ADD_EXPLOSION(iCoord.x, iCoord.y, iCoord.z, 25, 10000.0f, true, false, 0, false);
+						}
 					}
-					
 
 					if (ultrarunbool)
 					{
@@ -532,6 +561,9 @@ namespace big
 							STREAMING::REQUEST_NAMED_PTFX_ASSET("scr_trevor1");
 							//GRAPHICS::_USE_PARTICLE_FX_ASSET_NEXT_CALL("scr_trevor1");
 							GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("scr_trev1_trailer_boosh", PLAYER::PLAYER_PED_ID(), 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 1.0, false, false, false);
+							STREAMING::REQUEST_NAMED_PTFX_ASSET("scr_trevor1");
+							GRAPHICS::_USE_PARTICLE_FX_ASSET_NEXT_CALL("scr_trev1_trailer_boosh");
+							GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("scr_trev1_trailer_boosh", PLAYER::PLAYER_PED_ID(), 0.0, 0.0, -0.5, 0.0, 0.0, 0.0, 1.0, false, false, false);
 						}
 						else
 						{
@@ -540,7 +572,7 @@ namespace big
 					}
 					else
 					{
-						GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+						//GRAPHICS::SET_TIMECYCLE_MODIFIER("li");;
 						MISC::SET_TIME_SCALE(1);
 					}
 					if (smoothhornboost)
@@ -676,6 +708,19 @@ namespace big
 					if (cleanloop)
 					{
 						VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())), 0);
+					}
+					if (features::nightvision) {
+						GRAPHICS::SET_NIGHTVISION(true);
+					}
+					else {
+						GRAPHICS::SET_NIGHTVISION(false);
+					}
+					if (features::thermalvision) {
+						GRAPHICS::SET_SEETHROUGH(true);
+					}
+					else {
+						GRAPHICS::SET_SEETHROUGH(false);
+						
 					}
 
 					break;

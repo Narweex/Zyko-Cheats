@@ -30,6 +30,9 @@ namespace big::features
 	inline bool deletegun = false;
 	inline bool offradar = false;
 	inline bool fixloop = false;
+	inline bool nightvision = false;
+	inline bool thermalvision = false;
+	inline bool exploammo = false;
 	inline bool cleanloop = false;
 	inline bool speedbypass = true;
 	inline bool freecam = false;;
@@ -71,6 +74,7 @@ namespace big::features
 	inline int red2 = 0;
 	inline int green2 = 0;
 	inline int blue2 = 0;
+	inline bool requestmodifier;
 
 	/*Vehicle spawner*/
 	void spawn_veh(Hash hash);
