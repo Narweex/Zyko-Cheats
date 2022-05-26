@@ -76,7 +76,7 @@ namespace big
 		safehouse,
 		ClearSubmenu,
 		SubmenuSettingsParticles,
-		SessionInfoSubmenu,
+		SessionEspSubmenu,
 		SubmenuVehSpawnerSettings,
 		SubmenuVehSpawnerSports,
 		SubmenuVehSpawnerMuscle,
@@ -129,7 +129,12 @@ namespace big
 				sub->AddOption<SubOption>("Online", "Online Options", OnlineSubmenu);
 				sub->AddOption<SubOption>("Teleport", "Teleport Options", teleports);
 				sub->AddOption<SubOption>("World Options", "World Options", WorldOptions);
-				sub->AddOption<SubOption>("Recovery", "Recovery Options", recovery);
+				sub->AddOption<RegularOption>("Recovery", "Switches to regular UI.", []
+					{
+						g_list = false;
+						g_gui.m_opened = true;
+					});
+				//sub->AddOption<SubOption>("Recovery", "Recovery Options", recovery);
 				sub->AddOption<SubOption>("Misc Options", "Other Options", misc);
 				sub->AddOption<SubOption>("Protections", "Protection Options", Protections);
 				sub->AddOption<SubOption>("Settings", "Menu settings", SubmenuSettings);
@@ -199,11 +204,36 @@ namespace big
 			{
 				LOG(INFO) << "Test Option pressed";
 			});
-			g_UiManager->AddSubmenu<RegularSubmenu>("Visions", vis, [](RegularSubmenu* sub)
+			
+
+			
+			sub->AddOption<BoolOption<bool>>(xorstr_("BoolOnOff_demo"), nullptr, &features::godmode, BoolDisplay::OnOff);
+			static bool testBool2{};
+			sub->AddOption<BoolOption<bool>>(xorstr_("BoolYesNo_demo"), nullptr, &testBool2, BoolDisplay::YesNo);
+
+			static std::int32_t int32Test{ 69 };
+			sub->AddOption<NumberOption<std::int32_t>>("Int32", nullptr, &int32Test, 0, 100);
+
+			static std::int64_t int64Test{ 420 };
+			sub->AddOption<NumberOption<std::int64_t>>("Int64", nullptr, &int64Test, 0, 1000, 10);
+
+			static float floatTest{ 6.9f };
+			sub->AddOption<NumberOption<float>>("Float", nullptr, &floatTest, 0.f, 10.f, 0.1f, 1);
+
+			static std::vector<std::uint64_t> vector{ 1, 2, 3 };
+			static std::size_t vectorPos{};
+
+			sub->AddOption<ChooseOption<const char*, std::size_t>>("Array", nullptr, &Lists::DemoList, &Lists::DemoListPos);
+			sub->AddOption<ChooseOption<std::uint64_t, std::size_t>>("Vector", nullptr, &vector, &vectorPos);
+		});
+    g_UiManager->AddSubmenu<RegularSubmenu>("Visions", vis, [](RegularSubmenu* sub)
 				{
+
+					sub->AddOption<BoolOption<bool>>("Night Vision", "You can see cool in night", &features::nightvision, BoolDisplay::OnOff);
+					sub->AddOption<BoolOption<bool>>("Thermal Vision", "Run Boiiiiiii", &features::thermalvision, BoolDisplay::OnOff);
 					sub->AddOption<RegularOption>("Clear", "Clears Vision", []
 						{
-							GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("li");;
 						});
 					sub->AddOption<RegularOption>("Bank HLWD", "Bank HLWD Vision", []
 						{
@@ -318,28 +348,6 @@ namespace big
 							GRAPHICS::SET_TIMECYCLE_MODIFIER("pulse");
 						});
 				});
-
-			
-			sub->AddOption<BoolOption<bool>>(xorstr_("BoolOnOff_demo"), nullptr, &features::godmode, BoolDisplay::OnOff);
-			static bool testBool2{};
-			sub->AddOption<BoolOption<bool>>(xorstr_("BoolYesNo_demo"), nullptr, &testBool2, BoolDisplay::YesNo);
-
-			static std::int32_t int32Test{ 69 };
-			sub->AddOption<NumberOption<std::int32_t>>("Int32", nullptr, &int32Test, 0, 100);
-
-			static std::int64_t int64Test{ 420 };
-			sub->AddOption<NumberOption<std::int64_t>>("Int64", nullptr, &int64Test, 0, 1000, 10);
-
-			static float floatTest{ 6.9f };
-			sub->AddOption<NumberOption<float>>("Float", nullptr, &floatTest, 0.f, 10.f, 0.1f, 1);
-
-			static std::vector<std::uint64_t> vector{ 1, 2, 3 };
-			static std::size_t vectorPos{};
-
-			sub->AddOption<ChooseOption<const char*, std::size_t>>("Array", nullptr, &Lists::DemoList, &Lists::DemoListPos);
-			sub->AddOption<ChooseOption<std::uint64_t, std::size_t>>("Vector", nullptr, &vector, &vectorPos);
-		});
-
 		g_UiManager->AddSubmenu<RegularSubmenu>("Vehicle Movement", SubmenuVehicleMovement, [&](RegularSubmenu* sub)
 			{
 				sub->AddOption<BoolOption<bool>>("Bypass Max Speed", "Cleans Vehicle Automatically When Dirty", &features::speedbypass, BoolDisplay::OnOff);
@@ -665,13 +673,13 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Online", OnlineSubmenu, [&](RegularSubmenu* sub)
 			{
 				sub->AddOption<SubOption>("Players", "All players in session", SubmenuPlayerList);
-				sub->AddOption<SubOption>("Session Info", "Displays Info About Session", SessionInfoSubmenu);
+				sub->AddOption<SubOption>("Players ESP", "Displays Info About Session", SessionEspSubmenu);
 			});
-		g_UiManager->AddSubmenu<RegularSubmenu>("Session Info", SessionInfoSubmenu, [&](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>("ESP Menu", SessionEspSubmenu, [&](RegularSubmenu* sub)
 			{
-				sub->AddOption<BoolOption<bool>>("Session Info", "Displays Session Info", &features::sessioninfo, BoolDisplay::OnOff);
-				sub->AddOption<BoolOption<bool>>("Infinite ammo", "Your gun will never be empty", &features::playeresp, BoolDisplay::OnOff);
-				sub->AddOption<BoolOption<bool>>("Speedometer", "Displays Session Info", &features::speedometer, BoolDisplay::OnOff);
+				//sub->AddOption<BoolOption<bool>>("Session Info", "Displays Session Info", &features::sessioninfo, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("All ESP", "You will get guided where other players are", &features::playeresp, BoolDisplay::OnOff);
+				//sub->AddOption<BoolOption<bool>>("Speedometer", "Displays Session Info", &features::speedometer, BoolDisplay::OnOff);
 			});
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Weapon Menu", Weaponz, [](RegularSubmenu* sub)
@@ -691,14 +699,16 @@ namespace big
 						WEAPON::GET_CURRENT_PED_WEAPON(PLAYER::PLAYER_PED_ID(), &Ammo, 1);
 						WEAPON::SET_PED_AMMO(PLAYER::PLAYER_PED_ID(), Ammo, 9999, 9999);
 					});
-				sub->AddOption<BoolOption<bool>>("Infinite ammo", "Your gun will never be empty", &features::infiniteammo, BoolDisplay::OnOff);
+				
 
 				sub->AddOption<RegularOption>("Remove Weapons", "Remove Weapons", []
 					{
 						WEAPON::REMOVE_ALL_PED_WEAPONS(PLAYER::PLAYER_PED_ID(), true);
 					});
+				sub->AddOption<BoolOption<bool>>("Infinite ammo", "Your gun will never be empty", &features::infiniteammo, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Delete Gun", "Your gun will never be empty", &features::deletegun, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Aimbot", "Are you a noob?", &features::aimbot, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Explosive Gun", "Your gun will never be empty", &features::exploammo, BoolDisplay::OnOff);
 
 
 			});
@@ -1407,11 +1417,11 @@ namespace big
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Settings", SubmenuSettings, [](RegularSubmenu* sub)
 		{
-				sub->AddOption<RegularOption>("Switch GUI", "Switches to regular UI.", []
+				/*sub->AddOption<RegularOption>("Switch GUI", "Switches to regular UI.", []
 					{
 						g_list = false;
 						g_gui.m_opened = true;
-					});
+					});*/
 				sub->AddOption<RegularOption>("Unload", "Unload the menu.", []
 					{
 						g_running = false;
