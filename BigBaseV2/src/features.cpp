@@ -183,7 +183,6 @@ namespace big
 					continue;
 
 				VEHICLE::SET_VEHICLE_MOD(veh, i, VEHICLE::GET_NUM_VEHICLE_MODS(veh, i) - 1, false);
-				GRAPHICS::USE_PARTICLE_FX_ASSET(xorstr_("scr_rcbarry2"));
 			}
 
 		}
@@ -297,7 +296,68 @@ namespace big
 		}
 		
 		
-		
+		if (playeresp)
+		{
+
+			Player playerPed = PLAYER::PLAYER_PED_ID();
+			for (int i = 0; i < 32; i++)
+			{
+				Player playerHandle = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i);
+				Vector3 handleCoords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerHandle, 0, 0, 0);
+				const char* Name = PLAYER::GET_PLAYER_NAME(PLAYER::INT_TO_PLAYERINDEX(i));
+
+				if (ENTITY::DOES_ENTITY_EXIST(playerHandle))
+				{
+					GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, 200, 94, 100, 255); // top Box
+					GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
+					GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
+					GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
+
+					GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, 200, 94, 100, 255); // bottom Box
+					GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, 200, 94, 100, 255);
+					GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, 200, 94, 100, 255);
+					GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, 200, 94, 100, 255);
+
+					GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, 200, 94, 100, 255); // bottom Box
+					GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
+					GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
+					GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
+					Vector3 locationOne = ENTITY::GET_ENTITY_COORDS(playerHandle, false);
+					Vector3 locationTwo = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), false);
+					GRAPHICS::DRAW_LINE(locationOne.x, locationOne.y, locationOne.z, locationTwo.x, locationTwo.y, locationTwo.z, 255, 0, 0, 255);
+
+				}
+			}
+		}
+		if (superjumpbool)
+		{
+			Player player = PLAYER::PLAYER_ID();
+			MISC::SET_SUPER_JUMP_THIS_FRAME(player);
+			Ped playerPed = PLAYER::PLAYER_PED_ID();
+		}
+		if (deletegun)
+		{
+			Entity delentity;
+			if (PLAYER::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(PLAYER::PLAYER_ID(), &delentity)) {
+				if (ENTITY::DOES_ENTITY_EXIST(delentity) && NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(delentity)) {
+					if (PED::IS_PED_SHOOTING(PLAYER::PLAYER_PED_ID())) {
+						ENTITY::DETACH_ENTITY(delentity, 1, 1);
+						ENTITY::SET_ENTITY_COORDS_NO_OFFSET(delentity, 0, 0, 0, 0, 0, 0);
+						ENTITY::SET_ENTITY_AS_MISSION_ENTITY(delentity, 0, 1);
+						ENTITY::DELETE_ENTITY(&delentity);
+					}
+				}
+			}
+		}
+		if (ultrajumpbool)
+		{
+			MISC::SET_SUPER_JUMP_THIS_FRAME(PLAYER::PLAYER_PED_ID());
+			MISC::SET_SUPER_JUMP_THIS_FRAME(PLAYER::PLAYER_ID());
+			if (PED::IS_PED_JUMPING(PLAYER::PLAYER_PED_ID()))
+			{
+				ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), true, 0, 0, 150, 0, 0, true, true, true, true, false, true, false);
+			}
+		}
 		
 		
 
@@ -334,12 +394,7 @@ namespace big
 							PED::SET_PED_MOVE_RATE_OVERRIDE(PLAYER::PLAYER_PED_ID(), runspeed);
 						}
 					}
-					if (superjumpbool)
-					{
-						Player player = PLAYER::PLAYER_ID();
-						MISC::SET_SUPER_JUMP_THIS_FRAME(player);
-						Ped playerPed = PLAYER::PLAYER_PED_ID();
-					}
+					
 					if (forcefield) {
 						
 						Player playerPed = PLAYER::PLAYER_PED_ID();
@@ -457,20 +512,7 @@ namespace big
 						
 
 					}
-					if (deletegun)
-					{
-						Entity delentity;
-						if (PLAYER::GET_ENTITY_PLAYER_IS_FREE_AIMING_AT(PLAYER::PLAYER_ID(), &delentity)) {
-							if (ENTITY::DOES_ENTITY_EXIST(delentity) && NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(delentity)) {
-								if (PED::IS_PED_SHOOTING(PLAYER::PLAYER_PED_ID())) {
-									ENTITY::DETACH_ENTITY(delentity, 1, 1);
-									ENTITY::SET_ENTITY_COORDS_NO_OFFSET(delentity, 0, 0, 0, 0, 0, 0);
-									ENTITY::SET_ENTITY_AS_MISSION_ENTITY(delentity, 0, 1);
-									ENTITY::DELETE_ENTITY(&delentity);
-								}
-							}
-						}
-					}
+					
 
 					if (ultrarunbool)
 					{
@@ -549,39 +591,7 @@ namespace big
 						}
 
 					}
-					if (playeresp)
-					{
-
-						Player playerPed = PLAYER::PLAYER_PED_ID();
-						for (int i = 0; i < 32; i++)
-						{
-							Player playerHandle = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i);
-							Vector3 handleCoords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerHandle, 0, 0, 0);
-							const char* Name = PLAYER::GET_PLAYER_NAME(PLAYER::INT_TO_PLAYERINDEX(i));
-
-							if (ENTITY::DOES_ENTITY_EXIST(playerHandle))
-							{
-								GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, 200, 94, 100, 255); // top Box
-								GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
-								GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
-								GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
-
-								GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, 200, 94, 100, 255); // bottom Box
-								GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, 200, 94, 100, 255);
-								GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, 200, 94, 100, 255);
-								GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, 200, 94, 100, 255);
-
-								GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, 200, 94, 100, 255); // bottom Box
-								GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
-								GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
-								GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
-								Vector3 locationOne = ENTITY::GET_ENTITY_COORDS(playerHandle, false);
-								Vector3 locationTwo = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), false);
-								GRAPHICS::DRAW_LINE(locationOne.x, locationOne.y, locationOne.z, locationTwo.x, locationTwo.y, locationTwo.z, 255, 0, 0, 255);
-
-							}
-						}
-					}
+					
 					if (aimbot)
 					{
 						int player = PLAYER::PLAYER_ID();
@@ -637,15 +647,7 @@ namespace big
 						*script_global(19954 + 1).as<int*>() = 3;
 					}
 
-					if (ultrajumpbool)
-					{
-						MISC::SET_SUPER_JUMP_THIS_FRAME(PLAYER::PLAYER_PED_ID());
-						MISC::SET_SUPER_JUMP_THIS_FRAME(PLAYER::PLAYER_ID());
-						if (PED::IS_PED_JUMPING(PLAYER::PLAYER_PED_ID()))
-						{
-							ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), true, 0, 0, 150, 0, 0, true, true, true, true, false, true, false);
-						}
-					}
+					
 
 
 
