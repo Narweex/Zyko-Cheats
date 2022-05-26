@@ -3,7 +3,8 @@
 #include "natives.hpp"
 #include "gta_util.hpp"
 #include <imgui.h>
-#
+#include "../../BigBaseV2/src/gui/list/Lists.hpp"
+#include <sstream>
 namespace big::UserInterface
 {
 
