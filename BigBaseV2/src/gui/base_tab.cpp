@@ -83,7 +83,7 @@ namespace big
 			ImGui::SameLine();
 
 			ImGui::PushItemWidth(449.f);
-			ImGui::SliderInt(xorstr_("$"), &bunker_money, 1, 1000000);
+			ImGui::SliderInt(xorstr_("$"), &bunker_money, 1, 2500000);
 			ImGui::PopItemWidth();
 
 			ImGui::Spacing();
