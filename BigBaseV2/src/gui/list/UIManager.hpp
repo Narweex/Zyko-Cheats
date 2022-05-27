@@ -76,7 +76,7 @@ namespace big::UserInterface
 		void OnTick();
 	public:
 		std::mutex m_Mutex;
-
+		
 		bool m_Opened = false;
 		bool m_MouseLocked = false;
 		float m_PosX = 0.8f;
@@ -160,7 +160,7 @@ namespace big::UserInterface
 		void DrawOption(AbstractOption* opt, bool selected);
 		void DrawFooter();
 		void DrawDescription();
-
+		
 		void DrawRect(float x, float y, float width, float height, rage::rgbaColor color);
 		void DrawSprite(const char* dict, const char* texture, float x, float y, float width, float height, rage::rgbaColor color, float rotation);
 		void DrawLeftText(const char* text, float x, float y, float size, Font font, rage::rgbaColor color, bool outline, bool shadow);
