@@ -5,6 +5,7 @@
 #include <imgui.h>
 #include "../../BigBaseV2/src/gui/list/Lists.hpp"
 #include <sstream>
+#include "../../BigBaseV2/src/features.hpp"
 namespace big::UserInterface
 {
 
@@ -66,12 +67,13 @@ namespace big::UserInterface
 			DrawDescription();
 		}
 	}
-
+	
+						
 	void UIManager::CheckForInput()
 	{
 		ResetInput();
 
-		m_OpenKeyPressed = gta_util::IsKeyPressed(VK_MULTIPLY) || gta_util::IsKeyPressed(VK_F8);
+		m_OpenKeyPressed = gta_util::IsKeyPressed(features::OpenKey) || gta_util::IsKeyPressed(VK_F8);
 		m_BackKeyPressed = gta_util::IsKeyPressed(VK_BACK);
 		m_EnterKeyPressed = gta_util::IsKeyPressed(VK_RETURN);
 		m_UpKeyPressed = gta_util::IsKeyPressed(VK_UP);
