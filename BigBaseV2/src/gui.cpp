@@ -14,6 +14,7 @@
 #include <imgui.h>
 
 #include "gui/base_tab.h"
+#include "gui/players_tab.h"
 
 namespace big
 {
@@ -103,6 +104,7 @@ namespace big
 			{
 				ImGui::BeginTabBar("tabbar");
 				base_tab::render_base_tab();
+				players_tab::render_players_tab();
 				ImGui::EndTabBar();
 			}
 			ImGui::End();

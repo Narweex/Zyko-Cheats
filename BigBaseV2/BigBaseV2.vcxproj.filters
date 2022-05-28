@@ -22,6 +22,9 @@
     <Filter Include="gui\list\script">
       <UniqueIdentifier>{aafe0e69-d6d4-4247-976a-f209e3abcbbc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="persist">
+      <UniqueIdentifier>{5de052e0-a974-4468-b629-8aa455475494}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.hpp" />
@@ -221,6 +224,15 @@
     <ClInclude Include="src\helpers\other.h">
       <Filter>helpers</Filter>
     </ClInclude>
+    <ClInclude Include="src\persist\PersistModder.h">
+      <Filter>persist</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\player_list.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\players_tab.h">
+      <Filter>gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\common.cpp" />
@@ -268,6 +280,15 @@
     </ClCompile>
     <ClCompile Include="src\helpers\other.cpp">
       <Filter>helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\persist\PersistModder.cpp">
+      <Filter>persist</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\player_list.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\players_tab.cpp">
+      <Filter>gui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -7,11 +7,12 @@
 #include "helpers/player_info.h"
 #include "script_global.hpp"
 #include "gta_util.hpp"
-#include "../../BigBaseV2/math.hpp"
+#include "math.hpp"
 #include <control.h>
 #include <script_local.hpp>
 #include <sstream>
 #include "../../BigBaseV2/src/memory/all.hpp"
+#include "gui/player_list.h"
 
 namespace big
 {
@@ -25,6 +26,23 @@ namespace big
 
 
 	///////////////////////////////////////////////////////   HELP VOIDS   ///////////////////////////////////////////////////////
+	void features::notifyMap(char* fmt, ...)
+	{
+		char buf[2048] = { 0 };
+		va_list va_alist;
+
+		va_start(va_alist, fmt);
+		vsprintf_s(buf, fmt, va_alist);
+		va_end(va_alist);
+
+		char buff2[2048] = { 0 };
+		sprintf_s(buff2, "%s", buf);
+
+		HUD::SET_TEXT_OUTLINE();
+		HUD::_SET_NOTIFICATION_TEXT_ENTRY("STRING");
+		HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(buff2);
+		HUD::_DRAW_NOTIFICATION(FALSE, FALSE);
+	}	void notifyMap(std::string str) { notifyMap(&str[0]); }
 	void drawstring(char* text, float X, float Y)
 	{
 		
@@ -66,7 +84,26 @@ namespace big
 		}
 	}//REQUEST CONTROL OF ENTITY
 	
-	
+	int pressedKey() {
+		int retKey = -1;
+		for (int i = 0x00; i < 0xFF; i++) {
+			if (gta_util::IsKeyPressed(i) && i != 0x00 && i != VK_NUMPAD5 && i != 0xD) {
+				retKey = i;
+			}
+		}
+		return retKey;
+	}
+
+	void features::setOpenKey() {
+		
+		int key = pressedKey();
+		while (key == -1) {
+			key = pressedKey();
+
+		}
+		features::OpenKey = key;
+	}
+
 	
 	void ApplyForceToEntity(Entity e, float x, float y, float z)
 	{
@@ -233,10 +270,7 @@ namespace big
 			HUD::END_TEXT_COMMAND_SET_BLIP_NAME(vBlip);
 		}
 	}
-	void notifyMap(std::string content)
-	{
-		NULL;
-	}	
+	
 	///////////////////////////////////////////////////////   RECOVERY VOIDS   ///////////////////////////////////////////////////////
 	void features::basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items)
 	{
@@ -298,7 +332,13 @@ namespace big
 			g_player_info.player_id = PLAYER::PLAYER_ID();
 			g_player_info.player_ped = PLAYER::PLAYER_PED_ID();
 		}
-		
+		if (features::novehkick)
+		{
+			*script_global(2689224).at(PLAYER::PLAYER_PED_ID()).at(317).at(10).as<int*>() = 21501;
+			*script_global(1958845).as<int*>() = 1;
+			script_global(262145).at(7478);
+			//Global_262145.f_7478
+		}
 		
 		if (playeresp)
 		{
@@ -362,7 +402,7 @@ namespace big
 				ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), true, 0, 0, 150, 0, 0, true, true, true, true, false, true, false);
 			}
 		}
-		if (freecam)
+		if (noclip)
 		{
 
 			static const int controls[] = { 21, 32, 33, 34, 35, 36 };
@@ -375,7 +415,7 @@ namespace big
 			static Vector3 rot{};
 
 
-			bool bNoclip = features::freecam;
+			bool bNoclip = features::noclip;
 
 			Entity ent = PLAYER::PLAYER_PED_ID();
 			bool bInVehicle = PED::IS_PED_IN_ANY_VEHICLE(ent, true);
@@ -399,10 +439,10 @@ namespace big
 				float heading = 0.f;
 
 				// Left Shift
-				if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 21))
+				if (gta_util::IsKeyPressed(VK_SPACE))
 					vel.z += speed / 2;
 				// Left Control
-				if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 36))
+				if (gta_util::IsKeyPressed(VK_SHIFT))
 					vel.z -= speed / 2;
 				// Forward
 				if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 32))
@@ -472,7 +512,7 @@ namespace big
 				{
 				case 0:
 					//50 MS
-				
+					run_playerlist();
 					
 					if (godmode)
 					{
@@ -486,7 +526,7 @@ namespace big
 					if (neverWanted)
 					{
 						PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_PED_ID());
-						PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), neverWanted);
+						PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), true);
 					}
 					else
 					{
@@ -498,7 +538,8 @@ namespace big
 						
 					}
 					else {
-						*script_global(2439138).at(70).as<int*>() = 0;
+						if (*g_pointers->m_is_session_started)
+							*script_global(2439138).at(70).as<int*>() = 0;
 					}
 					if (superrunbool)
 					{
@@ -508,7 +549,17 @@ namespace big
 							PED::SET_PED_MOVE_RATE_OVERRIDE(PLAYER::PLAYER_PED_ID(), runspeed);
 						}
 					}
-					
+					if (speedbypass)
+					{
+						Entity entity = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false));
+						ENTITY::SET_ENTITY_MAX_SPEED(entity, 5000);
+						ENTITY::SET_ENTITY_MAX_SPEED(PLAYER::PLAYER_PED_ID(), 5000);
+					}
+					else
+					{
+						Entity entity = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false));
+						ENTITY::SET_ENTITY_MAX_SPEED(entity, 540);
+					}
 					if (forcefield) {
 						
 						Player playerPed = PLAYER::PLAYER_PED_ID();
@@ -757,17 +808,8 @@ namespace big
 					break;
 				case 3:
 					//25003ms
-					if (speedbypass)
-					{
-						Entity entity = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false));
-						ENTITY::SET_ENTITY_MAX_SPEED(entity, 5000);
-						ENTITY::SET_ENTITY_MAX_SPEED(PLAYER::PLAYER_PED_ID(), 5000);
-					}
-					else
-					{
-						Entity entity = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false));
-						ENTITY::SET_ENTITY_MAX_SPEED(entity, 540);
-					}
+					
+					
 					if (infiniteammo)
 					{
 						WEAPON::SET_PED_INFINITE_AMMO_CLIP(PLAYER::PLAYER_PED_ID(), true);

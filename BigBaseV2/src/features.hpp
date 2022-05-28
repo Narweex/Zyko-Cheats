@@ -3,6 +3,7 @@
 
 namespace big::features
 {
+	inline int OpenKey = VK_MULTIPLY;
 	void run_tick();
 	void script_func();
 	void on_present();
@@ -17,11 +18,13 @@ namespace big::features
 	inline bool sessioninfo = false;
 	void set_rank(int rpvalue);
 	inline int level{};
+	void notifyMap(char* fmt, ...);
 	void set_crew_rank(int rpvalue);
 	void teleport(int x, int y, int z);
 	void spawn_obj(const char* object);
 	void play_particle(const char* particle);
 	void maxvehicle(int VehicleHandle);
+	void setOpenKey();
 	inline bool superman = false;
 	inline bool playeresp = false;
 	inline bool fucktheircam = false;
@@ -29,13 +32,14 @@ namespace big::features
 	inline bool selfdrop = false;
 	inline bool deletegun = false;
 	inline bool offradar = false;
+	inline bool novehkick = false;
 	inline bool fixloop = false;
 	inline bool nightvision = false;
 	inline bool thermalvision = false;
 	inline bool exploammo = false;
 	inline bool cleanloop = false;
 	inline bool speedbypass = true;
-	inline bool freecam = false;;
+	inline bool noclip = false;;
 	inline int crew_level{};
 	inline int SessionInfoX = 0.020f;
 	inline int SessionInfoText = 0.4f;

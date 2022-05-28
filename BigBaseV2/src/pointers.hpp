@@ -39,7 +39,7 @@ namespace big
 
 		PVOID m_model_spawn_bypass;
 
-		
+		functions::get_net_player_t* m_get_net_player{};
 
 		transaction_queue** m_transact_queue{};
 		functions::construct_basket_t m_construct_basket{};

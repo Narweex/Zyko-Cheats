@@ -5,6 +5,7 @@
 #include "gta/script_thread.hpp"
 #include "gta/tls_context.hpp"
 #include "pointers.hpp"
+#include "natives.hpp"
 
 namespace big::gta_util
 {
@@ -65,5 +66,10 @@ namespace big::gta_util
 		}
 
 		return false;
+	}
+
+	inline int get_connected_players()
+	{
+		return NETWORK::NETWORK_GET_NUM_CONNECTED_PLAYERS();
 	}
 }

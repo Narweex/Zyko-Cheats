@@ -5,12 +5,10 @@
 #include <imgui.h>
 #include "../../BigBaseV2/src/gui/list/Lists.hpp"
 #include <sstream>
-#include "../../BigBaseV2/src/features.hpp"
+#include "features.hpp"
+
 namespace big::UserInterface
 {
-
-	
-
 	UIManager::UIManager()
 	{
 		g_UiManager = this;

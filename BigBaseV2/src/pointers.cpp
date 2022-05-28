@@ -101,6 +101,11 @@ namespace big
 			m_file_register = ptr.as<functions::file_register_t>();
 		});
 
+		main_batch.add("GNP", "48 83 EC 28 33 C0 38 05 ? ? ? ? 74 0A", [this](memory::handle ptr)
+		{
+			m_get_net_player = ptr.as<decltype(m_get_net_player)>();
+		});
+
 		main_batch.run(memory::module(nullptr));
 
 		m_hwnd = FindWindowW(L"grcWindow", nullptr);
