@@ -16,6 +16,7 @@
 #include "script_global.hpp"
 #include "helpers/other.h"
 #include "../../list/script/Translation.hpp"
+#include "../../BigBaseV2/src/gui/player_list.h"
 
 namespace big
 {
@@ -1166,8 +1167,8 @@ namespace big
 									features::g_selected_player = i;
 								});
 						}
-						else if (PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i) == NETWORK::NETWORK_IS_IN_SPECTATOR_MODE()) {
-							char Buffer[255]; sprintf(Buffer, "%s   ~b~[SPECTATING]", PLAYER::GET_PLAYER_NAME(i));
+						else if (g_player_list.is_modder) {
+							char Buffer[255]; sprintf(Buffer, "%s   ~r~[MODDER]", PLAYER::GET_PLAYER_NAME(i));
 							sub->AddOption<SubOption>(Buffer, nullptr, SubmenuSelectedPlayer, [=]
 								{
 									features::g_selected_player = i;
