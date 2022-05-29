@@ -13,6 +13,7 @@
 #include <sstream>
 #include "../../BigBaseV2/src/memory/all.hpp"
 #include "gui/player_list.h"
+#include "imgui.h"
 
 namespace big
 {
@@ -318,8 +319,17 @@ namespace big
 		}
 	}
 	
+	bool features::is_modder(Player player)
+	{
+		if (auto plyr = g_pointers->m_get_net_player(player))
+		{
+			if (plyr->m_player_info->m_ped->m_god == 0x01 && !INTERIOR::GET_INTERIOR_FROM_ENTITY(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player)))
+				return true;
+		}
 
-	
+		return false;
+	}
+
 
 	void features::run_tick()
 	{
@@ -511,9 +521,9 @@ namespace big
 				switch (g_current_tick_job)
 				{
 				case 0:
-					//50 MS
+					//50 MS				
 					run_playerlist();
-					
+
 					if (godmode)
 					{
 						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), godmode);
@@ -538,8 +548,7 @@ namespace big
 						
 					}
 					else {
-						if (*g_pointers->m_is_session_started)
-							*script_global(2439138).at(70).as<int*>() = 0;
+						//*script_global(2439138).at(70).as<int*>() = 0;
 					}
 					if (superrunbool)
 					{

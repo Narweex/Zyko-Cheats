@@ -241,7 +241,6 @@
     <ClInclude Include="src\memory\pattern_batch.hpp" />
     <ClInclude Include="src\memory\range.hpp" />
     <ClInclude Include="src\natives.hpp" />
-    <ClInclude Include="src\persist\PersistModder.h" />
     <ClInclude Include="src\pointers.hpp" />
     <ClInclude Include="src\renderer.hpp" />
     <ClInclude Include="src\script.hpp" />
@@ -274,7 +273,6 @@
     <ClCompile Include="src\memory\pattern.cpp" />
     <ClCompile Include="src\memory\pattern_batch.cpp" />
     <ClCompile Include="src\memory\range.cpp" />
-    <ClCompile Include="src\persist\PersistModder.cpp" />
     <ClCompile Include="src\pointers.cpp" />
     <ClCompile Include="src\renderer.cpp" />
     <ClCompile Include="src\script.cpp" />

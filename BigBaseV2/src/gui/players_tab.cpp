@@ -15,31 +15,28 @@ namespace big
 	{
 		if (ImGui::BeginTabItem(xorstr_("Players")))
 		{
-			if (ImGui::ListBoxHeader(xorstr_("##playerlist"), ImVec2(200, -1)))
+			if (*g_pointers->m_is_session_started)
 			{
-				for (auto pair : playerlist)
+				if (ImGui::ListBoxHeader(xorstr_("##playerlist"), ImVec2(200, -1)))
 				{
-					if (pair.second.name != nullptr)
+					for (auto pair : playerlist)
 					{
-						if (ImGui::Selectable(pair.second.name, pair.second.id == features::g_selected_player))
+						if (pair.second.name != nullptr)
 						{
-							if (features::g_selected_player != pair.second.id)
-								features::g_selected_player = pair.second.id;
+							if (ImGui::Selectable(pair.second.name, pair.second.id == features::g_selected_player))
+							{
+								if (features::g_selected_player != pair.second.id)
+									features::g_selected_player = pair.second.id;
+							}	
 						}
 					}
+					ImGui::ListBoxFooter();
 				}
-				ImGui::ListBoxFooter();
-			}
-			ImGui::EndTabItem();
-		}
 
-		ImGui::SameLine(215.f);
 
-		ImGui::BeginChild(xorstr_("##playerfeatures"), ImVec2(925.f, -1)); 
-		{
-			for (auto pair : playerlist)
-			{
-				if (pair.second.name != nullptr)
+				ImGui::SameLine(215.f);
+
+				ImGui::BeginChild(xorstr_("##playerfeatures"), ImVec2(925.f, -1));
 				{
 					if (ImGui::CollapsingHeader(xorstr_("Player Info")))
 					{
@@ -47,14 +44,19 @@ namespace big
 
 						ImGui::BeginGroup();
 						ImGui::Text(xorstr_("Player ID: %lld"), features::g_selected_player);
+						ImGui::Text(xorstr_("Is Modder: ")); ImGui::SameLine(); 
+						if (g_player_list.is_modder) 
+							ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(180, 0, 0, 255)), xorstr_("Yes")); 
+						else
+							ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(0, 180, 0, 255)), xorstr_("No"));
 
 						ImGui::EndGroup();
 
 						ImGui::NextColumn();
 
 						ImGui::BeginGroup();
-						ImGui::Text(xorstr_("Health: %d"), pair.second.health);
-
+						ImGui::Text(xorstr_("Health: %f"), g_player_list.health);
+						ImGui::Text(xorstr_("In Vehicle: %s"), g_player_list.is_vehicle ? "Yes" : "No");
 
 						ImGui::EndGroup();
 
@@ -62,17 +64,11 @@ namespace big
 						ImGui::Separator();
 					}
 				}
+				ImGui::EndChild();
+				ImGui::EndTabItem();
 			}
-
-			if (ImGui::Button(xorstr_("Teleport"))) {
-				QUEUE_JOB_BEGIN_CLAUSE()
-				{
-					Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false);
-					ENTITY::SET_ENTITY_COORDS_NO_OFFSET(PLAYER::PLAYER_PED_ID(), coords.x, coords.y, coords.z, 0, 0, 1);
-				} QUEUE_JOB_END_CLAUSE
-			} 
-				
+			else
+				ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(0, 0, 255)), xorstr_("Connect to GTA Online"));
 		}
-		ImGui::EndChild();
 	} 
 }

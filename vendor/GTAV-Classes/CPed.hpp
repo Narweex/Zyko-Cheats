@@ -11,6 +11,7 @@
 class CPed : public rage::fwEntity
 {
 public:
+	uint8_t m_god; //0x0189
 	uint8_t m_hostility; //0x018C
 	char pad_018D[243]; //0x018D
 	float m_health; //0x0280
@@ -28,7 +29,6 @@ public:
 	uint8_t m_ped_task_flag; //0x146B
 	char pad_146C[196]; //0x146C
 	float m_armor; //0x1530
-}; //Size: 0x1534
-static_assert(sizeof(CPed) == 0x1534);
+}; 
 
 #pragma pack(pop)

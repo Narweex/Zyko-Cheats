@@ -224,9 +224,6 @@
     <ClInclude Include="src\helpers\other.h">
       <Filter>helpers</Filter>
     </ClInclude>
-    <ClInclude Include="src\persist\PersistModder.h">
-      <Filter>persist</Filter>
-    </ClInclude>
     <ClInclude Include="src\gui\player_list.h">
       <Filter>gui</Filter>
     </ClInclude>
@@ -280,9 +277,6 @@
     </ClCompile>
     <ClCompile Include="src\helpers\other.cpp">
       <Filter>helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\persist\PersistModder.cpp">
-      <Filter>persist</Filter>
     </ClCompile>
     <ClCompile Include="src\gui\player_list.cpp">
       <Filter>gui</Filter>
