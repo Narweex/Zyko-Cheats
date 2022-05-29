@@ -100,7 +100,7 @@ namespace big
 	{
 		TRY_CLAUSE
 		{
-			if (ImGui::Begin("BigBaseV2"))
+			if (ImGui::Begin("Zyko Cheats"))
 			{
 				ImGui::BeginTabBar("tabbar");
 				base_tab::render_base_tab();
