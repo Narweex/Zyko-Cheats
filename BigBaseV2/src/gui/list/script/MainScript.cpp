@@ -146,6 +146,7 @@ namespace big
 			{
 				sub->AddOption<SubOption>("Visions", "Change Player Visions", vis);
 				sub->AddOption<BoolOption<bool>>("God Mode", "You Cannot Die", &features::godmode, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Noclip", "WASD - Direction | SPACE - Up | Shift - Down", &features::godmode, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Never Wanted", "Police Wont Start Coming AFter You", &features::neverWanted, BoolDisplay::OnOff);
 				if (!features::neverWanted) {
 					sub->AddOption<NumberOption<int>>("Wanted Level", nullptr, &features::wantedLevel, 0, 5, 1, 3, true, "", "", []
