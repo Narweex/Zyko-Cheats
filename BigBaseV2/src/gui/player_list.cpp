@@ -35,9 +35,21 @@ namespace big
 		{
 			g_player_list.is_modder = is_modder(g_selected_player);
 			g_player_list.player_id = net_player->m_player_id;
+			g_player_list.name = PLAYER::GET_PLAYER_NAME(g_player_list.ped_id);
+			
 			g_player_list.ped_id = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(g_player_list.player_id);
 			g_player_list.is_vehicle = PED::IS_PED_IN_ANY_VEHICLE(g_player_list.ped_id, false);
 			g_player_list.health = ENTITY::GET_ENTITY_HEALTH(g_player_list.ped_id);
+			g_player_list.armour = PED::GET_PED_ARMOUR(g_player_list.ped_id);
+			g_player_list.wanted = PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(g_player_list.ped_id));
+			g_player_list.speed = ENTITY::GET_ENTITY_SPEED(g_player_list.ped_id);
+			g_player_list.alpha = ENTITY::GET_ENTITY_ALPHA(g_player_list.ped_id);
+		
+			
+
+
 		}
 	}
+	
+
 }

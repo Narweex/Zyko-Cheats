@@ -12,6 +12,14 @@ namespace big
 		Ped ped_id{};
 		BOOL is_vehicle{};
 		float health{};
+		float coordsx{};
+		float coordsy{};
+		float coordsz{};
+		float armour{};
+		int wanted{};
+		float is_dead{};
+		int speed{};
+		int alpha{};
 	};
     void run_playerlist();
 	void update_playerlist();

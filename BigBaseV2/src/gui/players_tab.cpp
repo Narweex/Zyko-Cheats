@@ -11,12 +11,14 @@
 
 namespace big
 {
+	
+	
 	void players_tab::render_players_tab()
 	{
 		if (ImGui::BeginTabItem(xorstr_("Players")))
 		{
-			if (*g_pointers->m_is_session_started)
-			{
+			//if (*g_pointers->m_is_session_started)
+			//{
 				if (ImGui::ListBoxHeader(xorstr_("##playerlist"), ImVec2(200, -1)))
 				{
 					for (auto pair : playerlist)
@@ -43,6 +45,7 @@ namespace big
 						ImGui::Columns(2);
 
 						ImGui::BeginGroup();
+						ImGui::Text(xorstr_("Name: %lld"), g_player_list.name);
 						ImGui::Text(xorstr_("Player ID: %lld"), features::g_selected_player);
 						ImGui::Text(xorstr_("Is Modder: ")); ImGui::SameLine(); 
 						if (g_player_list.is_modder) 
@@ -50,13 +53,33 @@ namespace big
 						else
 							ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(0, 180, 0, 255)), xorstr_("No"));
 
+						ImGui::Text(xorstr_("Wanted Level: %i / 5"), g_player_list.wanted);
+						ImGui::Text(xorstr_("In Vehicle: %s"), g_player_list.is_vehicle ? "Yes" : "No");
+						ImGui::Text(xorstr_("Entity Alpha: %i"), g_player_list.alpha);
+						ImGui::Text(xorstr_("Entity Speed: %i MPH"), g_player_list.speed);
+					
+
+						
+						
 						ImGui::EndGroup();
 
 						ImGui::NextColumn();
 
 						ImGui::BeginGroup();
+						ImGui::Text(xorstr_("Is Alive: ")); ImGui::SameLine();
+						if(g_player_list.health < 1)
+							ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(0, 180, 0, 255)), xorstr_("No"));
+						else
+							ImGui::Text(xorstr_("Yes"));
+						ImGui::NewLine();
+						
 						ImGui::Text(xorstr_("Health: %f"), g_player_list.health);
-						ImGui::Text(xorstr_("In Vehicle: %s"), g_player_list.is_vehicle ? "Yes" : "No");
+						ImGui::Text(xorstr_("Armour: %f"), g_player_list.armour);
+						
+						
+
+						
+						
 
 						ImGui::EndGroup();
 
@@ -67,8 +90,7 @@ namespace big
 				ImGui::EndChild();
 				ImGui::EndTabItem();
 			}
-			else
-				ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(0, 0, 255)), xorstr_("Connect to GTA Online"));
-		}
+			//else
+				//ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(0, 0, 255)), xorstr_("Connect to GTA Online"));}
 	} 
 }
