@@ -17,8 +17,8 @@ namespace big
 	{
 		if (ImGui::BeginTabItem(xorstr_("Players")))
 		{
-			//if (*g_pointers->m_is_session_started)
-			//{
+			if (*g_pointers->m_is_session_started)
+			{
 				if (ImGui::ListBoxHeader(xorstr_("##playerlist"), ImVec2(200, -1)))
 				{
 					for (auto pair : playerlist)
@@ -90,7 +90,8 @@ namespace big
 				ImGui::EndChild();
 				ImGui::EndTabItem();
 			}
-			//else
-				//ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(0, 0, 255)), xorstr_("Connect to GTA Online"));}
+			else
+				ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(0, 0, 255)), xorstr_("Connect to GTA Online"));
+		}
 	} 
 }

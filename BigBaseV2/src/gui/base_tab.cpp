@@ -15,22 +15,14 @@ namespace big
 	{
 		if (ImGui::BeginTabItem("Recovery"))
 		{
-			if (ImGui::Button(xorstr_("Clear Wanted Level"))) {
-				QUEUE_JOB_BEGIN_CLAUSE() {
-					if (auto player_info = g_local_player->m_player_info) {
-						if (player_info->m_is_wanted)
-							player_info->m_wanted_level = 0;
-					}
-				} QUEUE_JOB_END_CLAUSE
+			/*if (ImGui::Button(xorstr_("Clear Wanted Level"))) {
+				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_PED_ID(), 0);
+				PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_PED_ID());
 			}
 			ImGui::SameLine();
 			if (ImGui::Button(xorstr_("Add Wanted Level"))) {
-				QUEUE_JOB_BEGIN_CLAUSE() {
-					if (auto player_info = g_local_player->m_player_info) {
-							player_info->m_wanted_level = 5;
-					}
-				} QUEUE_JOB_END_CLAUSE
-			}
+				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_PED_ID(), 5);
+			}*/
 
 			ImGui::Spacing();
 
