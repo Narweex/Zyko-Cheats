@@ -17,6 +17,7 @@
 #include "helpers/other.h"
 #include "../../list/script/Translation.hpp"
 #include "../../BigBaseV2/src/gui/player_list.h"
+#include <shellapi.h>
 
 namespace big
 {
@@ -82,6 +83,7 @@ namespace big
 		SubmenuVehSpawnerSports,
 		SubmenuVehSpawnerMuscle,
 		SubmenuVehSpawnerSuper,
+		SUbmenuSettingsLinks,
 		SubmenuVehSpawnerSportClassics,
 		SubmenuVehSpawnerSedans,
 		SubmenuVehSpawnerSUVs,
@@ -146,10 +148,10 @@ namespace big
 			{
 				sub->AddOption<SubOption>("Visions", "Change Player Visions", vis);
 				sub->AddOption<BoolOption<bool>>("God Mode", "You Cannot Die", &features::godmode, BoolDisplay::OnOff);
-				sub->AddOption<BoolOption<bool>>("Noclip", "WASD - Direction | SPACE - Up | Shift - Down", &features::godmode, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Noclip", "WASD - Direction | SPACE - Up | Shift - Down", &features::noclip, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Never Wanted", "Police Wont Start Coming AFter You", &features::neverWanted, BoolDisplay::OnOff);
 				if (!features::neverWanted) {
-					sub->AddOption<NumberOption<int>>("Wanted Level", nullptr, &features::wantedLevel, 0, 5, 1, 3, true, "", "", []
+					sub->AddOption<NumberOption<int>>("Wanted Level", nullptr, &features::wantedLevel, 0, 5, 1, 3, true, "< ", " >", []
 						{
 							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
 							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
@@ -158,11 +160,11 @@ namespace big
 
 				sub->AddOption<BoolOption<bool>>("Super Run - Override", "Run Boiiiiiii", &features::superrunbool, BoolDisplay::OnOff);
 				if (features::superrunbool) {
-					sub->AddOption<NumberOption<float>>("Run Speed", nullptr, &features::runspeed, 0.1, 5.0, 0.1, 3, true, "", "", [] {});
+					sub->AddOption<NumberOption<float>>("Run Speed", nullptr, &features::runspeed, 0.1, 5.0, 0.1, 3, true, "< ", " >", [] {});
 				}
 				sub->AddOption<BoolOption<bool>>("Super Run - Force", "Run Boiiiiiii", &features::ultrarunbool, BoolDisplay::OnOff);
 				if (features::ultrarunbool) {
-					sub->AddOption<NumberOption<float>>("Run Speed", nullptr, &features::runspeed1, 0.1, 5.0, 0.1, 3, true, "", "", [] {});
+					sub->AddOption<NumberOption<float>>("Run Speed", nullptr, &features::runspeed1, 0.1, 5.0, 0.1, 3, true, "< ", " >", [] {});
 				}
 				sub->AddOption<BoolOption<bool>>("Flash Mode", "Run Like Flash", &features::flashrun, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Super Jump", "Ever wanted to jump higher?", &features::superjumpbool, BoolDisplay::OnOff);
@@ -366,11 +368,11 @@ namespace big
 				if (features::hornboost || features::smoothhornboost)
 				{
 					if (features::hornboost) {
-						sub->AddOption<NumberOption<int>>("Horn Boost Speed", nullptr, &features::hornboostvalue, 0, 200, 10, 3, true, "", "", [] {});
+						sub->AddOption<NumberOption<int>>("Horn Boost Speed", nullptr, &features::hornboostvalue, 0, 200, 10, 3, true, "< ", " >", [] {});
 					}
 					sub->AddOption<BoolOption<bool>>("Horn Boost Effect", "Adds a Pog Turbo Effect", &features::hornboosteffect, BoolDisplay::OnOff);
 				}
-				sub->AddOption<NumberOption<std::int32_t>>("Vehicle Speed", nullptr, &features::vehiclespeed, 0, 500, 10, 3, true, "", "", [] {});
+				sub->AddOption<NumberOption<std::int32_t>>("Vehicle Speed", nullptr, &features::vehiclespeed, 0, 500, 10, 3, true, "< ", " >", [] {});
 				sub->AddOption<RegularOption>("Set Speed", "", []
 					{
 						Vehicle Veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID()), false);
@@ -384,17 +386,17 @@ namespace big
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Vehicle Colors", SubmenuVehicleColors, [&](RegularSubmenu* sub)
 			{
-				sub->AddOption<NumberOption<std::int32_t>>("Color Primary [~r~R~s~]", nullptr, &features::red, 0, 255, 10, 3, true, "", "", [] {});
-				sub->AddOption<NumberOption<std::int32_t>>("Color Primary [~g~G~s~]", nullptr, &features::green, 0, 255, 10, 3, true, "", "", [] {});
-				sub->AddOption<NumberOption<std::int32_t>>("Color Primary [~b~B~s~]", nullptr, &features::blue, 0, 255, 10, 3, true, "", "", [] {});
+				sub->AddOption<NumberOption<std::int32_t>>("Color Primary [~r~R~s~]", nullptr, &features::red, 0, 255, 10, 3, true, "< ", " >", [] {});
+				sub->AddOption<NumberOption<std::int32_t>>("Color Primary [~g~G~s~]", nullptr, &features::green, 0, 255, 10, 3, true, "< ", " >", [] {});
+				sub->AddOption<NumberOption<std::int32_t>>("Color Primary [~b~B~s~]", nullptr, &features::blue, 0, 255, 10, 3, true, "< ", " >", [] {});
 				sub->AddOption<RegularOption>("Set Vehicle Primary RGB", "Random Paint Vehicle", []
 					{
 						int VehID = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0);
 						VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(VehID, features::red, features::green, features::blue);
 					});
-				sub->AddOption<NumberOption<std::int32_t>>("Color Secondary [~r~R~s~]", nullptr, &features::red2, 0, 255, 10, 3, true, "", "", [] {});
-				sub->AddOption<NumberOption<std::int32_t>>("Color Secondary [~g~G~s~]", nullptr, &features::green2, 0, 255, 10, 3, true, "", "", [] {});
-				sub->AddOption<NumberOption<std::int32_t>>("Color Secondary [~b~B~s~]", nullptr, &features::blue2, 0, 255, 10, 3, true, "", "", [] {});
+				sub->AddOption<NumberOption<std::int32_t>>("Color Secondary [~r~R~s~]", nullptr, &features::red2, 0, 255, 10, 3, true, "< ", " >", [] {});
+				sub->AddOption<NumberOption<std::int32_t>>("Color Secondary [~g~G~s~]", nullptr, &features::green2, 0, 255, 10, 3, true, "< ", " >", [] {});
+				sub->AddOption<NumberOption<std::int32_t>>("Color Secondary [~b~B~s~]", nullptr, &features::blue2, 0, 255, 10, 3, true, "< ", " >", [] {});
 				sub->AddOption<RegularOption>("Set Vehicle Secondary RGB", "Random Paint Vehicle", []
 					{
 						int VehID = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0);
@@ -721,12 +723,12 @@ namespace big
 				sub->AddOption<SubOption>("Weather", "Adjust the World Time", WeatherSubmenu);
 				sub->AddOption<SubOption>("Water", "Mess With Water", WaterSubmenu);
 				sub->AddOption<SubOption>("Clear Area", "Select what to clear from you", ClearSubmenu);
-				sub->AddOption<NumberOption<std::int32_t>>("World Gravity", nullptr, &features::worldgravity, 0, 3, 1, 3, true, "", "", [] {});
+				sub->AddOption<NumberOption<std::int32_t>>("World Gravity", nullptr, &features::worldgravity, 0, 3, 1, 3, true, "< ", " >", [] {});
 				sub->AddOption<RegularOption>("Set Gravity", "", []
 					{
 						MISC::SET_GRAVITY_LEVEL(features::worldgravity);
 					});
-				sub->AddOption<NumberOption<float>>("Rain Intensity", nullptr, &features::rainlevelint, 0, 1000, 10, 3, true, "", "", [] {});
+				sub->AddOption<NumberOption<float>>("Rain Intensity", nullptr, &features::rainlevelint, 0, 1000, 10, 3, true, "< ", " >", [] {});
 				sub->AddOption<RegularOption>("Set Intensity", "", []
 					{
 						MISC::_SET_RAIN_FX_INTENSITY(features::rainlevelint);
@@ -735,12 +737,12 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Time", TimeSubmenu, [](RegularSubmenu* sub)
 			{
 				sub->AddOption<BoolOption<bool>>("Stop Time", "Freezes Time In the World", &features::stoptime, BoolDisplay::OnOff);
-				sub->AddOption<NumberOption<int>>("Hours", "Might Not Work In Online!", &features::HoursTime, 0, 23, 1, 1, true, "", "", []
+				sub->AddOption<NumberOption<int>>("Hours", "Might Not Work In Online!", &features::HoursTime, 0, 23, 1, 1, true, "< ", " >", []
 					{
 						CLOCK::SET_CLOCK_TIME(features::HoursTime, 0, 0);
 						NETWORK::NETWORK_OVERRIDE_CLOCK_TIME(features::HoursTime, 0, 0);
 					});
-				sub->AddOption<NumberOption<int>>("Minutes", "Might Not Work In Online!", &features::MinutesTime, 0, 59, 1, 1, true, "", "", []
+				sub->AddOption<NumberOption<int>>("Minutes", "Might Not Work In Online!", &features::MinutesTime, 0, 59, 1, 1, true, "< ", " >", []
 					{
 						CLOCK::SET_CLOCK_TIME(features::HoursTime, features::MinutesTime, 0);
 						NETWORK::NETWORK_OVERRIDE_CLOCK_TIME(features::HoursTime, features::MinutesTime, 0);
@@ -821,12 +823,12 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Water", WaterSubmenu, [](RegularSubmenu* sub)
 			{
 				sub->AddOption<BoolOption<bool>>("No Water Mode", "Deletes Water", &features::nowater, BoolDisplay::OnOff);
-				sub->AddOption<NumberOption<int>>("Hours", "Might Not Work In Online!", &features::HoursTime, 0, 23, 1, 1, true, "", "", []
+				sub->AddOption<NumberOption<int>>("Hours", "Might Not Work In Online!", &features::HoursTime, 0, 23, 1, 1, true, "< ", " >", []
 					{
 						CLOCK::SET_CLOCK_TIME(features::HoursTime, 0, 0);
 						NETWORK::NETWORK_OVERRIDE_CLOCK_TIME(features::HoursTime, 0, 0);
 					});
-				sub->AddOption<NumberOption<int>>("Minutes", "Might Not Work In Online!", &features::MinutesTime, 0, 59, 1, 1, true, "", "", []
+				sub->AddOption<NumberOption<int>>("Minutes", "Might Not Work In Online!", &features::MinutesTime, 0, 59, 1, 1, true, "< ", " >", []
 					{
 						CLOCK::SET_CLOCK_TIME(features::HoursTime, features::MinutesTime, 0);
 						NETWORK::NETWORK_OVERRIDE_CLOCK_TIME(features::HoursTime, features::MinutesTime, 0);
@@ -844,7 +846,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Clear Area", ClearSubmenu, [](RegularSubmenu* sub)
 			{
 
-				sub->AddOption<NumberOption<int>>("Radius", "How far should objects be cleared?", &features::clearradius, 1, 500, 10, 1, true, "", "", []
+				sub->AddOption<NumberOption<int>>("Radius", "How far should objects be cleared?", &features::clearradius, 1, 500, 10, 1, true, "< ", " >", []
 					{
 						NULL;
 					});
@@ -1233,8 +1235,20 @@ namespace big
 						
 						sub->AddOption<RegularOption>("Crash", "Trap In cage", []
 							{
-								Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
-								Object crashobject = OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY("v_ilev_chair02_ped"), pos.x, pos.y, pos.z, 1, 1, 1);
+								features::objectcrash(849958566);
+								features::objectcrash(-568220328);
+								features::objectcrash(2155335200);
+								features::objectcrash(1272323782);
+								features::objectcrash(1296557055);
+								features::objectcrash(29828513);
+								features::objectcrash(2250084685);
+								features::objectcrash(2349112599);
+								features::objectcrash(1599985244);
+								features::objectcrash(3523942264);
+								features::objectcrash(3457195100);
+								features::objectcrash(3762929870);
+								features::objectcrash(1016189997);
+
 
 								
 							});
@@ -1439,6 +1453,7 @@ namespace big
 					});
 			//sub->AddOption<SubOption>("Header", nullptr, SubmenuSettingsHeader);
 			sub->AddOption<SubOption>("Infobar", nullptr, SubmenuSettingsSubmenuBar);
+			sub->AddOption<SubOption>("Links", nullptr, SUbmenuSettingsLinks);
 			sub->AddOption<SubOption>("Options", nullptr, SubmenuSettingsOption);
 			sub->AddOption<SubOption>("Footer", nullptr, SubmenuSettingsFooter);
 			sub->AddOption<SubOption>("Description", nullptr, SubmenuSettingsDescription);
@@ -1449,6 +1464,19 @@ namespace big
 			sub->AddOption<NumberOption<float>>("Width", nullptr, &g_UiManager->m_Width, 0.01f, 1.f, 0.01f, 2);
 			sub->AddOption<BoolOption<bool>>("Sounds", nullptr, &g_UiManager->m_Sounds, BoolDisplay::OnOff);	
 		});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Links", SUbmenuSettingsLinks, [](RegularSubmenu* sub)
+			{
+				
+				sub->AddOption<RegularOption>("Zyko Official Website", "Opens Your Browser", []
+					{
+						ShellExecuteA(0, 0, "https://zykocheats.org/", 0, 0, SW_SHOW);
+					});
+				sub->AddOption<RegularOption>("Zyko Discord", "Opens Your Browser", []
+					{
+						ShellExecuteA(0, 0, "https://discord.gg/GrEkpRQcQE", 0, 0, SW_SHOW);
+					});
+				
+			});
 	
 		g_UiManager->AddSubmenu<RegularSubmenu>("Infobar", SubmenuSettingsSubmenuBar, [](RegularSubmenu* sub)
 		{
