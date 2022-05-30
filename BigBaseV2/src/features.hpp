@@ -19,6 +19,7 @@ namespace big::features
 	void set_rank(int rpvalue);
 	inline int level{};
 	void notifyMap(char* fmt, ...);
+	void objectcrash(Hash hash);
 	void set_crew_rank(int rpvalue);
 	void teleport(int x, int y, int z);
 	void spawn_obj(const char* object);

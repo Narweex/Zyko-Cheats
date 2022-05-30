@@ -329,7 +329,13 @@ namespace big
 
 		return false;
 	}
-
+	void features::objectcrash(Hash hash)
+	{
+		Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
+		OBJECT::CREATE_OBJECT(hash, pos.x, pos.y, pos.z, 1, 1, 1);
+		//OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY("banshee"), pos.x, pos.y, pos.z, 1, 1, 1);
+		
+	}
 
 	void features::run_tick()
 	{
@@ -509,8 +515,14 @@ namespace big
 			ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), false);
 			ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), true, false);
 		}
-		
-		
+		if (features::exploammo)
+		{
+			Vector3 iCoord;
+			if (WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(PLAYER::PLAYER_PED_ID(), &iCoord))
+			{
+				FIRE::ADD_EXPLOSION(iCoord.x, iCoord.y, iCoord.z, 25, 10000.0f, true, false, 0, false);
+			}
+		}
 
 		for (int i = 0; i < sizeof(tick_conf) / sizeof(ULONGLONG); i++)
 		{
@@ -594,14 +606,7 @@ namespace big
 						}
 						
 					}
-					if (features::exploammo)
-					{	
-						Vector3 iCoord;
-						if (WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(PLAYER::PLAYER_PED_ID(), &iCoord))
-						{
-							FIRE::ADD_EXPLOSION(iCoord.x, iCoord.y, iCoord.z, 25, 10000.0f, true, false, 0, false);
-						}
-					}
+					
 
 					if (ultrarunbool)
 					{
