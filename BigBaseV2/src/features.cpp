@@ -21,15 +21,15 @@ namespace big
 {
 	void features::on_present()
 	{
+		
+		TRY_CLAUSE
+		{
 		ImGui::MergeIconsWithLatestFont(16.f, false);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.f); // Round borders
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(43.f / 255.f, 43.f / 255.f, 43.f / 255.f, 100.f / 255.f)); // Background color
 		ImGui::RenderNotifications(); // <-- Here we render all notifications
 		ImGui::PopStyleVar(1); // Don't forget to Pop()
 		ImGui::PopStyleColor(1);
-		TRY_CLAUSE
-		{
-		
 		}
 		EXCEPT_CLAUSE
 	}
