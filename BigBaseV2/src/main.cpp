@@ -9,6 +9,7 @@
 #include "script_mgr.hpp"
 #include "gui/list/script/MainScript.hpp"
 #include "gui/list/UIManager.hpp"
+#include "features.hpp"
 
 BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 {
@@ -59,7 +60,8 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 
 				g_hooking->enable();
 				LOG(INFO) << "Hooking enabled.";
-
+				features::notify("   Welcome", "Welcome to Zyko Cheats!", 15000);
+				features::notify("INSERT to Open ", "   Info", 15000);
 				while (g_running)
 				{
 					std::this_thread::sleep_for(500ms);

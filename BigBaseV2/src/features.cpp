@@ -14,19 +14,50 @@
 #include "../../BigBaseV2/src/memory/all.hpp"
 #include "gui/player_list.h"
 #include "imgui.h"
+#include <helpers/imgui_notify.h>
+
 
 namespace big
 {
 	void features::on_present()
 	{
+		ImGui::MergeIconsWithLatestFont(16.f, false);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.f); // Round borders
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(43.f / 255.f, 43.f / 255.f, 43.f / 255.f, 100.f / 255.f)); // Background color
+		ImGui::RenderNotifications(); // <-- Here we render all notifications
+		ImGui::PopStyleVar(1); // Don't forget to Pop()
+		ImGui::PopStyleColor(1);
 		TRY_CLAUSE
 		{
+		
 		}
 		EXCEPT_CLAUSE
 	}
 
+	
 
 	///////////////////////////////////////////////////////   HELP VOIDS   ///////////////////////////////////////////////////////
+	void features::notify(const char* title,const char* text, int duration)
+	{
+		ImGuiToast toast(ImGuiToastType_None, duration);
+
+		
+			toast.set_title(text);
+			toast.set_content(title);
+			
+
+		ImGui::InsertNotification(toast);
+		//ImGui::InsertNotification({ ImGuiToastType_None, duration, text });
+	}
+	void features::notify_error(const char* text)
+	{
+		ImGui::InsertNotification({ ImGuiToastType_Error, 4000, text });
+	}
+	void features::notify_warning(const char* text)
+	{
+		ImGui::InsertNotification({ ImGuiToastType_Warning, 4000, text });
+	}
+	
 	void features::notifyMap(char* fmt, ...)
 	{
 		char buf[2048] = { 0 };
