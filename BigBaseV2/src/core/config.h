@@ -12,7 +12,7 @@ namespace big
 
 		nlohmann::json options;
 		nlohmann::json default_options =
-		R"({
+			R"({
 			"demo bool": false,
 			"demo int": 1,
 			"demo double": 1.0,
@@ -23,7 +23,7 @@ namespace big
 		bool save()
 		{
 			std::string settings_file = std::getenv("appdata");
-			settings_file += "\\BigBaseV2\\settings.json";
+			settings_file += "\\Zyko\\settings.json";
 
 			std::ofstream file(settings_file, std::ios::out | std::ios::trunc);
 			file << options.dump(4);
@@ -34,7 +34,7 @@ namespace big
 		bool load()
 		{
 			std::string settings_file = std::getenv("appdata");
-			settings_file += "\\BigBaseV2\\settings.json";
+			settings_file += "\\Zyko\\settings.json";
 
 			std::ifstream file(settings_file);
 
@@ -54,7 +54,7 @@ namespace big
 					should_save = true;
 					options[e.key()] = e.value();
 				}
-					
+
 			}
 
 			if (should_save)
@@ -70,7 +70,7 @@ namespace big
 		bool write_default_config()
 		{
 			std::string settings_file = std::getenv("appdata");
-			settings_file += "\\BigBaseV2\\settings.json";
+			settings_file += "\\Zyko\\settings.json";
 
 			std::ofstream file(settings_file, std::ios::out);
 			file << default_options.dump(4);
