@@ -1451,6 +1451,12 @@ namespace big
 					{
 						g_running = false;
 					});
+				sub->AddOption<RegularOption>("Change Open Key", "Game will freeze until you input a new key", []
+					{
+						features::notify("Press any key", "", 5000);
+						Sleep(1000);
+						features::setOpenKey();
+					});
 			//sub->AddOption<SubOption>("Header", nullptr, SubmenuSettingsHeader);
 			sub->AddOption<SubOption>("Infobar", nullptr, SubmenuSettingsSubmenuBar);
 			sub->AddOption<SubOption>("Links", nullptr, SUbmenuSettingsLinks);
