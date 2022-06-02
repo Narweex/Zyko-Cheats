@@ -13,6 +13,7 @@ namespace big
 {
 	void base_tab::render_base_tab()
 	{
+
 		if (ImGui::BeginTabItem("Recovery"))
 		{
 			/*if (ImGui::Button(xorstr_("Clear Wanted Level"))) {
@@ -25,12 +26,15 @@ namespace big
 			}*/
 
 			ImGui::Spacing();
+			static bool demo_bool = true;
+			ImGui::Checkbox("Bool", &demo_bool);
 
 			ImGui::Text(xorstr_("Money"));
 
 			static int bunker_money;
 
 			if (ImGui::Button(xorstr_("Add: Bunker Money"))) {
+				features::notify("Money Added", "", 4000);
 				QUEUE_JOB_BEGIN_CLAUSE() {
 					features::basket_transaction(-1799524201, -1018905335, 4,
 					{

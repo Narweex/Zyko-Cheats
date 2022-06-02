@@ -20,6 +20,7 @@ namespace big
 		float is_dead{};
 		int speed{};
 		int alpha{};
+		Hash zone{};
 	};
     void run_playerlist();
 	void update_playerlist();

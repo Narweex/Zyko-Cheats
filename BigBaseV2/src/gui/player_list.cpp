@@ -44,12 +44,17 @@ namespace big
 			g_player_list.wanted = PLAYER::GET_PLAYER_WANTED_LEVEL(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(g_player_list.ped_id));
 			g_player_list.speed = ENTITY::GET_ENTITY_SPEED(g_player_list.ped_id);
 			g_player_list.alpha = ENTITY::GET_ENTITY_ALPHA(g_player_list.ped_id);
-		
+			Vector3 playerpos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(g_selected_player), 1);
+			g_player_list.zone = ZONE::GET_HASH_OF_MAP_AREA_AT_COORDS(playerpos.x, playerpos.y, playerpos.z);
+			
 			
 
 
 		}
 	}
+	
+		
+	
 	
 
 }
