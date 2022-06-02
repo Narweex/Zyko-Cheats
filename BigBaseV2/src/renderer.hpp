@@ -1,6 +1,7 @@
 #pragma once
 #include "common.hpp"
 #include <imgui.h>
+#include "../../BigBaseV2/src/core/icons.h"
 
 namespace big
 {
@@ -14,10 +15,14 @@ namespace big
 
 		void pre_reset();
 		void post_reset();
-
-		void wndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+		
 	public:
-		ImFont *m_font;
+		ImFont* m_font;
+		ImFont* m_monospace_font;
+		ImFont* m_font_awesome;
+		ImFont* m_notosans_regular;
+		ImFont* m_staanliches;
+		void wndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	private:
 		comptr<IDXGISwapChain> m_dxgi_swapchain;
 		comptr<ID3D11Device> m_d3d_device;

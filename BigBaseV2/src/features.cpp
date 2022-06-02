@@ -13,8 +13,9 @@
 #include <sstream>
 #include "../../BigBaseV2/src/memory/all.hpp"
 #include "gui/player_list.h"
-#include "imgui.h"
+#include <imgui.h>
 #include <helpers/imgui_notify.h>
+#include "../../BigBaseV2/src/helpers/tahoma.h"
 
 
 namespace big
@@ -22,11 +23,15 @@ namespace big
 	void features::on_present()
 	{
 		
+
+		// Initialize notify
+		
 		TRY_CLAUSE
 		{
 		ImGui::MergeIconsWithLatestFont(16.f, false);
+		ImGui::MergeIconsWithLatestFont(16.f, false);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.f); // Round borders
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(43.f / 255.f, 43.f / 255.f, 43.f / 255.f, 100.f / 255.f)); // Background color
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.04f, 0.14f, 100.f / 255.f)); // Background color
 		ImGui::RenderNotifications(); // <-- Here we render all notifications
 		ImGui::PopStyleVar(1); // Don't forget to Pop()
 		ImGui::PopStyleColor(1);
@@ -37,26 +42,55 @@ namespace big
 	
 
 	///////////////////////////////////////////////////////   HELP VOIDS   ///////////////////////////////////////////////////////
-	void features::notify(const char* title,const char* text, int duration)
+	
+	void features::notify_success(const char* title, const char* text, int duration)
 	{
-		ImGuiToast toast(ImGuiToastType_None, duration);
+		ImGuiToast toast(ImGuiToastType_Success, duration);
 
-		
-			toast.set_title(text);
-			toast.set_content(title);
-			
+		toast.set_title(title);
+		toast.set_content(text);
 
 		ImGui::InsertNotification(toast);
-		//ImGui::InsertNotification({ ImGuiToastType_None, duration, text });
+
 	}
-	void features::notify_error(const char* text)
+	void features::notify(const char* title,const char* text, int duration)
 	{
-		ImGui::InsertNotification({ ImGuiToastType_Error, 4000, text });
+		ImGuiToast toast(ImGuiToastType_Info, duration);
+		
+			toast.set_title(title);
+			toast.set_content(text);
+			
+		ImGui::InsertNotification(toast);
+		
 	}
-	void features::notify_warning(const char* text)
+	void features::notify_error(const char* title, const char* text, int duration)
 	{
-		ImGui::InsertNotification({ ImGuiToastType_Warning, 4000, text });
+		ImGuiToast toast(ImGuiToastType_Error, duration);
+
+		toast.set_title(title);
+		toast.set_content(text);
+
+		ImGui::InsertNotification(toast);
+		
 	}
+	void features::notify_protections(const char* title, const char* text, int duration)
+	{
+		ImGuiToast toast(ImGuiToastType_Warning, duration);
+
+		toast.set_title(title);
+		toast.set_content(text);
+
+		ImGui::InsertNotification(toast);
+
+	}
+	//void features::notify_error(const char* text)
+	//{
+	//	ImGui::InsertNotification({ ImGuiToastType_Error, 4000, text });
+	//}
+	//void features::notify_warning(const char* text)
+	//{
+	//	ImGui::InsertNotification({ ImGuiToastType_Warning, 4000, text });
+	//}
 	
 	void features::notifyMap(char* fmt, ...)
 	{
@@ -349,13 +383,22 @@ namespace big
 			STATS::STAT_SAVE(0, 0, 3, 0);
 		}
 	}
-	
+	int moddervalue;
 	bool features::is_modder(Player player)
 	{
 		if (auto plyr = g_pointers->m_get_net_player(player))
 		{
 			if (plyr->m_player_info->m_ped->m_god == 0x01 && !INTERIOR::GET_INTERIOR_FROM_ENTITY(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player)))
+				moddervalue + 5;
+			//return true;
+			if (ENTITY::GET_ENTITY_SPEED(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player)))
+			{
+				moddervalue + 5;
+			}
+			if (moddervalue > 9)
+			{
 				return true;
+			}
 		}
 
 		return false;
@@ -595,7 +638,7 @@ namespace big
 					}
 					if (superrunbool)
 					{
-						notifyMap("Hold SHIFT To Activate");
+						notify("Hold SHIFT To Run", "Controls", 3000);
 						if (gta_util::IsKeyPressed(VK_SHIFT))
 						{
 							PED::SET_PED_MOVE_RATE_OVERRIDE(PLAYER::PLAYER_PED_ID(), runspeed);
@@ -617,7 +660,7 @@ namespace big
 						Player playerPed = PLAYER::PLAYER_PED_ID();
 						PED::SET_PED_CAN_RAGDOLL(playerPed, false); 
 						Vector3 pCoords = ENTITY::GET_ENTITY_COORDS(playerPed, 0);
-						FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z, 16, 5.00f, 0, 1, 0, 0);
+						FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z, 7, 5.00f, 0, 1, 0, 0);
 
 					}
 					if (hornboost)

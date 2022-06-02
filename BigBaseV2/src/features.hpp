@@ -1,5 +1,6 @@
 #pragma once
 #include "common.hpp"
+#include "../../BigBaseV2/src/core/config.h"
 
 namespace big::features
 {
@@ -19,9 +20,10 @@ namespace big::features
 	void set_rank(int rpvalue);
 	inline int level{};
 	void notifyMap(char* fmt, ...);
-	void notify(const char* title, const char* text, int duration);
-	void notify_error(const char* text);
-	void notify_warning(const char* text);
+	void notify(const char* text, const char* title, int duration);
+	void notify_success(const char* text, const char* title, int duration);
+	void notify_error(const char* text, const char* title, int duration);
+	void notify_protections(const char* text, const char* title, int duration);
 	void objectcrash(Hash hash);
 	void set_crew_rank(int rpvalue);
 	void teleport(int x, int y, int z);
