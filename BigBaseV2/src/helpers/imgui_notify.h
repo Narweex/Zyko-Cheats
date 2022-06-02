@@ -7,7 +7,7 @@
 #pragma once
 #include <vector>
 #include <string>
-#include "font_awesome_5.h"
+#include "icons.h"
 #include "fa_solid_900.h"
 #include <imgui.h>
 
@@ -15,7 +15,7 @@
 #define NOTIFY_PADDING_X				20.f		// Bottom-left X padding
 #define NOTIFY_PADDING_Y				20.f		// Bottom-left Y padding
 #define NOTIFY_PADDING_MESSAGE_Y		10.f		// Padding Y between each message
-#define NOTIFY_FADE_IN_OUT_TIME			150			// Fade in and out duration
+#define NOTIFY_FADE_IN_OUT_TIME			200			// Fade in and out duration
 #define NOTIFY_DEFAULT_DISMISS			3000		// Auto dismiss after X ms (default, applied only of no data provided in constructors)
 #define NOTIFY_OPACITY					1.0f		// 0-1 Toast opacity
 #define NOTIFY_TOAST_FLAGS				ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoFocusOnAppearing
@@ -138,16 +138,25 @@ public:
 		case ImGuiToastType_None:
 			return NULL;
 		case ImGuiToastType_Success:
-			return ICON_FA_CHECK_CIRCLE;
+			return ICON_FK_CHECK;
 		case ImGuiToastType_Warning:
-			return ICON_FA_EXCLAMATION_TRIANGLE;
+			return ICON_FK_EXCLAMATION_TRIANGLE;
 		case ImGuiToastType_Error:
-			return ICON_FA_TIMES_CIRCLE;
+			return ICON_FK_TIMES_CIRCLE;
 		case ImGuiToastType_Info:
-			return ICON_FA_INFO_CIRCLE;
+			return ICON_FK_INFO_CIRCLE;
 		}
 	}
-
+	/*case ImGuiToastType_None:
+		return NULL;
+	case ImGuiToastType_Success:
+		return ICON_FA_CHECK_CIRCLE;
+	case ImGuiToastType_Warning:
+		return ICON_FA_EXCLAMATION_TRIANGLE;
+	case ImGuiToastType_Error:
+		return ICON_FA_TIMES_CIRCLE;
+	case ImGuiToastType_Info:
+		return ICON_FA_INFO_CIRCLE;*/
 	NOTIFY_INLINE auto get_content() -> char* { return this->content; };
 
 	NOTIFY_INLINE auto get_elapsed_time() { return GetTickCount64() - this->creation_time; }
@@ -326,6 +335,10 @@ namespace ImGui
 
 				PopTextWrapPos();
 			}
+			
+			{
+
+			}
 
 			// Save height for next toasts
 			height += GetWindowHeight() + NOTIFY_PADDING_MESSAGE_Y;
@@ -341,7 +354,7 @@ namespace ImGui
 	/// </summary>
 	NOTIFY_INLINE VOID MergeIconsWithLatestFont(float font_size, bool FontDataOwnedByAtlas = false)
 	{
-		static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+		static const ImWchar icons_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
 
 		ImFontConfig icons_config;
 		icons_config.MergeMode = true;
