@@ -27,7 +27,7 @@ namespace big
 			try
 			{
 				char filename[100] = {};
-				std::snprintf(&filename[0], sizeof(filename) - 1, "%s.big", name);
+				std::snprintf(&filename[0], sizeof(filename) - 1, "%s.zyko", name);
 				auto filePath = std::filesystem::path(m_TranslationDir).append(filename);
 
 				std::ifstream file(filePath);

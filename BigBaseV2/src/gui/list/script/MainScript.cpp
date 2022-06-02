@@ -15,7 +15,7 @@
 #include "gta/joaat.hpp"
 #include "script_global.hpp"
 #include "helpers/other.h"
-#include "../../list/script/Translation.hpp"
+#include "Translation.hpp"
 #include "../../BigBaseV2/src/gui/player_list.h"
 #include <shellapi.h>
 
@@ -1396,25 +1396,24 @@ namespace big
 			});
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Language", SubmenuSettingsLanguage, [](RegularSubmenu* sub)
+			{namespace fs = std::filesystem;
+		fs::directory_iterator dirIt{ g_TranslationManager->GetTranslationDirectory() };
+		for (auto&& dirEntry : dirIt)
+		{
+			if (dirEntry.is_regular_file())
 			{
-				namespace fs = std::filesystem;
-				fs::directory_iterator dirIt{ g_TranslationManager->GetTranslationDirectory() };
-				
-				
-				for (auto&& dirEntry : dirIt)
+				auto path = dirEntry.path();
+				if (path.has_filename())
 				{
-					if (dirEntry.is_regular_file())
-					{
-						auto path = dirEntry.path();
-						if (path.has_filename())
+					sub->AddOption<RegularOption>(path.stem().u8string().c_str(), nullptr, [=]
 						{
-							sub->AddOption<RegularOption>(path.stem().u8string().c_str(), nullptr, [=]
-								{
-									g_TranslationManager->LoadTranslations(path.stem().u8string().c_str());
-								});
-						}
-					}
+							g_TranslationManager->LoadTranslations(path.stem().u8string().c_str());
+						});
 				}
+			}
+		}
+
+			
 
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Object Spawner", SubmenuSettingsObjectSpanwer, [](RegularSubmenu* sub)
@@ -1447,6 +1446,20 @@ namespace big
 						g_list = false;
 						g_gui.m_opened = true;
 					});*/
+				sub->AddOption<RegularOption>("notify", "Unload the menu.", []
+					{
+						features::notify("Test", "Notification", 4000);
+					});
+				sub->AddOption<RegularOption>("error", "Unload the menu.", []
+					{
+						features::notify_error("An error occured", "Notification", 4000);
+					});
+				sub->AddOption<RegularOption>("protections", "Unload the menu.", []
+					{
+						features::notify_protections("Event Blocked", "Crash from Narweex", 4000);
+					});
+				
+
 				sub->AddOption<RegularOption>("Unload", "Unload the menu.", []
 					{
 						g_running = false;
@@ -1454,7 +1467,7 @@ namespace big
 				sub->AddOption<RegularOption>("Change Open Key", "Game will freeze until you input a new key", []
 					{
 						features::notify("Press any key", "", 5000);
-						Sleep(1000);
+						Sleep(10000);
 						features::setOpenKey();
 					});
 			//sub->AddOption<SubOption>("Header", nullptr, SubmenuSettingsHeader);
