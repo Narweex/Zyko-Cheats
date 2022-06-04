@@ -100,9 +100,9 @@ namespace big
 	{
 		TRY_CLAUSE
 		{
-			if (ImGui::Begin("Zyko Cheats"))
+			if (ImGui::Begin(xorstr_("Zyko Cheats")))
 			{
-				ImGui::BeginTabBar("tabbar");
+				ImGui::BeginTabBar(xorstr_("tabbar"));
 				base_tab::render_base_tab();
 				players_tab::render_players_tab();
 				ImGui::EndTabBar();
