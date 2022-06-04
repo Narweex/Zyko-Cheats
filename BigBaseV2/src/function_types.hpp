@@ -24,4 +24,8 @@ namespace big::functions
 	using process_transaction = bool (*)(transaction_queue* tq, int transaction, int64_t unk3);
 	using file_register_t = uint32_t(*)(int* texture_id, const char* path, bool, const char* file_name, bool);
 	using get_net_player_t = CNetGamePlayer*(std::uint32_t index);
+	using get_script_handle_t = int64_t(*)(int64_t);
+	using send_event_ack = void(rage::netEventMgr* event_manager, CNetGamePlayer* source_player, CNetGamePlayer* target_player, int event_index, int event_handled_bitset);
+	using received_event = bool(*)(rage::netEventMgr* event_manager, CNetGamePlayer* source_player, CNetGamePlayer* target_player, uint16_t event_id, int event_index, int event_handled_bitset, int unk, rage::datBitBuffer* buffer);
+
 }

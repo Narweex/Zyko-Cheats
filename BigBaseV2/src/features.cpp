@@ -411,6 +411,20 @@ namespace big
 		
 	}
 
+	void features::normal_alert(const char* text, const char* subject, Player player)
+	{
+		auto handle = PED::REGISTER_PEDHEADSHOT(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player));
+		script::get_current()->yield(1s);
+		auto txd = PED::GET_PEDHEADSHOT_TXD_STRING(handle);
+
+		HUD::BEGIN_TEXT_COMMAND_THEFEED_POST(xorstr_("STRING"));
+		HUD::_THEFEED_SET_NEXT_POST_BACKGROUND_COLOR(6);
+		HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(text);
+		HUD::END_TEXT_COMMAND_THEFEED_POST_MESSAGETEXT(txd, txd, false, 0, PLAYER::GET_PLAYER_NAME(player), subject);
+		HUD::END_TEXT_COMMAND_THEFEED_POST_TICKER(FALSE, TRUE);
+		PED::UNREGISTER_PEDHEADSHOT(handle);
+	}
+
 	void features::run_tick()
 	{
 		ULONGLONG now = GetTickCount64();

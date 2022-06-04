@@ -53,6 +53,7 @@
 #include "core/config.h"
 #include "CPed.hpp"
 
+#define _DLL_NAME "Zyko.dll" //to change in final release
 #define _PTR_MAX_VALUE ((PVOID)0x000F000000000000)
 
 constexpr bool IsValidPtr(PVOID p)

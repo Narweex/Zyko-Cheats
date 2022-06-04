@@ -97,5 +97,12 @@ namespace big::features
 	inline std::uint32_t g_selected_player{};
 	bool is_modder(Player player);
 
+	// Protections
+	inline bool g_received_event{};
+	inline bool g_explosion_event{};
+	inline bool g_ptfx_event{};
+	inline bool g_log_net_event_data{};
+
 	void basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items);
+	void normal_alert(const char* text, const char* subject, Player player);
 }
