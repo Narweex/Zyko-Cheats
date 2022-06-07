@@ -185,6 +185,9 @@ namespace big
 					{
 						PED::ADD_ARMOUR_TO_PED(PLAYER::PLAYER_PED_ID(), 200);
 					});
+				sub->AddOption<NumberOption<int>>("Player Opacity", "Visibility Of Your Player", &features::playeropacity, 0, 255, 1, 3, true, "< ", " >", [] {
+					ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeropacity, 0);
+					});
 				sub->AddOption<BoolOption<bool>>("InfiniteStamina", "You Can Just Run Forever", &features::unlimitedstamina, BoolDisplay::OnOff);
 				sub->AddOption<RegularOption>("Clean Ped", "Clean Player", []
 					{
@@ -713,7 +716,8 @@ namespace big
 				sub->AddOption<BoolOption<bool>>("Delete Gun", "Your gun will never be empty", &features::deletegun, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Aimbot", "Are you a noob?", &features::aimbot, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Explosive Gun", "Your gun will never be empty", &features::exploammo, BoolDisplay::OnOff);
-
+				sub->AddOption<BoolOption<bool>>("Teleport Gun", "You Will Teleport Where You Shoot", &features::teleportgun, BoolDisplay::OnOff);
+				
 
 			});
 
@@ -1222,6 +1226,7 @@ namespace big
 
 				g_UiManager->AddSubmenu<RegularSubmenu>("Abuse", SelectedPlayerAbuse, [](RegularSubmenu* sub)
 					{
+
 						if (NETWORK::NETWORK_GET_HOST_OF_SCRIPT("Freemode", -1, 0) == PLAYER::PLAYER_PED_ID())
 						{
 							sub->AddOption<RegularOption>("Host Kick", "Kick From Session", []
@@ -1260,9 +1265,10 @@ namespace big
 							});
 						sub->AddOption<RegularOption>("Test Crash", "Test Crash From Session", []
 							{
-								 Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
+								/* Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
 								*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x9090;
-								auto veh = VEHICLE::CREATE_VEHICLE(-1041692462, pos.x + 5, pos.y + 5, pos.z, 0.f, TRUE, FALSE, FALSE);
+								auto veh = VEHICLE::CREATE_VEHICLE(-1041692462, pos.x + 5, pos.y + 5, pos.z, 0.f, TRUE, FALSE, FALSE);*/
+								features::crash();
 
 							});
 						sub->AddOption<RegularOption>("Script Kick", "Kick From Session", []
@@ -1276,6 +1282,7 @@ namespace big
 
 				g_UiManager->AddSubmenu<RegularSubmenu>("Trolling", SelectedPlayerTrolling, [](RegularSubmenu* sub)
 					{
+						sub->AddOption<BoolOption<bool>>("Angry Planes", "Spawns a bunch of planes that will follow and kill the player", &features::angryplanesonplayer, BoolDisplay::OnOff);
 						sub->AddOption<RegularOption>("Clone Player", "Clones Player", []
 							{
 								PED::CLONE_PED(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 1, 1, 1);
@@ -1300,23 +1307,22 @@ namespace big
 								Vector3 targetCords = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false);
 								FIRE::ADD_EXPLOSION(targetCords.x, targetCords.y, targetCords.z, 29, 9999.0f, true, false, 0.0f, false);
 							});
-						sub->AddOption<BoolOption<bool>>("Fuck Their Camera", "Just a Little Trolling", &features::fucktheircam, BoolDisplay::OnOff);
-						sub->AddOption<RegularOption>("Airstrike Player", "Blow Up Player With Airstrike", []
+						sub->AddOption<RegularOption>("Give Him Wanted Level", "Give The Player Wanted Level", []
 							{
-								if (PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL) == PLAYER::PLAYER_PED_ID())
-								{
-									NULL;
-								}
-								else
-								{
+								PLAYER::SET_PLAYER_WANTED_LEVEL(features::g_selected_player, 5, false);
+								PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
+							});
+						sub->AddOption<BoolOption<bool>>("Fuck Their Camera", "Just a Little Trolling", &features::fucktheircam, BoolDisplay::OnOff);
+						sub->AddOption<BoolOption<bool>>("Traffic Follows Player", "This Will Piss Them Off", &features::trafficfollowplayer, BoolDisplay::OnOff);
+						sub->AddOption<RegularOption>("Airstrike Player", "Blow Up Player With Airstrike", []
+							{																
 									Ped selectedplayer = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL);
 									Ped playerPed = PLAYER::PLAYER_PED_ID();
 									Vector3 coords = ENTITY::GET_ENTITY_COORDS(selectedplayer, 1);
-									Hash airStrike = RAGE_JOAAT("WEAPON_AIRSTRIKE_ROCKET");
+									Hash airStrike = rage::joaat("WEAPON_AIRSTRIKE_ROCKET");
 									WEAPON::REQUEST_WEAPON_ASSET(airStrike, 31, false);
-									while (!WEAPON::HAS_WEAPON_ASSET_LOADED(airStrike)) {}
 									MISC::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(coords.x, coords.y, coords.z + 50.f, coords.x, coords.y, coords.z, 250, 1, airStrike, playerPed, 1, 0, -1.0);
-								}
+								
 							});
 						sub->AddOption<RegularOption>("Cage Player", "Trap In cage", []
 							{
