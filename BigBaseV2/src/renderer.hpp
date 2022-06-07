@@ -1,9 +1,7 @@
 #pragma once
 #include "common.hpp"
 #include <imgui.h>
-#include <set>
-#include "core/icons.h"
-typedef void(*PresentCallback)(void*);
+#include "../../BigBaseV2/src/core/icons.h"
 
 namespace big
 {
@@ -18,8 +16,6 @@ namespace big
 		void pre_reset();
 		void post_reset();
 		
-		bool add_callback(PresentCallback callback) { return m_present_callbacks.insert(callback).second; }
-		bool remove_callback(PresentCallback callback) { return m_present_callbacks.erase(callback) != 0; }
 	public:
 		ImFont* m_font;
 		ImFont* m_monospace_font;
@@ -31,7 +27,6 @@ namespace big
 		comptr<IDXGISwapChain> m_dxgi_swapchain;
 		comptr<ID3D11Device> m_d3d_device;
 		comptr<ID3D11DeviceContext> m_d3d_device_context;
-		std::set<PresentCallback> m_present_callbacks;
 	};
 
 	inline renderer *g_renderer{};

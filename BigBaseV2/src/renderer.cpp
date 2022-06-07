@@ -63,9 +63,9 @@ namespace big
 		static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
 		static const ImWchar fork_icons_ranges[] = { ICON_MIN_FK, ICON_MAX_FK, 0 };
 		ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
-		m_font_awesome = ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(font_awesome_data, font_awesome_size, 28.5f, &icons_config, icons_ranges);
-		m_font_awesome = ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(FaSolid900_compressed_data, FaSolid900_compressed_size, 28.5f, &icons_config, icons_ranges);
-		m_font_awesome = ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(fork_awesome_compressed_data, fork_awesome_compressed_size, 28.5f, &icons_config, fork_icons_ranges); //32.5f DEF
+		m_font_awesome = ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(font_awesome_data, font_awesome_size, 20.5f, &icons_config, icons_ranges);
+		m_font_awesome = ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(FaSolid900_compressed_data, FaSolid900_compressed_size, 20.5f, &icons_config, icons_ranges);
+		m_font_awesome = ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(fork_awesome_compressed_data, fork_awesome_compressed_size, 20.5f, &icons_config, fork_icons_ranges); //32.5f DEF
 		m_staanliches = ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(staatliches_compressed_data, staatliches_compressed_size, 18.5f);
 		m_notosans_regular = ImGui::GetIO().Fonts->AddFontFromMemoryCompressedTTF(notosansbold_compressed_data, notosansbold_compressed_size, 19.5f);
 		g_gui.dx_init();

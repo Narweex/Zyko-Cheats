@@ -14,7 +14,12 @@ namespace big::features
 	inline int g_current_tick_job{};
 
 	/* Self */
-	inline bool godmode = false;
+	inline bool angryplanes = false;
+	void crash();
+	inline bool teleportgun;
+	inline bool angryplanesonplayer = false;
+	static bool demo_bool = true;
+	inline bool godmode;
 	inline bool neverWanted = false;
 	inline bool sessioninfo = false;
 	void set_rank(int rpvalue);
@@ -51,6 +56,8 @@ namespace big::features
 	inline int SessionInfoText = 0.4f;
 	inline bool speedometer = true;
 	inline bool loadingtext = true;
+	inline int playeropacity = 255;
+	inline bool trafficfollowplayer = false;
 	inline bool spectateplayer = false;
 	inline bool nowater = false;
 	inline bool forcefield = false;
@@ -97,12 +104,5 @@ namespace big::features
 	inline std::uint32_t g_selected_player{};
 	bool is_modder(Player player);
 
-	// Protections
-	inline bool g_received_event{};
-	inline bool g_explosion_event{};
-	inline bool g_ptfx_event{};
-	inline bool g_log_net_event_data{};
-
 	void basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items);
-	void normal_alert(const char* text, const char* subject, Player player);
 }

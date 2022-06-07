@@ -43,12 +43,12 @@ namespace big
 
 	///////////////////////////////////////////////////////   HELP VOIDS   ///////////////////////////////////////////////////////
 	
-	void features::notify_success(const char* title, const char* text, int duration)
+	void features::notify_success(const char* text, const char* title, int duration)
 	{
 		ImGuiToast toast(ImGuiToastType_Success, duration);
 
-		toast.set_title(title);
-		toast.set_content(text);
+		toast.set_title(text);
+		toast.set_content(title);
 
 		ImGui::InsertNotification(toast);
 
@@ -366,6 +366,83 @@ namespace big
 			STATS::STAT_SET_INT(RAGE_JOAAT("MP1_CHAR_SET_RP_GIFT_ADMIN"), leveltable[rpvalue], TRUE);
 		}
 	}
+
+	Hash PlanesToBeAngry[21] = {
+		////plane
+		//link-https://wiki.rage.mp/index.php?title=Vehicles
+		//0xA52F6866/*alphaz1*/,
+		0x81BD2ED0/*avenger*/,
+		0x18606535/*avenger2*/,
+		//0x6CBD1D6D/*besra*/,
+		//0xF7004C86/*blimp*/,
+		//0xDB6B4924/*blimp2*/,
+		//0xEDA4ED97/*blimp3*/,
+		0xFE0A508C/*bombushka*/,
+		//0x15F27762/*cargoplane*/,
+		//0xD9927FE3/*cuban800*/,
+		//0xCA495705/*dodo*/,
+		//0x39D6779E/*duster*/,
+		//0xC3F25753/*howard*/,
+		0x39D6E83F/*hydra*/,
+		//0x3F119114/*jet*/,
+		0xB39B0AE6/*lazer*/,
+		//0x250B0C5E/*luxor*/,
+		//0xB79F589E/*luxor2*/,
+		//0x97E55D11/*mammatus*/,
+		//0x96E24857/*microlight*/,
+		//0x9D80F93/*miljet*/,
+		//0xD35698EF/*mogul*/,
+		//0x5D56F01B/*molotok*/,
+		//0xB2CF7250/*nimbus*/,
+		//0x3DC92356/*nokota*/,
+		//0xAD6065C0/*pyro*/,
+		//0xC5DD6967/*rogue*/,
+		//0xE8983F9F/*seabreeze*/,
+		//0xB79C1BF5/*shamal*/,
+		//0x9A9EB7DE/*starling*/,
+		0x64DE07A1/*strikeforce*/,
+		//0x81794C70/*stunt*/,
+		//0x761E2AD3/*titan*/,
+		0x3E2E4F8A/*tula*/,
+		//0x9C429B6A/*velum*/,
+		//0x403820E8/*velum2*/,
+		//0x4FF77E37/*vestra*/,
+		//0x1AAD0DED/*volatol*/,
+		////choper
+		0x46699F47/*akula*/,
+		//0x31F0B376/*annihilator*/,
+		0x2F03547B/*buzzard*/,
+		0x2C75F0DD/*buzzard2*/,
+		0xFCFCB68B/*cargobob*/,
+		0x60A7EA10/*cargobob2*/,
+		0x53174EEF/*cargobob3*/,
+		0x78BC1A3C/*cargobob4*/,
+		//0x2C634FBD/*frogger*/,
+		//0x742E9AC0/*frogger2*/,
+		//0x89BA59F5/*havok*/,
+		0xFD707EDE/*hunter*/,
+		//0x9D0450CA/*maverick*/,
+		0xFB133A17/*savage*/,
+		//0xD4AE63D9/*seasparrow*/,
+		0x3E48BF23/*skylift*/,
+		//0x2A54C47D/*supervolito*/,
+		//0x9Cregular644/*supervolito2*/,
+		0xEBC24DF2/*swift*/,
+		0x4019CB4C/*swift2*/,
+		0xA09E15FD/*valkyrie*/,
+		0x5BFA5C4B/*valkyrie2*/,
+		//0x920016F1/*volatus*/,
+	};
+	Hash VehsToFollow[21] = {
+		0x8E9254FB,
+		0xB5FCF74E,
+		0x8FB66F9B,
+		0xBB6B404F
+	};
+	int delayedPlanned = 400;
+	int timerPlaned = 3;
+
+		
 	void features::set_crew_rank(int rpvalue)
 	{
 		if (rpvalue > 0) {
@@ -410,21 +487,23 @@ namespace big
 		//OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY("banshee"), pos.x, pos.y, pos.z, 1, 1, 1);
 		
 	}
-
-	void features::normal_alert(const char* text, const char* subject, Player player)
+	void features::crash()
 	{
-		auto handle = PED::REGISTER_PEDHEADSHOT(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player));
-		script::get_current()->yield(1s);
-		auto txd = PED::GET_PEDHEADSHOT_TXD_STRING(handle);
-
-		HUD::BEGIN_TEXT_COMMAND_THEFEED_POST(xorstr_("STRING"));
-		HUD::_THEFEED_SET_NEXT_POST_BACKGROUND_COLOR(6);
-		HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(text);
-		HUD::END_TEXT_COMMAND_THEFEED_POST_MESSAGETEXT(txd, txd, false, 0, PLAYER::GET_PLAYER_NAME(player), subject);
-		HUD::END_TEXT_COMMAND_THEFEED_POST_TICKER(FALSE, TRUE);
-		PED::UNREGISTER_PEDHEADSHOT(handle);
+		
+		Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
+		Vector3 ppos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
+		Ped ped = PED::CREATE_PED(26, 2727244247, ppos.x, ppos.y, ppos.z, MISC::GET_RANDOM_INT_IN_RANGE(0, 255),0, 0);
+			pos.x = pos.x + 5;
+		ppos.z = ppos.z + 1;
+		Ped pedp = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player);
+		Vehicle cargobob = VEHICLE::CREATE_VEHICLE(2132890591, pos.x, pos.y, pos.z, MISC::GET_RANDOM_INT_IN_RANGE(0, 255),0,0, 0);
+		Vector3 idk = ENTITY::GET_ENTITY_COORDS(cargobob, true);
+		
+		int rope = PHYSICS::ADD_ROPE(pos.x, pos.y, pos.z,0, 0, 0, 1, 1, 0.0000000000000000000000000000000000001, 1, 1, true, true, true, 1.0, 0,0);
+		
+			
+		PHYSICS::ATTACH_ENTITIES_TO_ROPE(rope, cargobob, features::g_selected_player, pos.x, pos.y, pos.z, idk.x, idk.y, idk.z, 2, 0, 0, 0, 0);
 	}
-
 	void features::run_tick()
 	{
 		ULONGLONG now = GetTickCount64();
@@ -442,6 +521,109 @@ namespace big
 			*script_global(1958845).as<int*>() = 1;
 			script_global(262145).at(7478);
 			//Global_262145.f_7478
+		}
+		Entity detentity = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player);
+		Vector3 myCoord = ENTITY::GET_ENTITY_COORDS(detentity, true);
+		Vector3 speed = ENTITY::GET_ENTITY_SPEED_VECTOR(detentity, 1);
+		const int ElementAmount = 31;
+		const int ArrSize = ElementAmount * 2 + 2;
+		Vehicle* vehs = new Vehicle[ArrSize];
+		vehs[0] = ElementAmount;
+		if (angryplanesonplayer)
+		{
+			//PLAYER::_EXPAND_WORLD_LIMITS(FLT_MAX, FLT_MAX, FLT_MAX);
+			
+				
+					/*Vector3 wpVec = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);
+					float heading = (ENTITY::GET_ENTITY_ROTATION(PLAYER::PLAYER_PED_ID(), 0)).z;
+					FLOAT lookDir = ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID());
+					Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1);*/
+					Vector3 wpVec = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 1);
+					float heading = (ENTITY::GET_ENTITY_ROTATION(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0)).z;
+					FLOAT lookDir = ENTITY::GET_ENTITY_HEADING(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
+					Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 1);
+					if (MISC::GET_GAME_TIMER() > timerPlaned)
+					{
+						if (STREAMING::IS_MODEL_IN_CDIMAGE(PlanesToBeAngry[MISC::GET_RANDOM_INT_IN_RANGE(1, /*18*//*25*/50)]) && STREAMING::IS_MODEL_A_VEHICLE(PlanesToBeAngry[MISC::GET_RANDOM_INT_IN_RANGE(1, /*18*//*25*/50)]))
+						{
+							STREAMING::REQUEST_MODEL(PlanesToBeAngry[MISC::GET_RANDOM_INT_IN_RANGE(1, /*18*//*25*/50)]);
+							//while (!STREAMING::HAS_MODEL_LOADED(PlanesToBeAngry[GAMEPLAY::GET_RANDOM_INT_IN_RANGE(1, /*18*//*25*/50)]))
+							//{
+							//	/*make_periodic_feature_call();*/
+							//	/*WAIT(0)*/;	
+							//}
+							if (STREAMING::HAS_MODEL_LOADED(PlanesToBeAngry[MISC::GET_RANDOM_INT_IN_RANGE(1, /*18*//*25*/50)]))
+							{
+								Vector3 Coordsx;
+								Coordsx.x = coords.x + rand() % 339;
+								Coordsx.y = coords.y + rand() % 669;
+								Coordsx.z = coords.z + rand() % 29 + 69;
+								int SpawnedPlanes = VEHICLE::CREATE_VEHICLE(PlanesToBeAngry[MISC::GET_RANDOM_INT_IN_RANGE(1, /*18*/25)], coords.x + rand() % 339, coords.y + rand() % 669, coords.z + rand() % 29 + 69, lookDir, 1, 1, 1);
+								//int SpawnedPlanes = CHooking::create_vehicle(PlanesToBeAngry[MISC::GET_RANDOM_INT_IN_RANGE(1, /*18*//*25*/50)], &Coordsx, lookDir, 1, 1);
+								ENTITY::SET_ENTITY_INVINCIBLE(SpawnedPlanes, 1);
+								Ped planePilot = PED::CREATE_RANDOM_PED_AS_DRIVER(SpawnedPlanes, false);
+								PED::SET_DRIVER_ABILITY(planePilot, 1000.0f);
+								PED::SET_DRIVER_AGGRESSIVENESS(planePilot, 1000.0f);
+								/*PED::SET_PED_COMBAT_ABILITY(planePilot, 100);
+								AI::TASK_COMBAT_PED(planePilot, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i), 1, 1);
+								PED::SET_PED_ALERTNESS(planePilot, 1000);
+								PED::SET_PED_COMBAT_RANGE(planePilot, 1000);*/
+								ENTITY::SET_ENTITY_INVINCIBLE(planePilot, 1);
+								Vehicle vehicle = PED::GET_VEHICLE_PED_IS_IN(planePilot, 0);
+								//WAIT(0);
+								if (TASK::GET_SCRIPT_TASK_STATUS(planePilot, 0x21d33957) == 7)
+								{
+									TASK::TASK_VEHICLE_DRIVE_TO_COORD(planePilot, vehicle, wpVec.x, wpVec.y, wpVec.z + rand() % 21, (float)(rand() % 33 + 69), 1, ENTITY::GET_ENTITY_MODEL(vehicle), 16777216 || 262144, -1.0, -1.0);
+								}
+								timerPlaned = MISC::GET_GAME_TIMER() + delayedPlanned;
+							}
+						}
+
+					}
+					/*Ped playerPed = PLAYER::PLAYER_PED_ID();
+					Entity detentity = PLAYER::PLAYER_PED_ID();*/
+					Ped playerPed = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player);
+					
+					if (PED::IS_PED_IN_ANY_VEHICLE(detentity, 0))
+						detentity = PED::GET_VEHICLE_PED_IS_USING(detentity);
+
+					
+					/*int count = PED::GET_PED_NEARBY_VEHICLES(PLAYER::PLAYER_PED_ID(), vehs);*/
+					int count = PED::GET_PED_NEARBY_VEHICLES(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), vehs);
+					//int count = worldGetAllVehicles(ElementAmount, *vehs);
+					if (vehs != NULL)
+					{
+						for (int i = 0; i < count; i++)
+						{
+							int offsettedID = i * 2 + 2;
+							/*if (vehs[offsettedID] != PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false))*/
+							if (vehs[offsettedID] != PED::GET_VEHICLE_PED_IS_IN(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i), false))
+							{
+								if (vehs[offsettedID] != NULL && ENTITY::DOES_ENTITY_EXIST(vehs[offsettedID]))
+								{
+									if (VEHICLE::IS_VEHICLE_MODEL(vehs[offsettedID], PlanesToBeAngry[MISC::GET_RANDOM_INT_IN_RANGE(1, /*18*//*25*/50)]))
+									{
+										Vector3 planeCoords = ENTITY::GET_ENTITY_COORDS(vehs[offsettedID], 0);
+										if (MISC::GET_DISTANCE_BETWEEN_COORDS(planeCoords.x, planeCoords.y, planeCoords.z, coords.x, coords.y, coords.z, 1) < 69.99999f)
+										{
+											float deuxcenthuitcent = 200 % 800;
+											
+												/*GAMEPLAY::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(planeCoords.x, planeCoords.y + 5, planeCoords.z + GAMEPLAY::GET_RANDOM_FLOAT_IN_RANGE(6.337, 21.337), coords.x, coords.y, coords.z, 100, 0, GAMEPLAY2::GET_HASH_KEY2("WEAPON_RPG"), PLAYER::PLAYER_PED_ID(), 0, 0, rand() + 200 % 800);*/
+												MISC::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(planeCoords.x, planeCoords.y + 5, planeCoords.z + MISC::GET_RANDOM_FLOAT_IN_RANGE(6.337, 21.337), coords.x, coords.y, coords.z, 100, 0, MISC::GET_HASH_KEY("WEAPON_RPG"), PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i), 0, 0, rand() + deuxcenthuitcent);
+											
+											
+										}
+									}
+								}
+							}
+						}
+					}
+				
+			
+		}
+		else
+		{
+			ENTITY::DELETE_ENTITY(vehs);
 		}
 		
 		if (playeresp)
@@ -611,6 +793,24 @@ namespace big
 				FIRE::ADD_EXPLOSION(iCoord.x, iCoord.y, iCoord.z, 25, 10000.0f, true, false, 0, false);
 			}
 		}
+		if (teleportgun)
+		{
+			Vector3 iCoord;
+			if (WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(PLAYER::PLAYER_PED_ID(), &iCoord))
+			{
+				
+				PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), iCoord.x, iCoord.y, iCoord.z);
+			}
+		}
+		if (neverWanted)
+		{
+			PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_PED_ID());
+			PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), true);
+		}
+		else
+		{
+			PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), false);
+		}
 
 		for (int i = 0; i < sizeof(tick_conf) / sizeof(ULONGLONG); i++)
 		{
@@ -633,18 +833,11 @@ namespace big
 					{
 						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), false);
 					}
-					if (neverWanted)
-					{
-						PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_PED_ID());
-						PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), true);
-					}
-					else
-					{
-						PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), false);
-					}
+					
 					if (features::offradar) {
-						*script_global(2689224).at(PLAYER::PLAYER_ID(), 421).at(207).as<int*>() = 1;
-						*script_global(2703660).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 75497245;
+						
+						*script_global(2689224).at(PLAYER::GET_PLAYER_INDEX(), 421).at(207).as<int*>() = features::offradar;
+						*script_global(2703660).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;
 						
 					}
 					else {
@@ -670,11 +863,11 @@ namespace big
 						ENTITY::SET_ENTITY_MAX_SPEED(entity, 540);
 					}
 					if (forcefield) {
-						
+						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), forcefield);
 						Player playerPed = PLAYER::PLAYER_PED_ID();
 						PED::SET_PED_CAN_RAGDOLL(playerPed, false); 
 						Vector3 pCoords = ENTITY::GET_ENTITY_COORDS(playerPed, 0);
-						FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z, 7, 5.00f, 0, 1, 0, 0);
+						FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z, 7, 5.00f, 0, 1, 0, 1);
 
 					}
 					if (hornboost)
@@ -721,11 +914,12 @@ namespace big
 						else
 						{
 							MISC::SET_TIME_SCALE(1);
+							GRAPHICS::SET_TIMECYCLE_MODIFIER("li");;
 						}
 					}
 					else
 					{
-						//GRAPHICS::SET_TIMECYCLE_MODIFIER("li");;
+						//GRAPHICS::SET_TIMECYCLE_MODIFIER("li");
 						MISC::SET_TIME_SCALE(1);
 					}
 					if (smoothhornboost)
@@ -776,6 +970,49 @@ namespace big
 						}
 
 					}
+					if (trafficfollowplayer)
+					{
+						Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 1);
+						float heading = (ENTITY::GET_ENTITY_ROTATION(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0)).z;
+						FLOAT lookDir = ENTITY::GET_ENTITY_HEADING(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
+						if (MISC::GET_GAME_TIMER() > timerPlaned)
+						{
+
+
+
+
+							int vehicles = VEHICLE::CREATE_VEHICLE(VehsToFollow[MISC::GET_RANDOM_INT_IN_RANGE(1, /*18*/5)], coords.x + rand() % 339, coords.y + rand() % 669, coords.z + rand() % 29 + 69, lookDir, 1, 1, 1);
+							//int SpawnedPlanes = CHooking::create_vehicle(PlanesToBeAngry[MISC::GET_RANDOM_INT_IN_RANGE(1, /*18*//*25*/50)], &Coordsx, lookDir, 1, 1);
+							Ped planePilot = PED::CREATE_RANDOM_PED_AS_DRIVER(vehicles, false);
+							PED::SET_DRIVER_ABILITY(planePilot, 1000.0f);
+							PED::SET_DRIVER_AGGRESSIVENESS(planePilot, 1000.0f);
+							/*PED::SET_PED_COMBAT_ABILITY(planePilot, 100);
+							AI::TASK_COMBAT_PED(planePilot, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i), 1, 1);
+							PED::SET_PED_ALERTNESS(planePilot, 1000);
+							PED::SET_PED_COMBAT_RANGE(planePilot, 1000);*/
+							ENTITY::SET_ENTITY_INVINCIBLE(planePilot, 1);
+							Vehicle vehicle = PED::GET_VEHICLE_PED_IS_IN(planePilot, 0);
+							//WAIT(0);
+							if (TASK::GET_SCRIPT_TASK_STATUS(planePilot, 0x21d33957) == 7)
+							{
+								TASK::TASK_VEHICLE_DRIVE_TO_COORD(planePilot, vehicle, coords.x, coords.y, coords.z + rand() % 21, (float)(rand() % 33 + 69), 1, ENTITY::GET_ENTITY_MODEL(vehicle), 16777216 || 262144, -1.0, -1.0);
+							}
+							timerPlaned = MISC::GET_GAME_TIMER() + delayedPlanned;
+
+
+						}
+					}
+						
+
+
+						
+						
+						
+						
+
+
+							
+					
 					
 					if (aimbot)
 					{
@@ -819,6 +1056,7 @@ namespace big
 						PLAYER::GET_PLAYER_SPRINT_STAMINA_REMAINING(PLAYER::PLAYER_PED_ID());
 						PLAYER::RESTORE_PLAYER_STAMINA(PLAYER::PLAYER_PED_ID(), 100);
 					}
+					
 					if (fucktheircam)
 					{			
 						Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false);
