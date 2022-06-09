@@ -90,7 +90,7 @@ namespace big::UserInterface
 		std::int32_t m_BackDelay = 150;
 		std::int32_t m_EnterDelay = 150;
 		std::int32_t m_VerticalDelay = 100;
-		std::int32_t m_HorizontalDelay = 150;
+		std::int32_t m_HorizontalDelay = 90;
 
 		// Header
 		float m_HeaderHeight = 0.1f;
@@ -117,8 +117,8 @@ namespace big::UserInterface
 		rage::rgbaColor m_SubmenuBarTextColor{ 255, 255, 255, 255 };
 
 		// Options
-		float m_OptionHeight = 0.030f;
-		float m_OptionTextSize = 0.22f;
+		float m_OptionHeight = 0.029f;
+		float m_OptionTextSize = 0.21f;
 		Font m_OptionFont = Font::ChaletLondon;
 		float m_OptionPadding = 2.1f;
 		rage::rgbaColor m_OptionSelectedTextColor{ 10, 10, 10, 255 };
