@@ -3455,6 +3455,7 @@ namespace NETWORK
 
 namespace OBJECT
 {
+	NATIVE_DECL BOOL _IS_PICKUP_WITHIN_RADIUS(Hash pickupHash, float x, float y, float z, float radius) { return invoke<BOOL>(0xF9C36251F6E48E33, pickupHash, x, y, z, radius); } // 0xF9C36251F6E48E33 0xF139681B
 	NATIVE_DECL Object CREATE_OBJECT(Object modelHash, float x, float y, float z, BOOL isNetwork, BOOL thisScriptCheck, BOOL dynamic) { return invoke<Object>(0x509D5878EB39E842, modelHash, x, y, z, isNetwork, thisScriptCheck, dynamic); } // 0x509D5878EB39E842 0x2F7AA05C b323
 	NATIVE_DECL Object CREATE_OBJECT_NO_OFFSET(Hash modelHash, float x, float y, float z, BOOL isNetwork, BOOL thisScriptCheck, BOOL dynamic) { return invoke<Object>(0x9A294B2138ABB884, modelHash, x, y, z, isNetwork, thisScriptCheck, dynamic); } // 0x9A294B2138ABB884 0x58040420 b323
 	NATIVE_DECL void DELETE_OBJECT(Object* object) { invoke<Void>(0x539E0AE3E6634B9F, object); } // 0x539E0AE3E6634B9F 0xD6EF9DA7 b323
@@ -3939,7 +3940,7 @@ namespace PED
 	NATIVE_DECL void _0xB282749D5E028163(Any p0, Any p1) { invoke<Void>(0xB282749D5E028163, p0, p1); } // 0xB282749D5E028163 b877
 	NATIVE_DECL void SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(Ped ped, int state) { invoke<Void>(0x7A6535691B477C48, ped, state); } // 0x7A6535691B477C48 0x8A251612 b323
 	NATIVE_DECL BOOL CAN_KNOCK_PED_OFF_VEHICLE(Ped ped) { return invoke<BOOL>(0x51AC07A44D4F5B8A, ped); } // 0x51AC07A44D4F5B8A 0xC9D098B3 b323
-	NATIVE_DECL void KNOCK_PED_OFF_VEHICLE(Ped ped) { invoke<Void>(0x45BBCBA77C29A841, ped); } // 0x45BBCBA77C29A841 0xACDD0674 b323
+	NATIVE_DECL void KNOCK_PED_OFF_VEHICLEF(Ped ped) { invoke<Void>(0x45BBCBA77C29A841, ped); } // 0x45BBCBA77C29A841 0xACDD0674 b323
 	NATIVE_DECL void SET_PED_COORDS_NO_GANG(Ped ped, float posX, float posY, float posZ) { invoke<Void>(0x87052FE446E07247, ped, posX, posY, posZ); } // 0x87052FE446E07247 0x9561AD98 b323
 	NATIVE_DECL Ped GET_PED_AS_GROUP_MEMBER(int groupID, int memberNumber) { return invoke<Ped>(0x51455483CF23ED97, groupID, memberNumber); } // 0x51455483CF23ED97 0x9AA3CC8C b323
 	NATIVE_DECL Ped GET_PED_AS_GROUP_LEADER(int groupID) { return invoke<Ped>(0x5CCE68DBD5FE93EC, groupID); } // 0x5CCE68DBD5FE93EC 0x52873C6A b323

@@ -36,6 +36,7 @@ namespace big::features
 	void play_particle(const char* particle);
 	void maxvehicle(int VehicleHandle);
 	void setOpenKey();
+	inline bool croshair = false;
 	inline bool superman = false;
 	inline bool playeresp = false;
 	inline bool fucktheircam = false;
@@ -56,6 +57,13 @@ namespace big::features
 	inline int SessionInfoText = 0.4f;
 	inline bool speedometer = true;
 	inline bool loadingtext = true;
+	inline float timescale;
+	inline bool fieldov;
+	inline int fieldofview;
+	inline bool seatbelt = false;
+	inline bool airstrikegun = false;
+	inline bool moneynotify = true;
+	inline bool modifytimecycle = false;
 	inline int playeropacity = 255;
 	inline bool trafficfollowplayer = false;
 	inline bool spectateplayer = false;

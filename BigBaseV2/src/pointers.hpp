@@ -3,7 +3,6 @@
 #include "gta/fwddec.hpp"
 #include "gta/enums.hpp"
 #include "function_types.hpp"
-#include "asi/Pools.h"
 
 namespace big
 {
@@ -46,17 +45,6 @@ namespace big
 		functions::construct_basket_t m_construct_basket{};
 		functions::add_item_to_basket_t m_add_item_to_basket{};
 		functions::process_transaction m_process_transaction{};
-
-		functions::get_script_handle_t m_get_script_handle{};
-		rage::GenericPool* m_ped_pool{};
-		rage::VehiclePool* m_vehicle_pool{};
-		rage::GenericPool* m_prop_pool{};
-		rage::GenericPool* m_pickup_pool{};
-		rage::GenericPool* m_camera_pool{};
-
-		functions::send_event_ack* m_send_event_ack{};
-		functions::received_event m_received_event{};
-
 	};
 
 	inline pointers *g_pointers{};

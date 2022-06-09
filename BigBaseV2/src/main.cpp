@@ -12,9 +12,6 @@
 #include "features.hpp"
 #include "natives.hpp"
 
-#include "shv_runner.h"
-#include "asi/ASILoader.h"
-
 BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 {
 	using namespace big;
@@ -65,11 +62,8 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 				g_hooking->enable();
 				LOG(INFO) << "Hooking enabled.";
 				
-				ASILoader::Initialize();
-
 				features::notify("Welcome to Zyko Cheats!", "", 15000);
 				features::notify("INSERT to Open ", "", 15000);
-
 				while (g_running)
 				{
 					std::this_thread::sleep_for(500ms);
@@ -97,8 +91,6 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 
 				pointers_instance.reset();
 				LOG(INFO) << "Pointers uninitialized.";
-				
-				shv_runner::shutdown();
 			}
 			catch (std::exception const &ex)
 			{

@@ -11,10 +11,8 @@
 #include "pointers.hpp"
 #include "renderer.hpp"
 #include "script_mgr.hpp"
-#include "features.hpp"
-#include "helpers/player_info.h"
+
 #include <MinHook.h>
-#include "fiber_pool.hpp"
 
 namespace big
 {
@@ -39,8 +37,8 @@ namespace big
 		m_set_cursor_pos_hook("SetCursorPos", memory::module("user32.dll").get_export("SetCursorPos").as<void*>(), &hooks::set_cursor_pos),
 
 		m_run_script_threads_hook("Script hook", g_pointers->m_run_script_threads, &hooks::run_script_threads),
-		m_convert_thread_to_fiber_hook("ConvertThreadToFiber", memory::module("kernel32.dll").get_export("ConvertThreadToFiber").as<void*>(), &hooks::convert_thread_to_fiber),
-		m_received_event("RE", g_pointers->m_received_event, &hooks::received_event)
+		m_convert_thread_to_fiber_hook("ConvertThreadToFiber", memory::module("kernel32.dll").get_export("ConvertThreadToFiber").as<void*>(), &hooks::convert_thread_to_fiber)
+
 	{
 		m_swapchain_hook.hook(hooks::swapchain_present_index, &hooks::swapchain_present);
 		m_swapchain_hook.hook(hooks::swapchain_resizebuffers_index, &hooks::swapchain_resizebuffers);
@@ -58,7 +56,6 @@ namespace big
 
 	void hooking::enable()
 	{
-		m_received_event.enable();
 		m_swapchain_hook.enable();
 		m_og_wndproc = reinterpret_cast<WNDPROC>(SetWindowLongPtrW(g_pointers->m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&hooks::wndproc)));
 		m_set_cursor_pos_hook.enable();
@@ -79,7 +76,6 @@ namespace big
 		m_set_cursor_pos_hook.disable();
 		SetWindowLongPtrW(g_pointers->m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(m_og_wndproc));
 		m_swapchain_hook.disable();
-		m_received_event.disable();
 	}
 
 	minhook_keepalive::minhook_keepalive()
@@ -184,123 +180,4 @@ namespace big
 		} EXCEPT_CLAUSE
 		return FALSE;
 	}
-
-	bool hooks::received_event(rage::netEventMgr* event_manager, CNetGamePlayer* source_player, CNetGamePlayer* target_player, uint16_t event_id, int event_index, int event_handled_bitset, int unk, rage::datBitBuffer* buffer) 
-	{
-		TRY_CLAUSE
-		{
-			if (*g_pointers->m_is_session_started && features::g_received_event)
-			{
-				//auto buffer = std::make_unique<rage::datBitBuffer>((void*)bit_buffer, (uint32_t)bit_buffer_size);
-
-				if (event_id >= 91)
-					return false;
-
-				const char* event_name = *(char**)((DWORD64)event_manager + 8i64 * event_id + 243376);
-				if (!event_name || !source_player || source_player->m_player_id < 0 || source_player->m_player_id >= 32)
-				{
-					g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
-					return false;
-				}
-
-				switch (event_id)
-				{
-					case (int)RockstarEvent::NETWORK_CLEAR_PED_TASKS_EVENT:
-					{
-						if (!g_player_info.is_cutscene_playing() && !g_player_info.network_is_activity_session())
-						{
-							//persist_modder::save(source_player->m_player_id, 2, event_name);
-							g_fiber_pool->queue_job([=] { features::normal_alert(xorstr_("Received Event"), event_name, source_player->m_player_id); });
-							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
-							return false;
-						}
-						break;
-					}
-					case (int)RockstarEvent::REPORT_CASH_SPAWN_EVENT:
-					{
-						//persist_modder::save(source_player->m_player_id, 2, event_name);
-						LOG(HACKER) << xorstr_("Detected Cash drop from: ") << source_player->get_name();
-						g_fiber_pool->queue_job([=] { features::normal_alert(xorstr_("Received Event"), event_name, source_player->m_player_id); });
-						break;
-					}
-					case (int)RockstarEvent::NETWORK_CHECK_CODE_CRCS_EVENT:
-					case (int)RockstarEvent::REPORT_MYSELF_EVENT:
-					{
-						//persist_modder::save(source_player->m_player_id, 3, event_name);
-						break;
-					}
-					case (int)RockstarEvent::REQUEST_CONTROL_EVENT:
-					{
-						if (g_player_info.is_in_vehicle())
-						{
-							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
-							return false;
-						}
-						break;
-					}
-					case (int)RockstarEvent::GAME_CLOCK_EVENT:
-					{
-						//persist_modder::save(source_player->m_player_id, 3, event_name);
-						g_fiber_pool->queue_job([=] { features::normal_alert(xorstr_("Received Event"), event_name, source_player->m_player_id); });
-						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
-						return false;
-					}
-					case (int)RockstarEvent::GAME_WEATHER_EVENT:
-					{
-						//persist_modder::save(source_player->m_player_id, 3, event_name);
-						g_fiber_pool->queue_job([=] { features::normal_alert(xorstr_("Received Event"), event_name, source_player->m_player_id); });
-						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
-						return false;
-					}
-					case (int)RockstarEvent::KICK_VOTES_EVENT:
-					{
-						g_fiber_pool->queue_job([=] { features::normal_alert(xorstr_("Received Event"), event_name, source_player->m_player_id); });
-						LOG(RAW_GREEN_TO_CONSOLE) << source_player->get_name() << xorstr_(" voted to kick the: ") << target_player->get_name();
-						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
-						return false;
-					}
-					case (int)RockstarEvent::REMOVE_WEAPON_EVENT:
-					{
-						//persist_modder::save(source_player->m_player_id, 2, event_name);
-						g_fiber_pool->queue_job([=] { features::normal_alert(xorstr_("Received Event"), event_name, source_player->m_player_id); });					
-						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
-						return false;
-					}
-					case (int)RockstarEvent::GIVE_WEAPON_EVENT:
-					{
-						//persist_modder::save(source_player->m_player_id, 2, event_name);
-						g_fiber_pool->queue_job([=] { features::normal_alert(xorstr_("Received Event"), event_name, source_player->m_player_id); });					
-						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
-						return false;
-					}
-					case (int)RockstarEvent::EXPLOSION_EVENT:
-					{
-						if (features::g_explosion_event)
-						{
-							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
-							return false;
-						}
-						break;
-					}
-					case (int)RockstarEvent::NETWORK_PTFX_EVENT:
-					{
-						if (features::g_ptfx_event)
-						{
-							//persist_modder::save(source_player->m_player_id, 1, event_name);
-							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
-							return false;
-						}
-						break;
-					}
-				}
-				if (features::g_log_net_event_data)
-					LOG(EVENT) << xorstr_("Network Event from: ") << source_player->get_name() << xorstr_(" Type: ") << event_name;
-			}
-
-			return g_hooking->m_received_event.get_original<decltype(&received_event)>()(event_manager, source_player, target_player, event_id, event_index, event_handled_bitset, unk, buffer);
-		} EXCEPT_CLAUSE
-
-		return false;
-	}
-
 }
