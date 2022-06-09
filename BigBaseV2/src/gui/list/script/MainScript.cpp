@@ -101,7 +101,9 @@ namespace big
 		SubmenuVehSpawnerMilitary,
 		SubmenuVehSpawnerBoats,
 		SubmenuVehSpawnerPlanes,
-		SubmenuVehSpawnerHelicopters
+		SubmenuVehSpawnerHelicopters,
+		SelectedPlayerVehicle,
+		SessionSettingsSubmenu
 	};
 
 	void MainScript::gui_init()
@@ -172,6 +174,15 @@ namespace big
 				sub->AddOption<BoolOption<bool>>("Forcefield", "Push everyone", &features::forcefield, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Super Man", "Just Fly", &features::superman, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Off Radar", "Players wont see you on minimap", &features::offradar, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Modify Time Scale", "Speed Of The Whole World", &features::modifytimecycle, BoolDisplay::OnOff);
+				if (features::modifytimecycle)
+				{
+
+				
+				sub->AddOption<NumberOption<float>>("Time Scale", "You Can Do Slow Motion", &features::timescale, 0.0, 3.0, 0.1, 3, true, "< ", " >", [] {
+					
+					});
+				}
 				sub->AddOption<RegularOption>("Clear Wanted", "Clear Player Wanted Level", []	
 				{
 					PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
@@ -431,6 +442,7 @@ namespace big
 						VEHICLE::SET_VEHICLE_DEFORMATION_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
 					});
 				sub->AddOption<BoolOption<bool>>("Repair Vehicle Loop", "Repair Vehicle Automatically When Demaged", &features::fixloop, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Seatbelt", "You Cant Fall Of Vehicle", &features::seatbelt, BoolDisplay::OnOff);
 
 				//sub->AddOption<RegularOption>("Set License Plate", "Set Custom Text", []
 				//	{
@@ -681,6 +693,7 @@ namespace big
 			{
 				sub->AddOption<SubOption>("Players", "All players in session", SubmenuPlayerList);
 				sub->AddOption<SubOption>("Players ESP", "Displays Info About Session", SessionEspSubmenu);
+				sub->AddOption<SubOption>("Session settings", "Modify The Session", SessionSettingsSubmenu);
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("ESP Menu", SessionEspSubmenu, [&](RegularSubmenu* sub)
 			{
@@ -688,7 +701,11 @@ namespace big
 				sub->AddOption<BoolOption<bool>>("All ESP", "You will get guided where other players are", &features::playeresp, BoolDisplay::OnOff);
 				//sub->AddOption<BoolOption<bool>>("Speedometer", "Displays Session Info", &features::speedometer, BoolDisplay::OnOff);
 			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Session Settings", SessionSettingsSubmenu, [&](RegularSubmenu* sub)
+			{
+				sub->AddOption<BoolOption<bool>>("Notify For Money Drop", "You Will Get Notified When Someone Drops Money", &features::moneynotify, BoolDisplay::OnOff);
 
+			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Weapon Menu", Weaponz, [](RegularSubmenu* sub)
 			{
 				sub->AddOption<RegularOption>("Give All Weapons", "Gives you all weapons", []
@@ -712,10 +729,12 @@ namespace big
 					{
 						WEAPON::REMOVE_ALL_PED_WEAPONS(PLAYER::PLAYER_PED_ID(), true);
 					});
+				//sub->AddOption<BoolOption<bool>>("Always Crosshair", "Bruh Read The Title", &features::croshair, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Infinite ammo", "Your gun will never be empty", &features::infiniteammo, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Delete Gun", "Your gun will never be empty", &features::deletegun, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Aimbot", "Are you a noob?", &features::aimbot, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Explosive Gun", "Your gun will never be empty", &features::exploammo, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Airstrike Gun", "A Plane Will Strike Where You Shoot", &features::airstrikegun, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Teleport Gun", "You Will Teleport Where You Shoot", &features::teleportgun, BoolDisplay::OnOff);
 				
 
@@ -1199,6 +1218,7 @@ namespace big
 
 			sub->AddOption<BoolOption<bool>>("Spectate", nullptr, &features::spectateplayer, BoolDisplay::OnOff);
 			sub->AddOption<SubOption>("Teleport Options", nullptr, SelectedPlayerTeleport);
+			sub->AddOption<SubOption>("Vehicle Options", nullptr, SelectedPlayerVehicle);
 			sub->AddOption<SubOption>("Abuse", nullptr, SelectedPlayerAbuse);
 			sub->AddOption<SubOption>("Trolling Options", nullptr, SelectedPlayerTrolling);
 			sub->AddOption<SubOption>("Friendly Options", nullptr, SelectedPlayerFriendly);
@@ -1209,6 +1229,8 @@ namespace big
 
 				g_UiManager->AddSubmenu<RegularSubmenu>("Player Teleports", SelectedPlayerTeleport, [](RegularSubmenu* sub)
 					{
+						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+
 						sub->AddOption<RegularOption>("Teleport To Player", "tp to Player", []
 							{
 								Entity handle;
@@ -1226,6 +1248,7 @@ namespace big
 
 				g_UiManager->AddSubmenu<RegularSubmenu>("Abuse", SelectedPlayerAbuse, [](RegularSubmenu* sub)
 					{
+						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 
 						if (NETWORK::NETWORK_GET_HOST_OF_SCRIPT("Freemode", -1, 0) == PLAYER::PLAYER_PED_ID())
 						{
@@ -1279,9 +1302,17 @@ namespace big
 								
 							});
 					});
+				g_UiManager->AddSubmenu<RegularSubmenu>("Players Vehicle Options", SelectedPlayerVehicle, [](RegularSubmenu* sub)
+					{
+						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+
+						
+					});
 
 				g_UiManager->AddSubmenu<RegularSubmenu>("Trolling", SelectedPlayerTrolling, [](RegularSubmenu* sub)
 					{
+						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+
 						sub->AddOption<BoolOption<bool>>("Angry Planes", "Spawns a bunch of planes that will follow and kill the player", &features::angryplanesonplayer, BoolDisplay::OnOff);
 						sub->AddOption<RegularOption>("Clone Player", "Clones Player", []
 							{
@@ -1344,6 +1375,7 @@ namespace big
 
 				g_UiManager->AddSubmenu<RegularSubmenu>("Friendly", SelectedPlayerFriendly, [](RegularSubmenu* sub)
 					{
+						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 
 					});
 
@@ -1379,6 +1411,8 @@ namespace big
 				sub->AddOption<BoolOption<bool>>("Mobile Radio", "Vibe to the music everywhere!", &features::mobileradio, BoolDisplay::OnOff);
 				//sub->AddOption<BoolOption<bool>>("Free Camera", "Vibe to the music everywhere!", &features::, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Disable Phone", "English Dave wont bother you", &features::nophone, BoolDisplay::OnOff);
+				
+
 				sub->AddOption<RegularOption>("Skip Cutscene", "Skips current cutscene", []
 					{
 						
@@ -1402,12 +1436,11 @@ namespace big
 			});
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Language", SubmenuSettingsLanguage, [](RegularSubmenu* sub)
-			{namespace fs = std::filesystem;
-		fs::directory_iterator dirIt{ g_TranslationManager->GetTranslationDirectory() };
-		for (auto&& dirEntry : dirIt)
-		{
-			if (dirEntry.is_regular_file())
 			{
+				std::filesystem::directory_iterator dirIt{ g_TranslationManager->GetTranslationDirectory() };
+				for (auto&& dirEntry : dirIt)
+				{
+			
 				auto path = dirEntry.path();
 				if (path.has_filename())
 				{
@@ -1416,8 +1449,8 @@ namespace big
 							g_TranslationManager->LoadTranslations(path.stem().u8string().c_str());
 						});
 				}
+			
 			}
-		}
 
 			
 
@@ -1452,7 +1485,7 @@ namespace big
 						g_list = false;
 						g_gui.m_opened = true;
 					});*/
-				sub->AddOption<RegularOption>("notify", "Unload the menu.", []
+				/*sub->AddOption<RegularOption>("notify", "Unload the menu.", []
 					{
 						features::notify("Test", "Notification", 4000);
 					});
@@ -1463,7 +1496,7 @@ namespace big
 				sub->AddOption<RegularOption>("protections", "Unload the menu.", []
 					{
 						features::notify_protections("Event Blocked", "Crash from Narweex", 4000);
-					});
+					});*/
 				
 
 				sub->AddOption<RegularOption>("Unload", "Unload the menu.", []
