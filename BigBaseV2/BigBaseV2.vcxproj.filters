@@ -25,9 +25,6 @@
     <Filter Include="persist">
       <UniqueIdentifier>{5de052e0-a974-4468-b629-8aa455475494}</UniqueIdentifier>
     </Filter>
-    <Filter Include="asi">
-      <UniqueIdentifier>{04c5d407-3821-49ff-932c-112df4c0d9b1}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.hpp" />
@@ -234,18 +231,6 @@
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="src\shv_runner.h" />
-    <ClInclude Include="src\asi\ASILoader.h">
-      <Filter>asi</Filter>
-    </ClInclude>
-    <ClInclude Include="src\asi\Pools.h">
-      <Filter>asi</Filter>
-    </ClInclude>
-    <ClInclude Include="src\asi\ScriptManager.h">
-      <Filter>asi</Filter>
-    </ClInclude>
-    <ClInclude Include="src\core\PEImage.h">
-      <Filter>core</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\common.cpp" />
@@ -301,17 +286,8 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="src\shv_runner.cpp" />
-    <ClCompile Include="src\asi\ASILoader.cpp">
-      <Filter>asi</Filter>
-    </ClCompile>
-    <ClCompile Include="src\asi\Pools.cpp">
-      <Filter>asi</Filter>
-    </ClCompile>
-    <ClCompile Include="src\asi\ScriptManager.cpp">
-      <Filter>asi</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core\PEImage.cpp">
-      <Filter>core</Filter>
+    <ClCompile Include="src\gui\self_tab.cpp">
+      <Filter>gui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

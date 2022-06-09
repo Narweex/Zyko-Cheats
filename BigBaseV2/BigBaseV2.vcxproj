@@ -168,13 +168,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\asi\ASILoader.h" />
-    <ClInclude Include="src\asi\Pools.h" />
-    <ClInclude Include="src\asi\ScriptManager.h" />
     <ClInclude Include="src\common.hpp" />
     <ClInclude Include="src\core\config.h" />
     <ClInclude Include="src\core\fonts.hpp" />
-    <ClInclude Include="src\core\PEImage.h" />
     <ClInclude Include="src\core\xor_string.hpp" />
     <ClInclude Include="src\crossmap.hpp" />
     <ClInclude Include="src\detour_hook.hpp" />
@@ -256,14 +252,10 @@
     <ClInclude Include="src\vmt_hook.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\asi\ASILoader.cpp" />
-    <ClCompile Include="src\asi\Pools.cpp" />
-    <ClCompile Include="src\asi\ScriptManager.cpp" />
     <ClCompile Include="src\common.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\core\fonts.cpp" />
-    <ClCompile Include="src\core\PEImage.cpp" />
     <ClCompile Include="src\detour_hook.cpp" />
     <ClCompile Include="src\features.cpp" />
     <ClCompile Include="src\fiber_pool.cpp" />
@@ -273,6 +265,7 @@
     <ClCompile Include="src\gui\list\UIManager.cpp" />
     <ClCompile Include="src\gui\players_tab.cpp" />
     <ClCompile Include="src\gui\player_list.cpp" />
+    <ClCompile Include="src\gui\self_tab.cpp" />
     <ClCompile Include="src\helpers\other.cpp" />
     <ClCompile Include="src\helpers\player_info.cpp" />
     <ClCompile Include="src\hooking.cpp" />
