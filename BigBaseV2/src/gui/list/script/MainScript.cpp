@@ -127,7 +127,7 @@ namespace big
 		using namespace UserInterface;
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Home", SubmenuHome, [](RegularSubmenu* sub)
-		{
+			{
 				sub->AddOption<SubOption>("Self", "Self Options", SubmenuSelf);
 				sub->AddOption<SubOption>("Vehicle Options", "Vehicle Options", SubmenuVehicle);
 				sub->AddOption<SubOption>("Weapons", "Weapon Options", Weaponz);
@@ -143,8 +143,8 @@ namespace big
 				sub->AddOption<SubOption>("Misc Options", "Other Options", misc);
 				sub->AddOption<SubOption>("Protections", "Protection Options", Protections);
 				sub->AddOption<SubOption>("Settings", "Menu settings", SubmenuSettings);
-			
-		});
+
+			});
 
 		g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Self Options"), SubmenuSelf, [](RegularSubmenu* sub)
 			{
@@ -178,16 +178,16 @@ namespace big
 				if (features::modifytimecycle)
 				{
 
-				
-				sub->AddOption<NumberOption<float>>("Time Scale", "You Can Do Slow Motion", &features::timescale, 0.0, 3.0, 0.1, 3, true, "< ", " >", [] {
-					
-					});
+
+					sub->AddOption<NumberOption<float>>("Time Scale", "You Can Do Slow Motion", &features::timescale, 0.0, 3.0, 0.1, 3, true, "< ", " >", [] {
+
+						});
 				}
-				sub->AddOption<RegularOption>("Clear Wanted", "Clear Player Wanted Level", []	
-				{
-					PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
-				});
-					
+				sub->AddOption<RegularOption>("Clear Wanted", "Clear Player Wanted Level", []
+					{
+						PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
+					});
+
 				sub->AddOption<RegularOption>("Max Health", "Adds Health To The Player", []
 					{
 						ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 400, 100);
@@ -218,154 +218,154 @@ namespace big
 					{
 						ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0, 0);
 					});
-			sub->AddOption<RegularOption>(xorstr_("RegularOption_demo"), "A regular option.", []
-			{
-				LOG(INFO) << "Test Option pressed";
+				sub->AddOption<RegularOption>(xorstr_("RegularOption_demo"), "A regular option.", []
+					{
+						LOG(INFO) << "Test Option pressed";
+					});
+
+
+
+				sub->AddOption<BoolOption<bool>>(xorstr_("BoolOnOff_demo"), nullptr, &features::godmode, BoolDisplay::OnOff);
+				static bool testBool2{};
+				sub->AddOption<BoolOption<bool>>(xorstr_("BoolYesNo_demo"), nullptr, &testBool2, BoolDisplay::YesNo);
+
+				static std::int32_t int32Test{ 69 };
+				sub->AddOption<NumberOption<std::int32_t>>("Int32", nullptr, &int32Test, 0, 100);
+
+				static std::int64_t int64Test{ 420 };
+				sub->AddOption<NumberOption<std::int64_t>>("Int64", nullptr, &int64Test, 0, 1000, 10);
+
+				static float floatTest{ 6.9f };
+				sub->AddOption<NumberOption<float>>("Float", nullptr, &floatTest, 0.f, 10.f, 0.1f, 1);
+
+				static std::vector<std::uint64_t> vector{ 1, 2, 3 };
+				static std::size_t vectorPos{};
+
+				sub->AddOption<ChooseOption<const char*, std::size_t>>("Array", nullptr, &Lists::DemoList, &Lists::DemoListPos);
+				sub->AddOption<ChooseOption<std::uint64_t, std::size_t>>("Vector", nullptr, &vector, &vectorPos);
 			});
-			
+		g_UiManager->AddSubmenu<RegularSubmenu>("Visions", vis, [](RegularSubmenu* sub)
+			{
 
-			
-			sub->AddOption<BoolOption<bool>>(xorstr_("BoolOnOff_demo"), nullptr, &features::godmode, BoolDisplay::OnOff);
-			static bool testBool2{};
-			sub->AddOption<BoolOption<bool>>(xorstr_("BoolYesNo_demo"), nullptr, &testBool2, BoolDisplay::YesNo);
-
-			static std::int32_t int32Test{ 69 };
-			sub->AddOption<NumberOption<std::int32_t>>("Int32", nullptr, &int32Test, 0, 100);
-
-			static std::int64_t int64Test{ 420 };
-			sub->AddOption<NumberOption<std::int64_t>>("Int64", nullptr, &int64Test, 0, 1000, 10);
-
-			static float floatTest{ 6.9f };
-			sub->AddOption<NumberOption<float>>("Float", nullptr, &floatTest, 0.f, 10.f, 0.1f, 1);
-
-			static std::vector<std::uint64_t> vector{ 1, 2, 3 };
-			static std::size_t vectorPos{};
-
-			sub->AddOption<ChooseOption<const char*, std::size_t>>("Array", nullptr, &Lists::DemoList, &Lists::DemoListPos);
-			sub->AddOption<ChooseOption<std::uint64_t, std::size_t>>("Vector", nullptr, &vector, &vectorPos);
-		});
-    g_UiManager->AddSubmenu<RegularSubmenu>("Visions", vis, [](RegularSubmenu* sub)
-				{
-
-					sub->AddOption<BoolOption<bool>>("Night Vision", "You can see cool in night", &features::nightvision, BoolDisplay::OnOff);
-					sub->AddOption<BoolOption<bool>>("Thermal Vision", "Run Boiiiiiii", &features::thermalvision, BoolDisplay::OnOff);
-					sub->AddOption<RegularOption>("Clear", "Clears Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("li");;
-						});
-					sub->AddOption<RegularOption>("Bank HLWD", "Bank HLWD Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("Bank_HLWD");
-						});
-					sub->AddOption<RegularOption>("Barry Stoned", "Barry Stoned Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("Barry1_Stoned");
-						});
-					sub->AddOption<RegularOption>("Barry Fade Out", "Barry Fade Out Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("BarryFadeOut");
-						});
-					sub->AddOption<RegularOption>("Bloom Light", "Bloom Light Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("BloomLight");
-						});
-					sub->AddOption<RegularOption>("Building Top", "Building Top Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("buildingTOP");
-						});
-					sub->AddOption<RegularOption>("Bullet Time Dark", "Bullet Time Dark Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("BulletTimeDark");
-						});
-					sub->AddOption<RegularOption>("Building Time Light", "Building Time Light Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("BulletTimeLight");
-						});
-					sub->AddOption<RegularOption>("Camera ", "Camera Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("CAMERA_BW");
-						});
-					sub->AddOption<RegularOption>("Camera 2", "Camera 2 Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("CAMERA_secuirity");
-						});
-					sub->AddOption<RegularOption>("Camera 3", "Camera 3 Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("CAMERA_secuirity_FUZZ");
-						});
-					sub->AddOption<RegularOption>("Canyon Mission", "Canyon Mission Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("canyon_mission");
-						});
-					sub->AddOption<RegularOption>("Chop", "Chop Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("CHOP");
-						});
-					sub->AddOption<RegularOption>("Cinema", "Cinema Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("cinema");
-						});
-					sub->AddOption<RegularOption>("Cinema 2", "Cinema 2 Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("cinema_001");
-						});
-					sub->AddOption<RegularOption>("Night Lighting", "Night Lighting Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("whitenightlighting");
-						});
-					sub->AddOption<RegularOption>("White Out", "White Out Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("WhiteOut");
-						});
-					sub->AddOption<RegularOption>("Tunnel", "Tunnel Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("Tunnel");
-						});
-					sub->AddOption<RegularOption>("Drugs 1", "Drugs 1 Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("drug_drive_blend01");
-						});
-					sub->AddOption<RegularOption>("Drugs 2", "Drugs 2 Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("drug_drive_blend02");
-						});
-					sub->AddOption<RegularOption>("Drugs 3", "Drugs 3 Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("drug_flying_01");
-						});
-					sub->AddOption<RegularOption>("Race Turbo Dark", "Race Turbo Dark Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("RaceTurboDark");
-						});
-					sub->AddOption<RegularOption>("Race Turbo Flash", "Race Turbo Flash Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("RaceTurboFlash");
-						});
-					sub->AddOption<RegularOption>("Race Turbo Light", "Race Turbo Light Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("RaceTurboLight");
-						});
-					sub->AddOption<RegularOption>("Prologue Reflection", "prologue Reflection Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("prologue_reflection_opt");
-						});
-					sub->AddOption<RegularOption>("Prologue Shootout", "prologue Shootout Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("prologue_shootout");
-						});
-					sub->AddOption<RegularOption>("Prologue Shootout 2", "prologue Shootout 2 Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("Prologue_shootout_opt");
-						});
-					sub->AddOption<RegularOption>("Prologue", "prologue Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("prologue");
-						});
-					sub->AddOption<RegularOption>("Pulse", "pulse Vision", []
-						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("pulse");
-						});
-				});
+				sub->AddOption<BoolOption<bool>>("Night Vision", "You can see cool in night", &features::nightvision, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Thermal Vision", "Run Boiiiiiii", &features::thermalvision, BoolDisplay::OnOff);
+				sub->AddOption<RegularOption>("Clear", "Clears Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("li");;
+					});
+				sub->AddOption<RegularOption>("Bank HLWD", "Bank HLWD Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("Bank_HLWD");
+					});
+				sub->AddOption<RegularOption>("Barry Stoned", "Barry Stoned Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("Barry1_Stoned");
+					});
+				sub->AddOption<RegularOption>("Barry Fade Out", "Barry Fade Out Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("BarryFadeOut");
+					});
+				sub->AddOption<RegularOption>("Bloom Light", "Bloom Light Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("BloomLight");
+					});
+				sub->AddOption<RegularOption>("Building Top", "Building Top Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("buildingTOP");
+					});
+				sub->AddOption<RegularOption>("Bullet Time Dark", "Bullet Time Dark Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("BulletTimeDark");
+					});
+				sub->AddOption<RegularOption>("Building Time Light", "Building Time Light Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("BulletTimeLight");
+					});
+				sub->AddOption<RegularOption>("Camera ", "Camera Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("CAMERA_BW");
+					});
+				sub->AddOption<RegularOption>("Camera 2", "Camera 2 Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("CAMERA_secuirity");
+					});
+				sub->AddOption<RegularOption>("Camera 3", "Camera 3 Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("CAMERA_secuirity_FUZZ");
+					});
+				sub->AddOption<RegularOption>("Canyon Mission", "Canyon Mission Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("canyon_mission");
+					});
+				sub->AddOption<RegularOption>("Chop", "Chop Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("CHOP");
+					});
+				sub->AddOption<RegularOption>("Cinema", "Cinema Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("cinema");
+					});
+				sub->AddOption<RegularOption>("Cinema 2", "Cinema 2 Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("cinema_001");
+					});
+				sub->AddOption<RegularOption>("Night Lighting", "Night Lighting Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("whitenightlighting");
+					});
+				sub->AddOption<RegularOption>("White Out", "White Out Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("WhiteOut");
+					});
+				sub->AddOption<RegularOption>("Tunnel", "Tunnel Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("Tunnel");
+					});
+				sub->AddOption<RegularOption>("Drugs 1", "Drugs 1 Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("drug_drive_blend01");
+					});
+				sub->AddOption<RegularOption>("Drugs 2", "Drugs 2 Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("drug_drive_blend02");
+					});
+				sub->AddOption<RegularOption>("Drugs 3", "Drugs 3 Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("drug_flying_01");
+					});
+				sub->AddOption<RegularOption>("Race Turbo Dark", "Race Turbo Dark Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("RaceTurboDark");
+					});
+				sub->AddOption<RegularOption>("Race Turbo Flash", "Race Turbo Flash Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("RaceTurboFlash");
+					});
+				sub->AddOption<RegularOption>("Race Turbo Light", "Race Turbo Light Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("RaceTurboLight");
+					});
+				sub->AddOption<RegularOption>("Prologue Reflection", "prologue Reflection Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("prologue_reflection_opt");
+					});
+				sub->AddOption<RegularOption>("Prologue Shootout", "prologue Shootout Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("prologue_shootout");
+					});
+				sub->AddOption<RegularOption>("Prologue Shootout 2", "prologue Shootout 2 Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("Prologue_shootout_opt");
+					});
+				sub->AddOption<RegularOption>("Prologue", "prologue Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("prologue");
+					});
+				sub->AddOption<RegularOption>("Pulse", "pulse Vision", []
+					{
+						GRAPHICS::SET_TIMECYCLE_MODIFIER("pulse");
+					});
+			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Vehicle Movement", SubmenuVehicleMovement, [&](RegularSubmenu* sub)
 			{
 				sub->AddOption<BoolOption<bool>>("Bypass Max Speed", "Cleans Vehicle Automatically When Dirty", &features::speedbypass, BoolDisplay::OnOff);
@@ -490,7 +490,7 @@ namespace big
 				sub->AddOption<SubOption>("Boats", nullptr, SubmenuVehSpawnerBoats);
 				sub->AddOption<SubOption>("Planes", nullptr, SubmenuVehSpawnerPlanes);
 				sub->AddOption<SubOption>("Helicopters", nullptr, SubmenuVehSpawnerHelicopters);
-				
+
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Spawner Settings", SubmenuVehSpawnerSettings, [&](RegularSubmenu* sub)
 			{
@@ -688,7 +688,7 @@ namespace big
 						});
 				}
 			});
-				
+
 		g_UiManager->AddSubmenu<RegularSubmenu>("Online", OnlineSubmenu, [&](RegularSubmenu* sub)
 			{
 				sub->AddOption<SubOption>("Players", "All players in session", SubmenuPlayerList);
@@ -723,7 +723,7 @@ namespace big
 						WEAPON::GET_CURRENT_PED_WEAPON(PLAYER::PLAYER_PED_ID(), &Ammo, 1);
 						WEAPON::SET_PED_AMMO(PLAYER::PLAYER_PED_ID(), Ammo, 9999, 9999);
 					});
-				
+
 
 				sub->AddOption<RegularOption>("Remove Weapons", "Remove Weapons", []
 					{
@@ -736,7 +736,7 @@ namespace big
 				sub->AddOption<BoolOption<bool>>("Explosive Gun", "Your gun will never be empty", &features::exploammo, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Airstrike Gun", "A Plane Will Strike Where You Shoot", &features::airstrikegun, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Teleport Gun", "You Will Teleport Where You Shoot", &features::teleportgun, BoolDisplay::OnOff);
-				
+
 
 			});
 
@@ -1214,170 +1214,170 @@ namespace big
 
 		g_UiManager->AddSubmenu<PlayerSubmenu>(&features::g_selected_player, SubmenuSelectedPlayer, [](PlayerSubmenu* sub)
 			{
-			GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 
-			sub->AddOption<BoolOption<bool>>("Spectate", nullptr, &features::spectateplayer, BoolDisplay::OnOff);
-			sub->AddOption<SubOption>("Teleport Options", nullptr, SelectedPlayerTeleport);
-			sub->AddOption<SubOption>("Vehicle Options", nullptr, SelectedPlayerVehicle);
-			sub->AddOption<SubOption>("Abuse", nullptr, SelectedPlayerAbuse);
-			sub->AddOption<SubOption>("Trolling Options", nullptr, SelectedPlayerTrolling);
-			sub->AddOption<SubOption>("Friendly Options", nullptr, SelectedPlayerFriendly);
+				sub->AddOption<BoolOption<bool>>("Spectate", nullptr, &features::spectateplayer, BoolDisplay::OnOff);
+				sub->AddOption<SubOption>("Teleport Options", nullptr, SelectedPlayerTeleport);
+				sub->AddOption<SubOption>("Vehicle Options", nullptr, SelectedPlayerVehicle);
+				sub->AddOption<SubOption>("Abuse", nullptr, SelectedPlayerAbuse);
+				sub->AddOption<SubOption>("Trolling Options", nullptr, SelectedPlayerTrolling);
+				sub->AddOption<SubOption>("Friendly Options", nullptr, SelectedPlayerFriendly);
 			});
 
 
-	
 
-				g_UiManager->AddSubmenu<RegularSubmenu>("Player Teleports", SelectedPlayerTeleport, [](RegularSubmenu* sub)
+
+		g_UiManager->AddSubmenu<RegularSubmenu>("Player Teleports", SelectedPlayerTeleport, [](RegularSubmenu* sub)
+			{
+				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+
+				sub->AddOption<RegularOption>("Teleport To Player", "tp to Player", []
 					{
-						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
-
-						sub->AddOption<RegularOption>("Teleport To Player", "tp to Player", []
-							{
-								Entity handle;
-								PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) ? handle = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()) : handle = PLAYER::PLAYER_PED_ID();
-								ENTITY::SET_ENTITY_COORDS(handle, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).z, false, false, false, false);
-							});
-						sub->AddOption<RegularOption>("Teleport To Player's Vehicle", "tp to Players vehicle", []
-							{
-								if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::GET_PLAYER_PED(NULL), true))
-								{
-									PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(features::g_selected_player)), VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(NULL)), -1, true));
-								}
-							});
+						Entity handle;
+						PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) ? handle = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()) : handle = PLAYER::PLAYER_PED_ID();
+						ENTITY::SET_ENTITY_COORDS(handle, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).z, false, false, false, false);
 					});
-
-				g_UiManager->AddSubmenu<RegularSubmenu>("Abuse", SelectedPlayerAbuse, [](RegularSubmenu* sub)
+				sub->AddOption<RegularOption>("Teleport To Player's Vehicle", "tp to Players vehicle", []
 					{
-						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
-
-						if (NETWORK::NETWORK_GET_HOST_OF_SCRIPT("Freemode", -1, 0) == PLAYER::PLAYER_PED_ID())
+						if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::GET_PLAYER_PED(NULL), true))
 						{
-							sub->AddOption<RegularOption>("Host Kick", "Kick From Session", []
-								{
-									NETWORK::NETWORK_SESSION_KICK_PLAYER(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
-									int hostkick[69] = { 1885259, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player) };
-									SCRIPT::TRIGGER_SCRIPT_EVENT(1, hostkick, 4, 1 << features::g_selected_player);
-									//1885259 host kick global
-								});
+							PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(features::g_selected_player)), VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(NULL)), -1, true));
 						}
-						
-						sub->AddOption<RegularOption>("Crash", "Trap In cage", []
-							{
-								features::objectcrash(849958566);
-								features::objectcrash(-568220328);
-								features::objectcrash(2155335200);
-								features::objectcrash(1272323782);
-								features::objectcrash(1296557055);
-								features::objectcrash(29828513);
-								features::objectcrash(2250084685);
-								features::objectcrash(2349112599);
-								features::objectcrash(1599985244);
-								features::objectcrash(3523942264);
-								features::objectcrash(3457195100);
-								features::objectcrash(3762929870);
-								features::objectcrash(1016189997);
-
-
-								
-							});
-						sub->AddOption<RegularOption>("Non Host Kick", "Kick From Session", []
-							{
-
-								/*std::uint64_t args_6[] = { 1770262894, NULL, 0, 0 };
-								SCRIPT::TRIGGER_SCRIPT_EVENT(1, args_6, 4, NULL);*/
-							});
-						sub->AddOption<RegularOption>("Test Crash", "Test Crash From Session", []
-							{
-								/* Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
-								*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x9090;
-								auto veh = VEHICLE::CREATE_VEHICLE(-1041692462, pos.x + 5, pos.y + 5, pos.z, 0.f, TRUE, FALSE, FALSE);*/
-								features::crash();
-
-							});
-						sub->AddOption<RegularOption>("Script Kick", "Kick From Session", []
-							{
-								std::uint64_t args_1[] = { -145306724, 1, 0, 0 };
-								
-								g_pointers->m_TriggerScriptEvent(1, args_1, 4, NULL);
-								
-							});
 					});
-				g_UiManager->AddSubmenu<RegularSubmenu>("Players Vehicle Options", SelectedPlayerVehicle, [](RegularSubmenu* sub)
+			});
+
+		g_UiManager->AddSubmenu<RegularSubmenu>("Abuse", SelectedPlayerAbuse, [](RegularSubmenu* sub)
+			{
+				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+
+				if (NETWORK::NETWORK_GET_HOST_OF_SCRIPT("Freemode", -1, 0) == PLAYER::PLAYER_PED_ID())
+				{
+					sub->AddOption<RegularOption>("Host Kick", "Kick From Session", []
+						{
+							NETWORK::NETWORK_SESSION_KICK_PLAYER(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
+							int hostkick[69] = { 1885259, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player) };
+							SCRIPT::TRIGGER_SCRIPT_EVENT(1, hostkick, 4, 1 << features::g_selected_player);
+							//1885259 host kick global
+						});
+				}
+
+				sub->AddOption<RegularOption>("Crash", "Trap In cage", []
 					{
-						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+						features::objectcrash(849958566);
+						features::objectcrash(-568220328);
+						features::objectcrash(2155335200);
+						features::objectcrash(1272323782);
+						features::objectcrash(1296557055);
+						features::objectcrash(29828513);
+						features::objectcrash(2250084685);
+						features::objectcrash(2349112599);
+						features::objectcrash(1599985244);
+						features::objectcrash(3523942264);
+						features::objectcrash(3457195100);
+						features::objectcrash(3762929870);
+						features::objectcrash(1016189997);
 
-						
+
+
 					});
-
-				g_UiManager->AddSubmenu<RegularSubmenu>("Trolling", SelectedPlayerTrolling, [](RegularSubmenu* sub)
+				sub->AddOption<RegularOption>("Non Host Kick", "Kick From Session", []
 					{
-						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 
-						sub->AddOption<BoolOption<bool>>("Angry Planes", "Spawns a bunch of planes that will follow and kill the player", &features::angryplanesonplayer, BoolDisplay::OnOff);
-						sub->AddOption<RegularOption>("Clone Player", "Clones Player", []
-							{
-								PED::CLONE_PED(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 1, 1, 1);
-							});
-						sub->AddOption<RegularOption>("Attach To Player", "Attaches You To Player", []
-							{
-								if (PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player) == PLAYER::PLAYER_PED_ID())
-								{
-
-								}
-								else
-								{
-									ENTITY::ATTACH_ENTITY_TO_ENTITY(PLAYER::PLAYER_PED_ID(), PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, true, true, false, true, false, true);
-								}
-							});
-						sub->AddOption<RegularOption>("Detach Off Player", "Detach You From Player", []
-							{
-								ENTITY::DETACH_ENTITY(PLAYER::PLAYER_PED_ID(), true, true);
-							});
-						sub->AddOption<RegularOption>("Explode Player", "Blow Up Player", []
-							{
-								Vector3 targetCords = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false);
-								FIRE::ADD_EXPLOSION(targetCords.x, targetCords.y, targetCords.z, 29, 9999.0f, true, false, 0.0f, false);
-							});
-						sub->AddOption<RegularOption>("Give Him Wanted Level", "Give The Player Wanted Level", []
-							{
-								PLAYER::SET_PLAYER_WANTED_LEVEL(features::g_selected_player, 5, false);
-								PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
-							});
-						sub->AddOption<BoolOption<bool>>("Fuck Their Camera", "Just a Little Trolling", &features::fucktheircam, BoolDisplay::OnOff);
-						sub->AddOption<BoolOption<bool>>("Traffic Follows Player", "This Will Piss Them Off", &features::trafficfollowplayer, BoolDisplay::OnOff);
-						sub->AddOption<RegularOption>("Airstrike Player", "Blow Up Player With Airstrike", []
-							{																
-									Ped selectedplayer = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL);
-									Ped playerPed = PLAYER::PLAYER_PED_ID();
-									Vector3 coords = ENTITY::GET_ENTITY_COORDS(selectedplayer, 1);
-									Hash airStrike = rage::joaat("WEAPON_AIRSTRIKE_ROCKET");
-									WEAPON::REQUEST_WEAPON_ASSET(airStrike, 31, false);
-									MISC::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(coords.x, coords.y, coords.z + 50.f, coords.x, coords.y, coords.z, 250, 1, airStrike, playerPed, 1, 0, -1.0);
-								
-							});
-						sub->AddOption<RegularOption>("Cage Player", "Trap In cage", []
-							{
-								OBJECT::CREATE_OBJECT(959275690, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).z - 1.f, true, false, false);
-							});
-						sub->AddOption<RegularOption>("Tube Player", "Trap In Tube", []
-							{
-								Vector3 remotePos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0);
-								Object obj = OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY("stt_prop_stunt_tube_fn_01"), remotePos.x, remotePos.y, remotePos.z - 1.f, true, false, true);
-								ENTITY::SET_ENTITY_ROTATION(obj, 0.0f, 90.0f, 0.0f, 0, true);
-							});
-						sub->AddOption<RegularOption>("Tree Player", "Trap In Tree", []
-							{
-								Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
-								Object obj1 = OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY("prop_xmas_tree_int"), pos.x, pos.y, pos.z, 1, 1, 1);
-							});
-
+						/*std::uint64_t args_6[] = { 1770262894, NULL, 0, 0 };
+						SCRIPT::TRIGGER_SCRIPT_EVENT(1, args_6, 4, NULL);*/
 					});
-
-				g_UiManager->AddSubmenu<RegularSubmenu>("Friendly", SelectedPlayerFriendly, [](RegularSubmenu* sub)
+				sub->AddOption<RegularOption>("Test Crash", "Test Crash From Session", []
 					{
-						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+						/* Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
+						*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x9090;
+						auto veh = VEHICLE::CREATE_VEHICLE(-1041692462, pos.x + 5, pos.y + 5, pos.z, 0.f, TRUE, FALSE, FALSE);*/
+						features::crash();
 
 					});
+				sub->AddOption<RegularOption>("Script Kick", "Kick From Session", []
+					{
+						std::uint64_t args_1[] = { -145306724, 1, 0, 0 };
+
+						g_pointers->m_TriggerScriptEvent(1, args_1, 4, NULL);
+
+					});
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Players Vehicle Options", SelectedPlayerVehicle, [](RegularSubmenu* sub)
+			{
+				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+
+
+			});
+
+		g_UiManager->AddSubmenu<RegularSubmenu>("Trolling", SelectedPlayerTrolling, [](RegularSubmenu* sub)
+			{
+				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+
+				sub->AddOption<BoolOption<bool>>("Angry Planes", "Spawns a bunch of planes that will follow and kill the player", &features::angryplanesonplayer, BoolDisplay::OnOff);
+				sub->AddOption<RegularOption>("Clone Player", "Clones Player", []
+					{
+						PED::CLONE_PED(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 1, 1, 1);
+					});
+				sub->AddOption<RegularOption>("Attach To Player", "Attaches You To Player", []
+					{
+						if (PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player) == PLAYER::PLAYER_PED_ID())
+						{
+
+						}
+						else
+						{
+							ENTITY::ATTACH_ENTITY_TO_ENTITY(PLAYER::PLAYER_PED_ID(), PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, true, true, false, true, false, true);
+						}
+					});
+				sub->AddOption<RegularOption>("Detach Off Player", "Detach You From Player", []
+					{
+						ENTITY::DETACH_ENTITY(PLAYER::PLAYER_PED_ID(), true, true);
+					});
+				sub->AddOption<RegularOption>("Explode Player", "Blow Up Player", []
+					{
+						Vector3 targetCords = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false);
+						FIRE::ADD_EXPLOSION(targetCords.x, targetCords.y, targetCords.z, 29, 9999.0f, true, false, 0.0f, false);
+					});
+				sub->AddOption<RegularOption>("Give Him Wanted Level", "Give The Player Wanted Level", []
+					{
+						PLAYER::SET_PLAYER_WANTED_LEVEL(features::g_selected_player, 5, false);
+						PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
+					});
+				sub->AddOption<BoolOption<bool>>("Fuck Their Camera", "Just a Little Trolling", &features::fucktheircam, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Traffic Follows Player", "This Will Piss Them Off", &features::trafficfollowplayer, BoolDisplay::OnOff);
+				sub->AddOption<RegularOption>("Airstrike Player", "Blow Up Player With Airstrike", []
+					{
+						Ped selectedplayer = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL);
+						Ped playerPed = PLAYER::PLAYER_PED_ID();
+						Vector3 coords = ENTITY::GET_ENTITY_COORDS(selectedplayer, 1);
+						Hash airStrike = rage::joaat("WEAPON_AIRSTRIKE_ROCKET");
+						WEAPON::REQUEST_WEAPON_ASSET(airStrike, 31, false);
+						MISC::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(coords.x, coords.y, coords.z + 50.f, coords.x, coords.y, coords.z, 250, 1, airStrike, playerPed, 1, 0, -1.0);
+
+					});
+				sub->AddOption<RegularOption>("Cage Player", "Trap In cage", []
+					{
+						OBJECT::CREATE_OBJECT(959275690, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).z - 1.f, true, false, false);
+					});
+				sub->AddOption<RegularOption>("Tube Player", "Trap In Tube", []
+					{
+						Vector3 remotePos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0);
+						Object obj = OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY("stt_prop_stunt_tube_fn_01"), remotePos.x, remotePos.y, remotePos.z - 1.f, true, false, true);
+						ENTITY::SET_ENTITY_ROTATION(obj, 0.0f, 90.0f, 0.0f, 0, true);
+					});
+				sub->AddOption<RegularOption>("Tree Player", "Trap In Tree", []
+					{
+						Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
+						Object obj1 = OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY("prop_xmas_tree_int"), pos.x, pos.y, pos.z, 1, 1, 1);
+					});
+
+			});
+
+		g_UiManager->AddSubmenu<RegularSubmenu>("Friendly", SelectedPlayerFriendly, [](RegularSubmenu* sub)
+			{
+				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+
+			});
 
 
 
@@ -1411,11 +1411,11 @@ namespace big
 				sub->AddOption<BoolOption<bool>>("Mobile Radio", "Vibe to the music everywhere!", &features::mobileradio, BoolDisplay::OnOff);
 				//sub->AddOption<BoolOption<bool>>("Free Camera", "Vibe to the music everywhere!", &features::, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Disable Phone", "English Dave wont bother you", &features::nophone, BoolDisplay::OnOff);
-				
+
 
 				sub->AddOption<RegularOption>("Skip Cutscene", "Skips current cutscene", []
 					{
-						
+
 						CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
 					});
 
@@ -1432,7 +1432,12 @@ namespace big
 				sub->AddOption<BoolOption<bool>>("Mobile Radio", "Vibe to the music everywhere!", &features::mobileradio, BoolDisplay::OnOff);
 				//sub->AddOption<BoolOption<bool>>("Free Camera", "Vibe to the music everywhere!", &features::freecam, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Disable Phone", "English Dave wont bother you", &features::nophone, BoolDisplay::OnOff);
-		
+
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Protections", Protections, [](RegularSubmenu* sub)
+			{
+				sub->AddOption<BoolOption<bool>>("Block Explosions", "You Know What It Is", &features::g_explosion_event, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Block Particles", "Blocks Misc PTFX Effects", &features::g_ptfx_event, BoolDisplay::OnOff);
 			});
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Language", SubmenuSettingsLanguage, [](RegularSubmenu* sub)
@@ -1440,19 +1445,19 @@ namespace big
 				std::filesystem::directory_iterator dirIt{ g_TranslationManager->GetTranslationDirectory() };
 				for (auto&& dirEntry : dirIt)
 				{
-			
-				auto path = dirEntry.path();
-				if (path.has_filename())
-				{
-					sub->AddOption<RegularOption>(path.stem().u8string().c_str(), nullptr, [=]
-						{
-							g_TranslationManager->LoadTranslations(path.stem().u8string().c_str());
-						});
-				}
-			
-			}
 
-			
+					auto path = dirEntry.path();
+					if (path.has_filename())
+					{
+						sub->AddOption<RegularOption>(path.stem().u8string().c_str(), nullptr, [=]
+							{
+								g_TranslationManager->LoadTranslations(path.stem().u8string().c_str());
+							});
+					}
+
+				}
+
+
 
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Object Spawner", SubmenuSettingsObjectSpanwer, [](RegularSubmenu* sub)
@@ -1463,7 +1468,7 @@ namespace big
 							features::spawn_obj(obj);
 						});
 				}
-				
+
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Particles", SubmenuSettingsParticles, [](RegularSubmenu* sub)
 			{
@@ -1479,25 +1484,25 @@ namespace big
 
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Settings", SubmenuSettings, [](RegularSubmenu* sub)
-		{
+			{
 				/*sub->AddOption<RegularOption>("Switch GUI", "Switches to regular UI.", []
 					{
 						g_list = false;
 						g_gui.m_opened = true;
 					});*/
-				/*sub->AddOption<RegularOption>("notify", "Unload the menu.", []
-					{
-						features::notify("Test", "Notification", 4000);
-					});
-				sub->AddOption<RegularOption>("error", "Unload the menu.", []
-					{
-						features::notify_error("An error occured", "Notification", 4000);
-					});
-				sub->AddOption<RegularOption>("protections", "Unload the menu.", []
-					{
-						features::notify_protections("Event Blocked", "Crash from Narweex", 4000);
-					});*/
-				
+					/*sub->AddOption<RegularOption>("notify", "Unload the menu.", []
+						{
+							features::notify("Test", "Notification", 4000);
+						});
+					sub->AddOption<RegularOption>("error", "Unload the menu.", []
+						{
+							features::notify_error("An error occured", "Notification", 4000);
+						});
+					sub->AddOption<RegularOption>("protections", "Unload the menu.", []
+						{
+							features::notify_protections("Event Blocked", "Crash from Narweex", 4000);
+						});*/
+
 
 				sub->AddOption<RegularOption>("Unload", "Unload the menu.", []
 					{
@@ -1509,22 +1514,22 @@ namespace big
 						Sleep(10000);
 						features::setOpenKey();
 					});
-			//sub->AddOption<SubOption>("Header", nullptr, SubmenuSettingsHeader);
-			sub->AddOption<SubOption>("Infobar", nullptr, SubmenuSettingsSubmenuBar);
-			sub->AddOption<SubOption>("Links", nullptr, SUbmenuSettingsLinks);
-			sub->AddOption<SubOption>("Options", nullptr, SubmenuSettingsOption);
-			sub->AddOption<SubOption>("Footer", nullptr, SubmenuSettingsFooter);
-			sub->AddOption<SubOption>("Description", nullptr, SubmenuSettingsDescription);
-			//sub->AddOption<SubOption>("Input", nullptr, SubmenuSettingsInput);
-			sub->AddOption<SubOption>("Language", nullptr, SubmenuSettingsLanguage);
-			sub->AddOption<NumberOption<float>>("X Position", nullptr, &g_UiManager->m_PosX, 0.f, 1.f, 0.01f, 2);
-			sub->AddOption<NumberOption<float>>("Y Position", nullptr, &g_UiManager->m_PosY, 0.f, 1.f, 0.01f, 2);
-			sub->AddOption<NumberOption<float>>("Width", nullptr, &g_UiManager->m_Width, 0.01f, 1.f, 0.01f, 2);
-			sub->AddOption<BoolOption<bool>>("Sounds", nullptr, &g_UiManager->m_Sounds, BoolDisplay::OnOff);	
-		});
+				//sub->AddOption<SubOption>("Header", nullptr, SubmenuSettingsHeader);
+				sub->AddOption<SubOption>("Infobar", nullptr, SubmenuSettingsSubmenuBar);
+				sub->AddOption<SubOption>("Links", nullptr, SUbmenuSettingsLinks);
+				sub->AddOption<SubOption>("Options", nullptr, SubmenuSettingsOption);
+				sub->AddOption<SubOption>("Footer", nullptr, SubmenuSettingsFooter);
+				sub->AddOption<SubOption>("Description", nullptr, SubmenuSettingsDescription);
+				//sub->AddOption<SubOption>("Input", nullptr, SubmenuSettingsInput);
+				sub->AddOption<SubOption>("Language", nullptr, SubmenuSettingsLanguage);
+				sub->AddOption<NumberOption<float>>("X Position", nullptr, &g_UiManager->m_PosX, 0.f, 1.f, 0.01f, 2);
+				sub->AddOption<NumberOption<float>>("Y Position", nullptr, &g_UiManager->m_PosY, 0.f, 1.f, 0.01f, 2);
+				sub->AddOption<NumberOption<float>>("Width", nullptr, &g_UiManager->m_Width, 0.01f, 1.f, 0.01f, 2);
+				sub->AddOption<BoolOption<bool>>("Sounds", nullptr, &g_UiManager->m_Sounds, BoolDisplay::OnOff);
+			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Links", SUbmenuSettingsLinks, [](RegularSubmenu* sub)
 			{
-				
+
 				sub->AddOption<RegularOption>("Zyko Official Website", "Opens Your Browser", []
 					{
 						ShellExecuteA(0, 0, "https://zykocheats.org/", 0, 0, SW_SHOW);
@@ -1533,106 +1538,106 @@ namespace big
 					{
 						ShellExecuteA(0, 0, "https://discord.gg/GrEkpRQcQE", 0, 0, SW_SHOW);
 					});
-				
-			});
-	
-		g_UiManager->AddSubmenu<RegularSubmenu>("Infobar", SubmenuSettingsSubmenuBar, [](RegularSubmenu* sub)
-		{
-			sub->AddOption<NumberOption<float>>("Height", nullptr, &g_UiManager->m_SubmenuBarHeight, 0.01f, 0.1f, 0.001f, 3);
-			sub->AddOption<NumberOption<float>>("Text Size", nullptr, &g_UiManager->m_SubmenuBarTextSize, 0.01f, 1.f, 0.01f, 2);
 
-			sub->AddOption<NumberOption<std::uint8_t>>("Background R", nullptr, &g_UiManager->m_SubmenuBarBackgroundColor.r, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Background G", nullptr, &g_UiManager->m_SubmenuBarBackgroundColor.g, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Background B", nullptr, &g_UiManager->m_SubmenuBarBackgroundColor.b, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Background A", nullptr, &g_UiManager->m_SubmenuBarBackgroundColor.a, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Text R", nullptr, &g_UiManager->m_SubmenuBarTextColor.r, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Text G", nullptr, &g_UiManager->m_SubmenuBarTextColor.g, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Text B", nullptr, &g_UiManager->m_SubmenuBarTextColor.b, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Text A", nullptr, &g_UiManager->m_SubmenuBarTextColor.a, '\0', static_cast<std::uint8_t>(255));
-		});
+			});
+
+		g_UiManager->AddSubmenu<RegularSubmenu>("Infobar", SubmenuSettingsSubmenuBar, [](RegularSubmenu* sub)
+			{
+				sub->AddOption<NumberOption<float>>("Height", nullptr, &g_UiManager->m_SubmenuBarHeight, 0.01f, 0.1f, 0.001f, 3);
+				sub->AddOption<NumberOption<float>>("Text Size", nullptr, &g_UiManager->m_SubmenuBarTextSize, 0.01f, 1.f, 0.01f, 2);
+
+				sub->AddOption<NumberOption<std::uint8_t>>("Background R", nullptr, &g_UiManager->m_SubmenuBarBackgroundColor.r, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Background G", nullptr, &g_UiManager->m_SubmenuBarBackgroundColor.g, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Background B", nullptr, &g_UiManager->m_SubmenuBarBackgroundColor.b, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Background A", nullptr, &g_UiManager->m_SubmenuBarBackgroundColor.a, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Text R", nullptr, &g_UiManager->m_SubmenuBarTextColor.r, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Text G", nullptr, &g_UiManager->m_SubmenuBarTextColor.g, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Text B", nullptr, &g_UiManager->m_SubmenuBarTextColor.b, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Text A", nullptr, &g_UiManager->m_SubmenuBarTextColor.a, '\0', static_cast<std::uint8_t>(255));
+			});
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Options", SubmenuSettingsOption, [](RegularSubmenu* sub)
-		{
-			sub->AddOption<NumberOption<float>>("Height", nullptr, &g_UiManager->m_OptionHeight, 0.01f, 0.1f, 0.001f, 3);
-			sub->AddOption<NumberOption<float>>("Text Size", nullptr, &g_UiManager->m_OptionTextSize, 0.01f, 1.f, 0.01f, 2);
-
-			sub->AddOption<NumberOption<std::uint8_t>>("Selected Background R", nullptr, &g_UiManager->m_OptionSelectedBackgroundColor.r, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Selected Background G", nullptr, &g_UiManager->m_OptionSelectedBackgroundColor.g, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Selected Background B", nullptr, &g_UiManager->m_OptionSelectedBackgroundColor.b, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Selected Background A", nullptr, &g_UiManager->m_OptionSelectedBackgroundColor.a, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Unselected Background R", nullptr, &g_UiManager->m_OptionUnselectedBackgroundColor.r, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Unselected Background G", nullptr, &g_UiManager->m_OptionUnselectedBackgroundColor.g, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Unselected Background B", nullptr, &g_UiManager->m_OptionUnselectedBackgroundColor.b, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Unselected Background A", nullptr, &g_UiManager->m_OptionUnselectedBackgroundColor.a, '\0', static_cast<std::uint8_t>(255));
-
-			sub->AddOption<NumberOption<std::uint8_t>>("Selected Text R", nullptr, &g_UiManager->m_OptionSelectedTextColor.r, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Selected Text G", nullptr, &g_UiManager->m_OptionSelectedTextColor.g, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Selected Text B", nullptr, &g_UiManager->m_OptionSelectedTextColor.b, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Selected Text A", nullptr, &g_UiManager->m_OptionSelectedTextColor.a, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Unselected Text R", nullptr, &g_UiManager->m_OptionUnselectedTextColor.r, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Unselected Text G", nullptr, &g_UiManager->m_OptionUnselectedTextColor.g, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Unselected Text B", nullptr, &g_UiManager->m_OptionUnselectedTextColor.b, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Unselected Text A", nullptr, &g_UiManager->m_OptionUnselectedTextColor.a, '\0', static_cast<std::uint8_t>(255));
-		});
-
-		g_UiManager->AddSubmenu<RegularSubmenu>("Footer", SubmenuSettingsFooter, [](RegularSubmenu* sub)
-		{
-			sub->AddOption<NumberOption<float>>("Height", nullptr, &g_UiManager->m_FooterHeight, 0.01f, 0.1f, 0.001f, 3);
-			sub->AddOption<NumberOption<float>>("Sprite Size", nullptr, &g_UiManager->m_FooterSpriteSize, 0.01f, 1.f, 0.001f, 3);
-
-			sub->AddOption<NumberOption<std::uint8_t>>("Background R", nullptr, &g_UiManager->m_FooterBackgroundColor.r, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Background G", nullptr, &g_UiManager->m_FooterBackgroundColor.g, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Background B", nullptr, &g_UiManager->m_FooterBackgroundColor.b, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Background A", nullptr, &g_UiManager->m_FooterBackgroundColor.a, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Sprite R", nullptr, &g_UiManager->m_FooterSpriteColor.r, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Sprite G", nullptr, &g_UiManager->m_FooterSpriteColor.g, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Sprite B", nullptr, &g_UiManager->m_FooterSpriteColor.b, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("Sprite A", nullptr, &g_UiManager->m_FooterSpriteColor.a, '\0', static_cast<std::uint8_t>(255));
-		});
-
-		g_UiManager->AddSubmenu<RegularSubmenu>("Header", SubmenuSettingsHeader, [](RegularSubmenu* sub)
-		{
-			sub->AddOption<ChooseOption<const char*, std::size_t>>("Type", nullptr, &Lists::HeaderTypesFrontend, &Lists::HeaderTypesPosition, true, []
 			{
-				g_UiManager->m_HeaderType = Lists::HeaderTypesBackend[Lists::HeaderTypesPosition];
+				sub->AddOption<NumberOption<float>>("Height", nullptr, &g_UiManager->m_OptionHeight, 0.01f, 0.1f, 0.001f, 3);
+				sub->AddOption<NumberOption<float>>("Text Size", nullptr, &g_UiManager->m_OptionTextSize, 0.01f, 1.f, 0.01f, 2);
+
+				sub->AddOption<NumberOption<std::uint8_t>>("Selected Background R", nullptr, &g_UiManager->m_OptionSelectedBackgroundColor.r, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Selected Background G", nullptr, &g_UiManager->m_OptionSelectedBackgroundColor.g, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Selected Background B", nullptr, &g_UiManager->m_OptionSelectedBackgroundColor.b, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Selected Background A", nullptr, &g_UiManager->m_OptionSelectedBackgroundColor.a, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Unselected Background R", nullptr, &g_UiManager->m_OptionUnselectedBackgroundColor.r, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Unselected Background G", nullptr, &g_UiManager->m_OptionUnselectedBackgroundColor.g, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Unselected Background B", nullptr, &g_UiManager->m_OptionUnselectedBackgroundColor.b, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Unselected Background A", nullptr, &g_UiManager->m_OptionUnselectedBackgroundColor.a, '\0', static_cast<std::uint8_t>(255));
+
+				sub->AddOption<NumberOption<std::uint8_t>>("Selected Text R", nullptr, &g_UiManager->m_OptionSelectedTextColor.r, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Selected Text G", nullptr, &g_UiManager->m_OptionSelectedTextColor.g, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Selected Text B", nullptr, &g_UiManager->m_OptionSelectedTextColor.b, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Selected Text A", nullptr, &g_UiManager->m_OptionSelectedTextColor.a, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Unselected Text R", nullptr, &g_UiManager->m_OptionUnselectedTextColor.r, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Unselected Text G", nullptr, &g_UiManager->m_OptionUnselectedTextColor.g, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Unselected Text B", nullptr, &g_UiManager->m_OptionUnselectedTextColor.b, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Unselected Text A", nullptr, &g_UiManager->m_OptionUnselectedTextColor.a, '\0', static_cast<std::uint8_t>(255));
 			});
 
-			switch (g_UiManager->m_HeaderType)
+		g_UiManager->AddSubmenu<RegularSubmenu>("Footer", SubmenuSettingsFooter, [](RegularSubmenu* sub)
 			{
-			case HeaderType::Static:
-				sub->AddOption<SubOption>("Background", nullptr, SubmenuSettingsHeaderStaticBackground);
-				break;
-			case HeaderType::Gradient:
-				sub->AddOption<SubOption>("Gradient", nullptr, SubmenuSettingsHeaderGradientBackground);
-				break;
-			}
+				sub->AddOption<NumberOption<float>>("Height", nullptr, &g_UiManager->m_FooterHeight, 0.01f, 0.1f, 0.001f, 3);
+				sub->AddOption<NumberOption<float>>("Sprite Size", nullptr, &g_UiManager->m_FooterSpriteSize, 0.01f, 1.f, 0.001f, 3);
 
-			sub->AddOption<SubOption>("Text", nullptr, SubmenuSettingsHeaderText);
-			sub->AddOption<NumberOption<float>>("Height", nullptr, &g_UiManager->m_HeaderHeight, 0.01f, 0.2f, 0.001f, 3);
-		});
+				sub->AddOption<NumberOption<std::uint8_t>>("Background R", nullptr, &g_UiManager->m_FooterBackgroundColor.r, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Background G", nullptr, &g_UiManager->m_FooterBackgroundColor.g, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Background B", nullptr, &g_UiManager->m_FooterBackgroundColor.b, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Background A", nullptr, &g_UiManager->m_FooterBackgroundColor.a, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Sprite R", nullptr, &g_UiManager->m_FooterSpriteColor.r, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Sprite G", nullptr, &g_UiManager->m_FooterSpriteColor.g, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Sprite B", nullptr, &g_UiManager->m_FooterSpriteColor.b, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("Sprite A", nullptr, &g_UiManager->m_FooterSpriteColor.a, '\0', static_cast<std::uint8_t>(255));
+			});
+
+		g_UiManager->AddSubmenu<RegularSubmenu>("Header", SubmenuSettingsHeader, [](RegularSubmenu* sub)
+			{
+				sub->AddOption<ChooseOption<const char*, std::size_t>>("Type", nullptr, &Lists::HeaderTypesFrontend, &Lists::HeaderTypesPosition, true, []
+					{
+						g_UiManager->m_HeaderType = Lists::HeaderTypesBackend[Lists::HeaderTypesPosition];
+					});
+
+				switch (g_UiManager->m_HeaderType)
+				{
+				case HeaderType::Static:
+					sub->AddOption<SubOption>("Background", nullptr, SubmenuSettingsHeaderStaticBackground);
+					break;
+				case HeaderType::Gradient:
+					sub->AddOption<SubOption>("Gradient", nullptr, SubmenuSettingsHeaderGradientBackground);
+					break;
+				}
+
+				sub->AddOption<SubOption>("Text", nullptr, SubmenuSettingsHeaderText);
+				sub->AddOption<NumberOption<float>>("Height", nullptr, &g_UiManager->m_HeaderHeight, 0.01f, 0.2f, 0.001f, 3);
+			});
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Header Background", SubmenuSettingsHeaderStaticBackground, [](RegularSubmenu* sub)
-		{
-			sub->AddOption<NumberOption<std::uint8_t>>("R", nullptr, &g_UiManager->m_HeaderBackgroundColor.r, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("G", nullptr, &g_UiManager->m_HeaderBackgroundColor.g, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("B", nullptr, &g_UiManager->m_HeaderBackgroundColor.b, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("A", nullptr, &g_UiManager->m_HeaderBackgroundColor.a, '\0', static_cast<std::uint8_t>(255));
-		});
+			{
+				sub->AddOption<NumberOption<std::uint8_t>>("R", nullptr, &g_UiManager->m_HeaderBackgroundColor.r, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("G", nullptr, &g_UiManager->m_HeaderBackgroundColor.g, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("B", nullptr, &g_UiManager->m_HeaderBackgroundColor.b, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("A", nullptr, &g_UiManager->m_HeaderBackgroundColor.a, '\0', static_cast<std::uint8_t>(255));
+			});
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Header Gradient", SubmenuSettingsHeaderGradientBackground, [](RegularSubmenu* sub)
-		{
-			sub->AddOption<BoolOption<bool>>("Transparent", nullptr, &g_UiManager->m_HeaderGradientTransparent, BoolDisplay::YesNo);
-			sub->AddOption<BoolOption<bool>>("Flip", nullptr, &g_UiManager->m_HeaderGradientFlip, BoolDisplay::YesNo);
+			{
+				sub->AddOption<BoolOption<bool>>("Transparent", nullptr, &g_UiManager->m_HeaderGradientTransparent, BoolDisplay::YesNo);
+				sub->AddOption<BoolOption<bool>>("Flip", nullptr, &g_UiManager->m_HeaderGradientFlip, BoolDisplay::YesNo);
 
-			sub->AddOption<NumberOption<std::uint8_t>>("R1", nullptr, &g_UiManager->m_HeaderGradientColorLeft.r, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("G1", nullptr, &g_UiManager->m_HeaderGradientColorLeft.g, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("B1", nullptr, &g_UiManager->m_HeaderGradientColorLeft.b, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("A1", nullptr, &g_UiManager->m_HeaderGradientColorLeft.a, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("R2", nullptr, &g_UiManager->m_HeaderGradientColorRight.r, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("G2", nullptr, &g_UiManager->m_HeaderGradientColorRight.g, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("B2", nullptr, &g_UiManager->m_HeaderGradientColorRight.b, '\0', static_cast<std::uint8_t>(255));
-			sub->AddOption<NumberOption<std::uint8_t>>("A2", nullptr, &g_UiManager->m_HeaderGradientColorRight.a, '\0', static_cast<std::uint8_t>(255));
-		});
+				sub->AddOption<NumberOption<std::uint8_t>>("R1", nullptr, &g_UiManager->m_HeaderGradientColorLeft.r, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("G1", nullptr, &g_UiManager->m_HeaderGradientColorLeft.g, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("B1", nullptr, &g_UiManager->m_HeaderGradientColorLeft.b, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("A1", nullptr, &g_UiManager->m_HeaderGradientColorLeft.a, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("R2", nullptr, &g_UiManager->m_HeaderGradientColorRight.r, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("G2", nullptr, &g_UiManager->m_HeaderGradientColorRight.g, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("B2", nullptr, &g_UiManager->m_HeaderGradientColorRight.b, '\0', static_cast<std::uint8_t>(255));
+				sub->AddOption<NumberOption<std::uint8_t>>("A2", nullptr, &g_UiManager->m_HeaderGradientColorRight.a, '\0', static_cast<std::uint8_t>(255));
+			});
 		/*
 		g_UiManager->AddSubmenu<RegularSubmenu>("Header Text", SubmenuSettingsHeaderText, [](RegularSubmenu* sub)
 		{
@@ -1645,14 +1650,14 @@ namespace big
 		});
 		*/
 		g_UiManager->AddSubmenu<RegularSubmenu>("Description", SubmenuSettingsDescription, [](RegularSubmenu* sub)
-		{
-			sub->AddOption<NumberOption<float>>("Padding", "Padding before the description rect.", &g_UiManager->m_DescriptionHeightPadding, 0.01f, 1.f, 0.001f,
- 3);
-			sub->AddOption<NumberOption<float>>("Height", "Size of the description rect.", &g_UiManager->m_DescriptionHeight, 0.01f, 1.f, 0.001f, 3);
-			sub->AddOption<NumberOption<float>>("Text Size", "Size of the description text.", &g_UiManager->m_DescriptionTextSize, 0.1f, 2.f, 0.01f, 2);
-		});
+			{
+				sub->AddOption<NumberOption<float>>("Padding", "Padding before the description rect.", &g_UiManager->m_DescriptionHeightPadding, 0.01f, 1.f, 0.001f,
+					3);
+				sub->AddOption<NumberOption<float>>("Height", "Size of the description rect.", &g_UiManager->m_DescriptionHeight, 0.01f, 1.f, 0.001f, 3);
+				sub->AddOption<NumberOption<float>>("Text Size", "Size of the description text.", &g_UiManager->m_DescriptionTextSize, 0.1f, 2.f, 0.01f, 2);
+			});
 
-		
+
 
 		/*g_UiManager->AddSubmenu<RegularSubmenu>("Players", SubmenuPlayerList, [](RegularSubmenu* sub)
 		{
@@ -1683,7 +1688,7 @@ namespace big
 				PAD::DISABLE_CONTROL_ACTION(0, 27, true);
 			}
 		}
-		EXCEPT_CLAUSE
+			EXCEPT_CLAUSE
 	}
 
 	void MainScript::script_func()
@@ -1697,8 +1702,8 @@ namespace big
 				g_MainScript.script_on_tick();
 				g_MainScript.gui_on_tick();
 			}
-			EXCEPT_CLAUSE
-			script::get_current()->yield();
+				EXCEPT_CLAUSE
+				script::get_current()->yield();
 		}
 	}
 }
