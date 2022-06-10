@@ -111,6 +111,10 @@ namespace big::features
 	/* Online */
 	inline std::uint32_t g_selected_player{};
 	bool is_modder(Player player);
-
+	/*PROTECTIONS*/
+	inline bool g_received_event = false;
+	inline bool g_explosion_event = false;
+	inline bool g_ptfx_event = false;
+	inline bool g_log_net_event_data = false;
 	void basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items);
 }

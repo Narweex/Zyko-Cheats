@@ -15,10 +15,11 @@
 #include "helpers/player_info.h"
 #include <MinHook.h>
 #include "fiber_pool.hpp"
+#include "CNetGamePlayer.hpp"
 
 namespace big
 {
-	static GtaThread *find_script_thread(rage::joaat_t hash)
+	static GtaThread* find_script_thread(rage::joaat_t hash)
 	{
 		for (auto thread : *g_pointers->m_script_threads)
 		{
@@ -103,10 +104,10 @@ namespace big
 
 			return g_hooking->m_run_script_threads_hook.get_original<functions::run_script_threads_t>()(ops_to_execute);
 		} EXCEPT_CLAUSE
-		return false;
+			return false;
 	}
 
-	void *hooks::convert_thread_to_fiber(void *param)
+	void* hooks::convert_thread_to_fiber(void* param)
 	{
 		TRY_CLAUSE
 		{
@@ -117,10 +118,10 @@ namespace big
 
 			return g_hooking->m_convert_thread_to_fiber_hook.get_original<decltype(&convert_thread_to_fiber)>()(param);
 		} EXCEPT_CLAUSE
-		return nullptr;
+			return nullptr;
 	}
 
-	HRESULT hooks::swapchain_present(IDXGISwapChain *this_, UINT sync_interval, UINT flags)
+	HRESULT hooks::swapchain_present(IDXGISwapChain* this_, UINT sync_interval, UINT flags)
 	{
 		TRY_CLAUSE
 		{
@@ -131,10 +132,10 @@ namespace big
 
 			return g_hooking->m_swapchain_hook.get_original<decltype(&swapchain_present)>(swapchain_present_index)(this_, sync_interval, flags);
 		} EXCEPT_CLAUSE
-		return NULL;
+			return NULL;
 	}
 
-	HRESULT hooks::swapchain_resizebuffers(IDXGISwapChain * this_, UINT buffer_count, UINT width, UINT height, DXGI_FORMAT new_format, UINT swapchain_flags)
+	HRESULT hooks::swapchain_resizebuffers(IDXGISwapChain* this_, UINT buffer_count, UINT width, UINT height, DXGI_FORMAT new_format, UINT swapchain_flags)
 	{
 		TRY_CLAUSE
 		{
@@ -156,7 +157,7 @@ namespace big
 			return g_hooking->m_swapchain_hook.get_original<decltype(&swapchain_resizebuffers)>(swapchain_resizebuffers_index)
 				(this_, buffer_count, width, height, new_format, swapchain_flags);
 		} EXCEPT_CLAUSE
-		return NULL;
+			return NULL;
 	}
 
 	LRESULT hooks::wndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -170,7 +171,7 @@ namespace big
 
 			return CallWindowProcW(g_hooking->m_og_wndproc, hwnd, msg, wparam, lparam);
 		} EXCEPT_CLAUSE
-		return NULL;
+			return NULL;
 	}
 
 	BOOL hooks::set_cursor_pos(int x, int y)
@@ -182,10 +183,10 @@ namespace big
 
 			return g_hooking->m_set_cursor_pos_hook.get_original<decltype(&set_cursor_pos)>()(x, y);
 		} EXCEPT_CLAUSE
-		return FALSE;
+			return FALSE;
 	}
 
-	bool hooks::received_event(rage::netEventMgr* event_manager, CNetGamePlayer* source_player, CNetGamePlayer* target_player, uint16_t event_id, int event_index, int event_handled_bitset, int unk, rage::datBitBuffer* buffer) 
+	bool hooks::received_event(rage::netEventMgr* event_manager, CNetGamePlayer* source_player, CNetGamePlayer* target_player, uint16_t event_id, int event_index, int event_handled_bitset, int unk, rage::datBitBuffer* buffer)
 	{
 		TRY_CLAUSE
 		{
@@ -197,9 +198,9 @@ namespace big
 					return false;
 
 				const char* event_name = *(char**)((DWORD64)event_manager + 8i64 * event_id + 243376);
-				if (!event_name || !source_player || source_player->m_player_id < 0 || source_player->m_player_id >= 32)
+				if (!event_name || !source_player || 4000 < 0 || 4000 >= 32)
 				{
-					g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
+					/*g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);*/
 					return false;
 				}
 
@@ -209,8 +210,9 @@ namespace big
 					{
 						if (!g_player_info.is_cutscene_playing() && !g_player_info.network_is_activity_session())
 						{
-							//persist_modder::save(source_player->m_player_id, 2, event_name);
-							g_fiber_pool->queue_job([=] { features::normal_alert(xorstr_("Received Event"), event_name, source_player->m_player_id); });
+							//4000
+							//persist_modder::save(4000, 2, event_name);
+							g_fiber_pool->queue_job([=] { features::notify_protections("Received Event", event_name, 4000); });
 							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 							return false;
 						}
@@ -218,15 +220,15 @@ namespace big
 					}
 					case (int)RockstarEvent::REPORT_CASH_SPAWN_EVENT:
 					{
-						//persist_modder::save(source_player->m_player_id, 2, event_name);
+						//persist_modder::save(4000, 2, event_name);
 						LOG(HACKER) << xorstr_("Detected Cash drop from: ") << source_player->get_name();
-						g_fiber_pool->queue_job([=] { features::normal_alert(xorstr_("Received Event"), event_name, source_player->m_player_id); });
+						g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
 						break;
 					}
 					case (int)RockstarEvent::NETWORK_CHECK_CODE_CRCS_EVENT:
 					case (int)RockstarEvent::REPORT_MYSELF_EVENT:
 					{
-						//persist_modder::save(source_player->m_player_id, 3, event_name);
+						//persist_modder::save(4000, 3, event_name);
 						break;
 					}
 					case (int)RockstarEvent::REQUEST_CONTROL_EVENT:
@@ -240,36 +242,36 @@ namespace big
 					}
 					case (int)RockstarEvent::GAME_CLOCK_EVENT:
 					{
-						//persist_modder::save(source_player->m_player_id, 3, event_name);
-						g_fiber_pool->queue_job([=] { features::normal_alert(xorstr_("Received Event"), event_name, source_player->m_player_id); });
+						//persist_modder::save(4000, 3, event_name);
+						g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
 						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 						return false;
 					}
 					case (int)RockstarEvent::GAME_WEATHER_EVENT:
 					{
-						//persist_modder::save(source_player->m_player_id, 3, event_name);
-						g_fiber_pool->queue_job([=] { features::normal_alert(xorstr_("Received Event"), event_name, source_player->m_player_id); });
+						//persist_modder::save(4000, 3, event_name);
+						g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
 						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 						return false;
 					}
 					case (int)RockstarEvent::KICK_VOTES_EVENT:
 					{
-						g_fiber_pool->queue_job([=] { features::normal_alert(xorstr_("Received Event"), event_name, source_player->m_player_id); });
+						g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
 						LOG(RAW_GREEN_TO_CONSOLE) << source_player->get_name() << xorstr_(" voted to kick the: ") << target_player->get_name();
 						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 						return false;
 					}
 					case (int)RockstarEvent::REMOVE_WEAPON_EVENT:
 					{
-						//persist_modder::save(source_player->m_player_id, 2, event_name);
-						g_fiber_pool->queue_job([=] { features::normal_alert(xorstr_("Received Event"), event_name, source_player->m_player_id); });					
+						//persist_modder::save(4000, 2, event_name);
+						g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });					
 						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 						return false;
 					}
 					case (int)RockstarEvent::GIVE_WEAPON_EVENT:
 					{
-						//persist_modder::save(source_player->m_player_id, 2, event_name);
-						g_fiber_pool->queue_job([=] { features::normal_alert(xorstr_("Received Event"), event_name, source_player->m_player_id); });					
+						//persist_modder::save(4000, 2, event_name);
+						g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });					
 						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 						return false;
 					}
@@ -286,7 +288,7 @@ namespace big
 					{
 						if (features::g_ptfx_event)
 						{
-							//persist_modder::save(source_player->m_player_id, 1, event_name);
+							//persist_modder::save(4000, 1, event_name);
 							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 							return false;
 						}
@@ -300,7 +302,7 @@ namespace big
 			return g_hooking->m_received_event.get_original<decltype(&received_event)>()(event_manager, source_player, target_player, event_id, event_index, event_handled_bitset, unk, buffer);
 		} EXCEPT_CLAUSE
 
-		return false;
+			return false;
 	}
 
 }
