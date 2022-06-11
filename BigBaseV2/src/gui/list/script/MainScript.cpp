@@ -1260,31 +1260,9 @@ namespace big
 							//1885259 host kick global
 						});
 				}
-
-				sub->AddOption<RegularOption>("Crash", "Trap In cage", []
+				sub->AddOption<RegularOption>("Kick", "Kick ", []
 					{
-						features::objectcrash(849958566);
-						features::objectcrash(-568220328);
-						features::objectcrash(2155335200);
-						features::objectcrash(1272323782);
-						features::objectcrash(1296557055);
-						features::objectcrash(29828513);
-						features::objectcrash(2250084685);
-						features::objectcrash(2349112599);
-						features::objectcrash(1599985244);
-						features::objectcrash(3523942264);
-						features::objectcrash(3457195100);
-						features::objectcrash(3762929870);
-						features::objectcrash(1016189997);
-
-
-
-					});
-				sub->AddOption<RegularOption>("Non Host Kick", "Kick From Session", []
-					{
-
-						/*std::uint64_t args_6[] = { 1770262894, NULL, 0, 0 };
-						SCRIPT::TRIGGER_SCRIPT_EVENT(1, args_6, 4, NULL);*/
+						features::kick();
 					});
 				sub->AddOption<RegularOption>("Test Crash", "Test Crash From Session", []
 					{
