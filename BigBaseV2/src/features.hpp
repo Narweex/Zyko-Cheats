@@ -111,6 +111,10 @@ namespace big::features
 	/* Online */
 	inline std::uint32_t g_selected_player{};
 	bool is_modder(Player player);
+
+	/*Trolling and kicks*/
+	void kick();
+	void notification();
 	/*PROTECTIONS*/
 	inline bool g_received_event = false;
 	inline bool g_explosion_event = false;

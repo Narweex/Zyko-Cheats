@@ -480,13 +480,8 @@ namespace big
 
 		return false;
 	}
-	void features::objectcrash(Hash hash)
-	{
-		Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
-		OBJECT::CREATE_OBJECT(hash, pos.x, pos.y, pos.z, 1, 1, 1);
-		//OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY("banshee"), pos.x, pos.y, pos.z, 1, 1, 1);
-		
-	}
+
+	/*ATTACK FEATURES*/
 	void features::crash()
 	{
 		
@@ -517,6 +512,43 @@ namespace big
 
 		
 
+	}
+	void features::kick()
+	{
+		unsigned int player = (1 << features::g_selected_player);
+		
+		uint64_t kick1[] = { -371781708, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
+		uint64_t kick2[] = { 1514515570, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
+		uint64_t kick3[] = { 911179316, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
+		uint64_t kick4[] = { 846342319, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
+		uint64_t kick5[] = { 2085853000, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
+		uint64_t kick6[] = { 1514515570, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
+		uint64_t kick7[] = { -1970125962, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), -1, -1, -1 };
+		uint64_t kick8[] = { -1013679841, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
+		uint64_t kick9[] = { -1767058336, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), -1, -1, -1 };
+		uint64_t kick10[] = { -1892343528, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
+		uint64_t kick11[] = { 1494472464, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
+		uint64_t kick12[] = { 296518236, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
+		uint64_t kick13[] = { 998716537, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
+		g_pointers->m_TriggerScriptEvent(1, kick1, 4, player);
+		g_pointers->m_TriggerScriptEvent(1, kick2, 4, player);
+		g_pointers->m_TriggerScriptEvent(1, kick3, 4, player);
+		g_pointers->m_TriggerScriptEvent(1, kick4, 4, player);
+		g_pointers->m_TriggerScriptEvent(1, kick5, 4, player);
+		g_pointers->m_TriggerScriptEvent(1, kick6, 4, player);
+		g_pointers->m_TriggerScriptEvent(1, kick7, 4, player);
+		g_pointers->m_TriggerScriptEvent(1, kick8, 4, player);
+		g_pointers->m_TriggerScriptEvent(1, kick9, 4, player);
+		g_pointers->m_TriggerScriptEvent(1, kick10, 4, player);
+		g_pointers->m_TriggerScriptEvent(1, kick11, 4, player);
+		g_pointers->m_TriggerScriptEvent(1, kick12, 4, player);
+		g_pointers->m_TriggerScriptEvent(1, kick13, 4, player);
+	}
+	void features::notification()
+	{
+		unsigned int player = (1 << features::g_selected_player);
+		uint64_t notification[] = { 802133775, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 21000, 21000, 21000 };
+		g_pointers->m_TriggerScriptEvent(1, notification, 4, player);
 	}
 	void features::run_tick()
 	{
