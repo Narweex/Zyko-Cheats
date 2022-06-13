@@ -63,6 +63,10 @@ namespace big
 		SelectedPlayerFriendly,
 		SelectedPlayerTeleport,
 		SelectedPlayerTrolling,
+		AllPlayerAbuse,
+		AllPlayerFriendly,
+		AllPlayerTeleport,
+		AllPlayerTrolling,
 		recovery,
 		SubmenuVehicleMovement,
 		misc,
@@ -78,7 +82,7 @@ namespace big
 		safehouse,
 		ClearSubmenu,
 		SubmenuSettingsParticles,
-		SessionEspSubmenu,
+		SessionAllPlayersSubmenu,
 		SubmenuVehSpawnerSettings,
 		SubmenuVehSpawnerSports,
 		SubmenuVehSpawnerMuscle,
@@ -103,6 +107,7 @@ namespace big
 		SubmenuVehSpawnerPlanes,
 		SubmenuVehSpawnerHelicopters,
 		SelectedPlayerVehicle,
+		AllPlayerVehicle,
 		SessionSettingsSubmenu
 	};
 
@@ -174,12 +179,13 @@ namespace big
 				sub->AddOption<BoolOption<bool>>("Forcefield", "Push everyone", &features::forcefield, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Super Man", "Just Fly", &features::superman, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Off Radar", "Players wont see you on minimap", &features::offradar, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Bullshark Testosterone", "Players wont see you on minimap", &features::bullshark, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Modify Time Scale", "Speed Of The Whole World", &features::modifytimecycle, BoolDisplay::OnOff);
 				if (features::modifytimecycle)
 				{
 
 
-					sub->AddOption<NumberOption<float>>("Time Scale", "You Can Do Slow Motion", &features::timescale, 0.0, 3.0, 0.1, 3, true, "< ", " >", [] {
+					sub->AddOption<NumberOption<float>>("Time Scale", "You Can Do Slow Motion", &features::timescale, 0.0, 1.0, 0.1, 1, true, "< ", " >", [] {
 
 						});
 				}
@@ -199,7 +205,7 @@ namespace big
 				sub->AddOption<NumberOption<int>>("Player Opacity", "Visibility Of Your Player", &features::playeropacity, 0, 255, 1, 3, true, "< ", " >", [] {
 					ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeropacity, 0);
 					});
-				sub->AddOption<BoolOption<bool>>("InfiniteStamina", "You Can Just Run Forever", &features::unlimitedstamina, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Infinite Stamina", "You Can Just Run Forever", &features::unlimitedstamina, BoolDisplay::OnOff);
 				sub->AddOption<RegularOption>("Clean Ped", "Clean Player", []
 					{
 						PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID());
@@ -218,7 +224,7 @@ namespace big
 					{
 						ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0, 0);
 					});
-				sub->AddOption<RegularOption>(xorstr_("RegularOption_demo"), "A regular option.", []
+				/*sub->AddOption<RegularOption>(xorstr_("RegularOption_demo"), "A regular option.", []
 					{
 						LOG(INFO) << "Test Option pressed";
 					});
@@ -242,7 +248,7 @@ namespace big
 				static std::size_t vectorPos{};
 
 				sub->AddOption<ChooseOption<const char*, std::size_t>>("Array", nullptr, &Lists::DemoList, &Lists::DemoListPos);
-				sub->AddOption<ChooseOption<std::uint64_t, std::size_t>>("Vector", nullptr, &vector, &vectorPos);
+				sub->AddOption<ChooseOption<std::uint64_t, std::size_t>>("Vector", nullptr, &vector, &vectorPos);*/
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Visions", vis, [](RegularSubmenu* sub)
 			{
@@ -692,14 +698,158 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Online", OnlineSubmenu, [&](RegularSubmenu* sub)
 			{
 				sub->AddOption<SubOption>("Players", "All players in session", SubmenuPlayerList);
-				sub->AddOption<SubOption>("Players ESP", "Displays Info About Session", SessionEspSubmenu);
+				sub->AddOption<SubOption>("All Players", "You can mess with all of them in once", SessionAllPlayersSubmenu);
 				sub->AddOption<SubOption>("Session settings", "Modify The Session", SessionSettingsSubmenu);
 			});
-		g_UiManager->AddSubmenu<RegularSubmenu>("ESP Menu", SessionEspSubmenu, [&](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>("All Players", SessionAllPlayersSubmenu, [&](RegularSubmenu* sub)
 			{
-				//sub->AddOption<BoolOption<bool>>("Session Info", "Displays Session Info", &features::sessioninfo, BoolDisplay::OnOff);
-				sub->AddOption<BoolOption<bool>>("All ESP", "You will get guided where other players are", &features::playeresp, BoolDisplay::OnOff);
-				//sub->AddOption<BoolOption<bool>>("Speedometer", "Displays Session Info", &features::speedometer, BoolDisplay::OnOff);
+				sub->AddOption<SubOption>("Teleport", "All players in session", AllPlayerTeleport);
+				sub->AddOption<SubOption>("Abuse", "You can mess with all of them in once", AllPlayerAbuse);
+				sub->AddOption<SubOption>("Vehicle", "Modify The Session", AllPlayerVehicle);
+				sub->AddOption<SubOption>("Trolling", "You can mess with all of them in once", AllPlayerTrolling);
+				sub->AddOption<SubOption>("Friendly", "Modify The Session", AllPlayerFriendly);
+				sub->AddOption<BoolOption<bool>>("ESP", "You will get guided where other players are", &features::playeresp, BoolDisplay::OnOff);
+				if (features::playeresp)
+				{
+					
+					sub->AddOption<BoolOption<bool>>("Line ESP", "You will get guided where other players are", &features::playeresp, BoolDisplay::OnOff);
+					sub->AddOption<BoolOption<bool>>("Box ESP", "You will get guided where other players are", &features::playeresp, BoolDisplay::OnOff);
+					//sub->AddOption<BoolOption<bool>>("ESP", "You will get guided where other players are", &features::playeresp, BoolDisplay::OnOff);
+					//sub->AddOption<BoolOption<bool>>("ESP", "You will get guided where other players are", &features::playeresp, BoolDisplay::OnOff);
+					//sub->AddOption<BoolOption<bool>>("ESP", "You will get guided where other players are", &features::playeresp, BoolDisplay::OnOff);
+					//sub->AddOption<BoolOption<bool>>("ESP", "You will get guided where other players are", &features::playeresp, BoolDisplay::OnOff);
+				}
+				g_UiManager->AddSubmenu<RegularSubmenu>("Player Teleports", AllPlayerTeleport, [](RegularSubmenu* sub)
+					{
+						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+
+						sub->AddOption<RegularOption>("Teleport To Player", "tp to Player", []
+							{
+								Entity handle;
+								PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false) ? handle = PED::GET_VEHICLE_PED_IS_USING(PLAYER::PLAYER_PED_ID()) : handle = PLAYER::PLAYER_PED_ID();
+								ENTITY::SET_ENTITY_COORDS(handle, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).z, false, false, false, false);
+							});
+						sub->AddOption<RegularOption>("Teleport To Player's Vehicle", "tp to Players vehicle", []
+							{
+								if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::GET_PLAYER_PED(NULL), true))
+								{
+									PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(features::g_selected_player)), VEHICLE::IS_VEHICLE_SEAT_FREE(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(NULL)), -1, true));
+								}
+							});
+					});
+
+				g_UiManager->AddSubmenu<RegularSubmenu>("Abuse", AllPlayerAbuse, [](RegularSubmenu* sub)
+					{
+						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+
+						if (NETWORK::NETWORK_GET_HOST_OF_SCRIPT("Freemode", -1, 0) == PLAYER::PLAYER_PED_ID())
+						{
+							sub->AddOption<RegularOption>("Host Kick", "Kick From Session", []
+								{
+									NETWORK::NETWORK_SESSION_KICK_PLAYER(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
+									int hostkick[69] = { 1885259, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player) };
+									SCRIPT::TRIGGER_SCRIPT_EVENT(1, hostkick, 4, 1 << features::g_selected_player);
+									//1885259 host kick global
+								});
+						}
+						sub->AddOption<RegularOption>("Kick", "Kick ", []
+							{
+								for (int i = 0; i < 32; i++)
+								{
+									features::kick();
+								}
+								
+							});
+						sub->AddOption<RegularOption>("Test Crash", "Test Crash From Session", []
+							{
+
+								features::crash();
+
+							});
+						sub->AddOption<RegularOption>("Script Kick", "Kick From Session", []
+							{
+								std::uint64_t args_1[] = { -145306724, 1, 0, 0 };
+
+								g_pointers->m_TriggerScriptEvent(1, args_1, 4, NULL);
+
+							});
+					});
+				g_UiManager->AddSubmenu<RegularSubmenu>("Players Vehicle Options", AllPlayerVehicle, [](RegularSubmenu* sub)
+					{
+						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+
+
+					});
+
+				g_UiManager->AddSubmenu<RegularSubmenu>("Trolling", AllPlayerTrolling, [](RegularSubmenu* sub)
+					{
+						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+
+						sub->AddOption<RegularOption>("Clone Player", "Clones Player", []
+							{
+								PED::CLONE_PED(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 1, 1, 1);
+							});
+						sub->AddOption<RegularOption>("Attach To Player", "Attaches You To Player", []
+							{
+								if (PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player) == PLAYER::PLAYER_PED_ID())
+								{
+
+								}
+								else
+								{
+									ENTITY::ATTACH_ENTITY_TO_ENTITY(PLAYER::PLAYER_PED_ID(), PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, true, true, false, true, false, true);
+								}
+							});
+						sub->AddOption<RegularOption>("Detach Off Player", "Detach You From Player", []
+							{
+								ENTITY::DETACH_ENTITY(PLAYER::PLAYER_PED_ID(), true, true);
+							});
+						sub->AddOption<RegularOption>("Explode Player", "Blow Up Player", []
+							{
+								Vector3 targetCords = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false);
+								FIRE::ADD_EXPLOSION(targetCords.x, targetCords.y, targetCords.z, 29, 9999.0f, true, false, 0.0f, false);
+							});
+						sub->AddOption<RegularOption>("Give Him Wanted Level", "Give The Player Wanted Level", []
+							{
+								PLAYER::SET_PLAYER_WANTED_LEVEL(features::g_selected_player, 5, false);
+								PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
+							});
+						sub->AddOption<BoolOption<bool>>("Fuck Their Camera", "Just a Little Trolling", &features::fucktheircam, BoolDisplay::OnOff);
+						sub->AddOption<BoolOption<bool>>("Traffic Follows Player", "This Will Piss Them Off", &features::trafficfollowplayer, BoolDisplay::OnOff);
+						sub->AddOption<RegularOption>("Airstrike Player", "Blow Up Player With Airstrike", []
+							{
+								Ped selectedplayer = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL);
+								Ped playerPed = PLAYER::PLAYER_PED_ID();
+								Vector3 coords = ENTITY::GET_ENTITY_COORDS(selectedplayer, 1);
+								Hash airStrike = rage::joaat("WEAPON_AIRSTRIKE_ROCKET");
+								WEAPON::REQUEST_WEAPON_ASSET(airStrike, 31, false);
+								MISC::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(coords.x, coords.y, coords.z + 50.f, coords.x, coords.y, coords.z, 250, 1, airStrike, playerPed, 1, 0, -1.0);
+
+							});
+						sub->AddOption<RegularOption>("Cage Player", "Trap In cage", []
+							{
+								OBJECT::CREATE_OBJECT(959275690, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).z - 1.f, true, false, false);
+							});
+						sub->AddOption<RegularOption>("Tube Player", "Trap In Tube", []
+							{
+								Vector3 remotePos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0);
+								Object obj = OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY("stt_prop_stunt_tube_fn_01"), remotePos.x, remotePos.y, remotePos.z - 1.f, true, false, true);
+								ENTITY::SET_ENTITY_ROTATION(obj, 0.0f, 90.0f, 0.0f, 0, true);
+							});
+						sub->AddOption<RegularOption>("Tree Player", "Trap In Tree", []
+							{
+								Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
+								Object obj1 = OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY("prop_xmas_tree_int"), pos.x, pos.y, pos.z, 1, 1, 1);
+							});
+
+					});
+
+				g_UiManager->AddSubmenu<RegularSubmenu>("Friendly", AllPlayerFriendly, [](RegularSubmenu* sub)
+					{
+						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+
+					});
+				
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Session Settings", SessionSettingsSubmenu, [&](RegularSubmenu* sub)
 			{
@@ -1164,6 +1314,7 @@ namespace big
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Players", SubmenuPlayerList, [](RegularSubmenu* sub)
 			{
+				void playerinfo();
 				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 
 				for (std::uint32_t i = 0; i < 32; ++i)
@@ -1266,19 +1417,11 @@ namespace big
 					});
 				sub->AddOption<RegularOption>("Test Crash", "Test Crash From Session", []
 					{
-						/* Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
-						*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x9090;
-						auto veh = VEHICLE::CREATE_VEHICLE(-1041692462, pos.x + 5, pos.y + 5, pos.z, 0.f, TRUE, FALSE, FALSE);*/
+						
 						features::crash();
 
 					});
-				sub->AddOption<RegularOption>("Script Kick", "Kick From Session", []
-					{
-						std::uint64_t args_1[] = { -145306724, 1, 0, 0 };
-
-						g_pointers->m_TriggerScriptEvent(1, args_1, 4, NULL);
-
-					});
+				
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Players Vehicle Options", SelectedPlayerVehicle, [](RegularSubmenu* sub)
 			{
@@ -1384,8 +1527,8 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Miscellaneous", misc, [](RegularSubmenu* sub)
 			{
 				sub->AddOption<SubOption>("Object Spawner", nullptr, SubmenuSettingsObjectSpanwer);
-				sub->AddOption<SubOption>("Particles", nullptr, SubmenuSettingsParticles);
-				sub->AddOption<BoolOption<bool>>("Money Drop On Self [~r~RISKY]", "Vibe to the music everywhere!", &features::selfdrop, BoolDisplay::OnOff);
+				//sub->AddOption<SubOption>("Particles", nullptr, SubmenuSettingsParticles);
+				//sub->AddOption<BoolOption<bool>>("Money Drop On Self [~r~RISKY]", "Vibe to the music everywhere!", &features::selfdrop, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Mobile Radio", "Vibe to the music everywhere!", &features::mobileradio, BoolDisplay::OnOff);
 				//sub->AddOption<BoolOption<bool>>("Free Camera", "Vibe to the music everywhere!", &features::, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Disable Phone", "English Dave wont bother you", &features::nophone, BoolDisplay::OnOff);
@@ -1397,11 +1540,11 @@ namespace big
 						CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
 					});
 
-				sub->AddOption<RegularOption>("Break Session test", "test", []
-					{
-						MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("Freemode");
-						//
-					});
+				//sub->AddOption<RegularOption>("Break Session test", "test", []
+				//	{
+				//		MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("Freemode");
+				//		//
+				//	});
 			});
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Miscellaneous", misc, [](RegularSubmenu* sub)
@@ -1414,8 +1557,20 @@ namespace big
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Protections", Protections, [](RegularSubmenu* sub)
 			{
-				sub->AddOption<BoolOption<bool>>("Block Explosions", "You Know What It Is", &features::g_explosion_event, BoolDisplay::OnOff);
-				sub->AddOption<BoolOption<bool>>("Block Particles", "Blocks Misc PTFX Effects", &features::g_ptfx_event, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Notify For Blocked Events", "", &features::g_received_event, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Log Net Events", "Logs the events in a txt file", &features::g_log_net_event_data, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("No Explosions", "Blocks Explosions from other players", &features::g_explosion_event, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("No Particles", "Blocks Particle FX Effects", &features::g_ptfx_event, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("No Freeze", "Players Cant Freeze You", &features::no_freeze_event, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("No Pickup", "This Should Block Pickups Spawning On You", &features::no_pickup_event, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("No Time Change", "Others Cant Mess With Time", &features::no_clock_event, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("No Sound Event", "Blocks Annoying Sounds From Players", &features::no_sound_effect, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("No Votekick", "", &features::no_votekick_event, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("No Weapons Events", "Players Cant Take Or Give You Weapons", &features::no_weapons_event, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("No Wanted Event", "players Cant Give You Wanted Level", &features::no_wanted_event, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Players Cant Mess With Weather", "", &features::no_weather_event, BoolDisplay::OnOff);
+
+				
 			});
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Language", SubmenuSettingsLanguage, [](RegularSubmenu* sub)
@@ -1448,7 +1603,7 @@ namespace big
 				}
 
 			});
-		g_UiManager->AddSubmenu<RegularSubmenu>("Particles", SubmenuSettingsParticles, [](RegularSubmenu* sub)
+		/*g_UiManager->AddSubmenu<RegularSubmenu>("Particles", SubmenuSettingsParticles, [](RegularSubmenu* sub)
 			{
 				for (auto& particle : Lists::Particles1) {
 					sub->AddOption<RegularOption>(particle, "Play This Particle", [particle]
@@ -1457,7 +1612,7 @@ namespace big
 						});
 				}
 
-			});
+			});*/
 
 
 
@@ -1470,16 +1625,13 @@ namespace big
 					});*/
 					/*sub->AddOption<RegularOption>("notify", "Unload the menu.", []
 						{
-							features::notify("Test", "Notification", 4000);
+							features::notify_protections("Test", "Notification", 4000);
 						});
 					sub->AddOption<RegularOption>("error", "Unload the menu.", []
 						{
 							features::notify_error("An error occured", "Notification", 4000);
-						});
-					sub->AddOption<RegularOption>("protections", "Unload the menu.", []
-						{
-							features::notify_protections("Event Blocked", "Crash from Narweex", 4000);
 						});*/
+					
 
 
 				sub->AddOption<RegularOption>("Unload", "Unload the menu.", []
