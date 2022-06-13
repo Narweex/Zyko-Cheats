@@ -66,18 +66,19 @@ namespace big::UserInterface
 		}
 	}
 	
-						
+			
+	
 	void UIManager::CheckForInput()
 	{
 		ResetInput();
 
-		m_OpenKeyPressed = gta_util::IsKeyPressed(features::OpenKey) || gta_util::IsKeyPressed(VK_F8);
-		m_BackKeyPressed = gta_util::IsKeyPressed(VK_BACK);
-		m_EnterKeyPressed = gta_util::IsKeyPressed(VK_RETURN);
-		m_UpKeyPressed = gta_util::IsKeyPressed(VK_UP);
-		m_DownKeyPressed = gta_util::IsKeyPressed(VK_DOWN);
-		m_LeftKeyPressed = gta_util::IsKeyPressed(VK_LEFT);
-		m_RightKeyPressed = gta_util::IsKeyPressed(VK_RIGHT);
+		m_OpenKeyPressed = gta_util::IsKeyPressed(features::OpenKey) || gta_util::IsKeyPressed(VK_INSERT);
+		m_BackKeyPressed = gta_util::IsKeyPressed(VK_BACK)|| gta_util::IsKeyPressed(VK_NUMPAD0);
+		m_EnterKeyPressed = gta_util::IsKeyPressed(VK_RETURN) || gta_util::IsKeyPressed(VK_NUMPAD5);
+		m_UpKeyPressed = gta_util::IsKeyPressed(VK_UP) || gta_util::IsKeyPressed(VK_NUMPAD8);
+		m_DownKeyPressed = gta_util::IsKeyPressed(VK_DOWN) || gta_util::IsKeyPressed(VK_NUMPAD2);
+		m_LeftKeyPressed = gta_util::IsKeyPressed(VK_LEFT) || gta_util::IsKeyPressed(VK_NUMPAD4);
+		m_RightKeyPressed = gta_util::IsKeyPressed(VK_RIGHT) || gta_util::IsKeyPressed(VK_NUMPAD6);
 	}
 
 	void UIManager::HandleInput()
@@ -234,6 +235,8 @@ namespace big::UserInterface
 		m_DrawBaseY += m_SubmenuBarHeight;
 	}
 
+	
+
 	void UIManager::DrawOption(AbstractOption* opt, bool selected)
 	{
 		DrawRect(
@@ -276,7 +279,7 @@ namespace big::UserInterface
 
 	void UIManager::DrawFooter()
 	{
-		DrawLeftText("0.0.1.Beta", m_PosX + 0.08f,
+		DrawLeftText("0.0.5.Beta", m_PosX + 0.08f,
 			m_DrawBaseY,
 			0.24f,
 			m_DescriptionFont,

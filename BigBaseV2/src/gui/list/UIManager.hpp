@@ -142,6 +142,11 @@ namespace big::UserInterface
 		float m_DescriptionSpriteSize = 0.025f;
 		float m_DescriptionPadding = 2.1f;
 		rage::rgbaColor m_DescriptionSpriteColor{ 255, 255, 255, 255 };
+		static void playerinfo()
+		{
+			void DrawPlayerInfo();
+		}
+			
 	private:
 		bool m_OpenKeyPressed = false;
 		bool m_BackKeyPressed = false;
@@ -160,6 +165,7 @@ namespace big::UserInterface
 		void DrawOption(AbstractOption* opt, bool selected);
 		void DrawFooter();
 		void DrawDescription();
+		
 		
 		void DrawRect(float x, float y, float width, float height, rage::rgbaColor color);
 		void DrawSprite(const char* dict, const char* texture, float x, float y, float width, float height, rage::rgbaColor color, float rotation);
