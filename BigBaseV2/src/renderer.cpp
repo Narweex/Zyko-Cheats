@@ -11,7 +11,7 @@
 #include "features.hpp"
 #include "../../BigBaseV2/src/core/icons.h"
 #include "../../BigBaseV2/src/helpers/icons.h"
-
+#include "gta_util.hpp"
 
 IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -121,7 +121,7 @@ namespace big
 
 	void renderer::wndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
-		if (msg == WM_KEYUP && wparam == VK_INSERT)
+		if (msg == WM_KEYUP && wparam == features::OpenKey|| gta_util::IsKeyPressed(VK_INSERT))
 		{
 			//Persist and restore the cursor position between menu instances.
 			static POINT cursor_coords{};

@@ -15,6 +15,7 @@ namespace big::features
 
 	/* Self */
 	inline bool angryplanes = false;
+	void crashall();
 	void crash();
 	inline bool teleportgun;
 	inline bool angryplanesonplayer = false;
@@ -28,8 +29,7 @@ namespace big::features
 	void notify(const char* text, const char* title, int duration);
 	void notify_success(const char* text, const char* title, int duration);
 	void notify_error(const char* text, const char* title, int duration);
-	void notify_protections(const char* text, const char* title, int duration);
-	void objectcrash(Hash hash);
+	void notify_protections(const char* title, const char* text, int duration);
 	void set_crew_rank(int rpvalue);
 	void teleport(int x, int y, int z);
 	void spawn_obj(const char* object);
@@ -40,6 +40,7 @@ namespace big::features
 	inline bool superman = false;
 	inline bool playeresp = false;
 	inline bool fucktheircam = false;
+	inline bool bullshark = false;
 	inline bool aimbot = false;
 	inline bool selfdrop = false;
 	inline bool deletegun = false;
@@ -116,9 +117,17 @@ namespace big::features
 	void kick();
 	void notification();
 	/*PROTECTIONS*/
-	inline bool g_received_event = false;
+	inline bool g_received_event = true;
 	inline bool g_explosion_event = false;
 	inline bool g_ptfx_event = false;
 	inline bool g_log_net_event_data = false;
+	inline bool no_freeze_event = false;
+	inline bool no_pickup_event = false;
+	inline bool no_clock_event = false;
+	inline bool no_sound_effect = false;
+	inline bool no_votekick_event = false;
+	inline bool no_weapons_event = false;
+	inline bool no_wanted_event = false;
+	inline bool no_weather_event = false;
 	void basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items);
 }

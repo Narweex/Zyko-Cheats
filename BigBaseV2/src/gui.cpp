@@ -106,7 +106,7 @@ namespace big
 				ImGui::BeginTabBar("tabbar");
 				base_tab::render_base_tab();
 				players_tab::render_players_tab();
-				self_tab::render_self_tab();
+			//	self_tab::render_self_tab();
 				ImGui::EndTabBar();
 			}
 			ImGui::End();
