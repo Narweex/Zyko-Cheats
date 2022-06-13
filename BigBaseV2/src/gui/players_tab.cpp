@@ -53,9 +53,9 @@ namespace big
 						else
 							ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(0, 180, 0, 255)), xorstr_("No"));
 
-						ImGui::Text(xorstr_("Wanted Level: %i / 5"), g_player_list.wanted);
+						//ImGui::Text(xorstr_("Wanted Level: %i / 5"), g_player_list.wanted);
 						ImGui::Text(xorstr_("In Vehicle: %s"), g_player_list.is_vehicle ? "Yes" : "No");
-						ImGui::Text(xorstr_("Player Alpha: %i"), g_player_list.alpha);
+					//	ImGui::Text(xorstr_("Player Alpha: %i"), g_player_list.alpha);
 						ImGui::Text(xorstr_("Player Speed: %i MPH"), g_player_list.speed);
 						//ImGui::Text(xorstr_("Player Location: %"), HUD::GET_STREET_NAME_FROM_HASH_KEY(g_player_list.zone));
 					
