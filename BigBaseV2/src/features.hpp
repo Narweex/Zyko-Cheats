@@ -15,8 +15,7 @@ namespace big::features
 
 	/* Self */
 	inline bool angryplanes = false;
-	void crashall();
-	void crash();
+	void crash(int player);
 	inline bool teleportgun;
 	inline bool angryplanesonplayer = false;
 	static bool demo_bool = true;
@@ -114,7 +113,7 @@ namespace big::features
 	bool is_modder(Player player);
 
 	/*Trolling and kicks*/
-	void kick();
+	void kick(int player);
 	void notification();
 	/*PROTECTIONS*/
 	inline bool g_received_event = true;
