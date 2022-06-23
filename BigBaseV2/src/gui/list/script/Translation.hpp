@@ -1,5 +1,11 @@
 #include <gta/joaat.hpp>
 #include <filesystem>
+
+bool is_empty(std::ifstream& pFile)
+{
+	return pFile.peek() == std::ifstream::traits_type::eof();
+}
+
 namespace big
 {
 	class TranslationManager
@@ -11,8 +17,6 @@ namespace big
 			
 				if (!std::filesystem::exists(&m_TranslationDir[0]))
 					std::filesystem::create_directory(&m_TranslationDir[0]);
-			
-			
 		}
 
 		/**
@@ -31,7 +35,7 @@ namespace big
 				auto filePath = std::filesystem::path(m_TranslationDir).append(filename);
 
 				std::ifstream file(filePath);
-				if (file.good())
+				if (file.good() && !is_empty(file))
 				{
 					std::stringstream str;
 					std::string line;
