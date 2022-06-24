@@ -13,18 +13,22 @@ namespace big::features
 	inline ULONGLONG tick_conf[] = { 50, 250, 2000, 25003 };
 	inline int g_current_tick_job{};
 
+
+	/*Playerinfo*/
+	void render_player_info();
 	/* Self */
-	inline bool angryplanes = false;
 	void crash(int player);
+	void transactionerror(int player);
+	void infloading(int player);
 	inline bool teleportgun;
 	inline bool angryplanesonplayer = false;
 	static bool demo_bool = true;
 	inline bool godmode;
 	inline bool neverWanted = false;
 	inline bool sessioninfo = false;
+	inline bool instartenter = false;
 	void set_rank(int rpvalue);
 	inline int level{};
-	void notifyMap(char* fmt, ...);
 	void notify(const char* text, const char* title, int duration);
 	void notify_success(const char* text, const char* title, int duration);
 	void notify_error(const char* text, const char* title, int duration);
@@ -114,7 +118,9 @@ namespace big::features
 
 	/*Trolling and kicks*/
 	void kick(int player);
-	void notification();
+	void notification(int player);
+	void kill(int player);
+	void vehkick(int player);
 	/*PROTECTIONS*/
 	inline bool g_received_event = true;
 	inline bool g_explosion_event = false;

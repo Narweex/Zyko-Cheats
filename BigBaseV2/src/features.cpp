@@ -20,15 +20,19 @@
 
 namespace big
 {
+	void features::render_player_info()
+	{
+		ImGui::Text(xorstr_("Money"));
+	}
 	void features::on_present()
 	{
 		
-
+		
 		// Initialize notify
 		
 		TRY_CLAUSE
 		{
-		ImGui::MergeIconsWithLatestFont(16.f, false);
+		
 		ImGui::MergeIconsWithLatestFont(16.f, false);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.f); // Round borders
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.04f, 0.14f, 100.f / 255.f)); // Background color
@@ -173,6 +177,7 @@ namespace big
 	{
 		return degs * 3.141592653589793f / 180.f;
 	}
+	
 	void features::maxvehicle(int VehicleHandle)
 	{
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(VehicleHandle, "Zyko");
@@ -397,38 +402,64 @@ namespace big
 	{
 		//unsigned int player = (1 << features::g_selected_player);
 		
-		uint64_t kick1[] = { -371781708, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
-		uint64_t kick2[] = { 1514515570, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
-		uint64_t kick3[] = { 911179316, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
-		uint64_t kick4[] = { 846342319, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
-		uint64_t kick5[] = { 2085853000, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
-		uint64_t kick6[] = { 1514515570, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
-		uint64_t kick7[] = { -1970125962, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), -1, -1, -1 };
-		uint64_t kick8[] = { -1013679841, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
-		uint64_t kick9[] = { -1767058336, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), -1, -1, -1 };
-		uint64_t kick10[] = { -1892343528, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
-		uint64_t kick11[] = { 1494472464, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
-		uint64_t kick12[] = { 296518236, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
-		uint64_t kick13[] = { 998716537, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 0, 0 };
+		uint64_t kick1[] = { -371781708, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
+		uint64_t kick2[] = { 1514515570, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
+		uint64_t kick3[] = { 911179316, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
+		uint64_t kick4[] = { 846342319, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
+		uint64_t kick5[] = { 2085853000, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
+		uint64_t kick6[] = { 1514515570, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
+		uint64_t kick7[] = { -1970125962, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), -1, -1, -1 };
+		uint64_t kick8[] = { -1013679841, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
+		uint64_t kick9[] = { -1767058336, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), -1, -1, -1 };
+		uint64_t kick10[] = { -1892343528, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
+		uint64_t kick11[] = { 1494472464, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
+		uint64_t kick12[] = { 296518236, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
+		uint64_t kick13[] = { 998716537, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
 		uint64_t superkick[] = { *kick1, *kick2, *kick3, *kick4, *kick5, *kick6, *kick7, *kick8, *kick9, *kick10, *kick11, *kick12, *kick13 };
 		g_pointers->m_TriggerScriptEvent(1, superkick, 4, player);
 		
 	}
-	void features::notification()
+	void features::vehkick(int player)
+	{
+		uint64_t event[] = { 578856274,PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player)};
+		g_pointers->m_TriggerScriptEvent(1, event, 4, player);
+	}
+	void features::notification(int player)
 	{
 		//unsigned int player = (1 << features::g_selected_player);
-		uint64_t notification[] = { 802133775, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 21000, 21000, 21000 };
+		uint64_t notification[] = { 802133775, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 21000, 21000, 21000 };
 		//g_pointers->m_TriggerScriptEvent(1, notification, 4, player);
 	}
 	void features::crash(int player)
 	{
 		//unsigned int player = (1 << features::g_selected_player);
 		int nigger = rand() % -2147483647 + 2147483647;
-		uint64_t crash1[] = { -393294520, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
-		uint64_t crash2[] = { -1386010354, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
-		uint64_t crash3[] = { 962740265, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
+		uint64_t crash1[] = { -393294520, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
+		uint64_t crash2[] = { -1386010354, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
+		uint64_t crash3[] = { 962740265, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
 		uint64_t crash[] = { *crash1, *crash2, *crash3 };
 		g_pointers->m_TriggerScriptEvent(1, crash, 4, player);
+	}
+	void features::kill(int player)
+	{
+
+		ENTITY::SET_ENTITY_HEALTH(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0);
+	}
+	void features::infloading(int player)
+	{
+		//unsigned int player = (1 << features::g_selected_player);
+		
+		uint64_t event[] = { 603406648, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 99, 69 };
+		uint64_t event2[] = { 962740265, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0, 32, 32, 32 };
+		uint64_t loadingscr[] = { *event, *event2 };
+		g_pointers->m_TriggerScriptEvent(1, loadingscr, 4, player);
+	}
+	void features::transactionerror(int player)
+	{
+		//unsigned int player = (1 << features::g_selected_player);
+
+		uint64_t event[] = {-1704141512};
+		g_pointers->m_TriggerScriptEvent(1, event, 4, player);
 	}
 
 
@@ -443,13 +474,22 @@ namespace big
 			g_player_info.player_id = PLAYER::PLAYER_ID();
 			g_player_info.player_ped = PLAYER::PLAYER_PED_ID();
 		}
+		if (neverWanted)
+		{
+			
+				PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
+				PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, false);
+		
+		}
 		if (features::novehkick)
 		{
 			*script_global(2689224).at(PLAYER::PLAYER_PED_ID()).at(317).at(10).as<int*>() = 21501;
 			*script_global(1958845).as<int*>() = 1;
 			script_global(262145).at(7478);
+			
 			//Global_262145.f_7478
 		}
+		
 		
 		
 		
@@ -544,6 +584,20 @@ namespace big
 		if (modifytimecycle)
 		{
 			MISC::SET_TIME_SCALE(features::timescale);
+		}
+		if (instartenter)
+		{
+			
+			Vehicle vehicle = PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(PLAYER::PLAYER_PED_ID());
+			Ped del = VEHICLE::GET_PED_IN_VEHICLE_SEAT(vehicle, -1, 0);
+			RequestControlOfEnt(vehicle);
+			RequestControlOfEnt(del);
+			TASK::CLEAR_PED_TASKS_IMMEDIATELY(del);
+			//PED::DELETE_PED(&del);
+			//PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), vehicle, -1);
+			PED::SET_PED_VEHICLE_FORCED_SEAT_USAGE(PLAYER::PLAYER_PED_ID(), vehicle, 0, 0);
+
+			
 		}
 		
 
