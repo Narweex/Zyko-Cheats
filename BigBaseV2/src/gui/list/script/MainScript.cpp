@@ -18,6 +18,7 @@
 #include "Translation.hpp"
 #include "../../BigBaseV2/src/gui/player_list.h"
 #include <shellapi.h>
+#include "auth/auth.hpp"
 
 namespace big
 {
@@ -156,14 +157,14 @@ namespace big
 				sub->AddOption<SubOption>("Visions", "Change Player Visions", vis);
 				sub->AddOption<BoolOption<bool>>("God Mode", "You Cannot Die", &features::godmode, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Noclip", "WASD - Direction | SPACE - Up | Shift - Down", &features::noclip, BoolDisplay::OnOff);
-				sub->AddOption<BoolOption<bool>>("Never Wanted", "Police Wont Start Coming AFter You", &features::neverWanted, BoolDisplay::OnOff);
-				if (!features::neverWanted) {
-					sub->AddOption<NumberOption<int>>("Wanted Level", nullptr, &features::wantedLevel, 0, 5, 1, 3, true, "< ", " >", []
-						{
-							PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
-							PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
-						});
-				}
+				sub->AddOption<BoolOption<bool>>("Never Wanted", "Police Wont Start Coming After You", &features::neverWanted, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Instantly Enter Vehicles", "Come On Lets GO!!!", &features::instartenter, BoolDisplay::OnOff);
+				sub->AddOption<NumberOption<int>>("Wanted Level", nullptr, &features::wantedLevel, 0, 5, 1, 3, true, "< ", " >", []
+					{
+						PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
+						PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
+					});
+				
 
 				sub->AddOption<BoolOption<bool>>("Super Run - Override", "Run Boiiiiiii", &features::superrunbool, BoolDisplay::OnOff);
 				if (features::superrunbool) {
@@ -756,14 +757,26 @@ namespace big
 							{
 								for (int i = 0; i < 32; i++)
 								{
-									features::kick();
+									features::kick(i);
 								}
 								
+							});
+						sub->AddOption<RegularOption>("Nig Nog Crash", "Nigs them out from game", []
+							{
+
+								for (int i = 0; i < 32; i++)
+								{
+									features::crash(i);
+								}
+
 							});
 						sub->AddOption<RegularOption>("Test Crash", "Test Crash From Session", []
 							{
 
-								features::crash();
+								for (int i = 0; i < 32; i++)
+								{
+									features::infloading(i);
+								}
 
 							});
 						sub->AddOption<RegularOption>("Script Kick", "Kick From Session", []
@@ -894,7 +907,7 @@ namespace big
 			{
 				sub->AddOption<SubOption>("Time", "Adjust the World Time", TimeSubmenu);
 				sub->AddOption<SubOption>("Weather", "Adjust the World Time", WeatherSubmenu);
-				sub->AddOption<SubOption>("Water", "Mess With Water", WaterSubmenu);
+				//sub->AddOption<SubOption>("Water", "Mess With Water", WaterSubmenu);
 				sub->AddOption<SubOption>("Clear Area", "Select what to clear from you", ClearSubmenu);
 				sub->AddOption<NumberOption<std::int32_t>>("World Gravity", nullptr, &features::worldgravity, 0, 3, 1, 3, true, "< ", " >", [] {});
 				sub->AddOption<RegularOption>("Set Gravity", "", []
@@ -1314,7 +1327,8 @@ namespace big
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Players", SubmenuPlayerList, [](RegularSubmenu* sub)
 			{
-				void playerinfo();
+				//features::render_player_info();
+				
 				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 
 				for (std::uint32_t i = 0; i < 32; ++i)
@@ -1413,12 +1427,24 @@ namespace big
 				}
 				sub->AddOption<RegularOption>("Kick", "Kick ", []
 					{
-						features::kick();
+						features::kick(features::g_selected_player);
 					});
-				sub->AddOption<RegularOption>("Test Crash", "Test Crash From Session", []
+				sub->AddOption<RegularOption>("Nig Nog Crash", "Crash From Game", []
 					{
 						
-						features::crash();
+						features::crash(features::g_selected_player);
+
+					});
+				sub->AddOption<RegularOption>("Infinite Loading", "He Will be In Loadingscreen Forever", []
+					{
+
+						features::infloading(features::g_selected_player);
+
+					});
+				sub->AddOption<RegularOption>("Transaction error", "They will be in infinite transaction", []
+					{
+
+						features::transactionerror(features::g_selected_player);
 
 					});
 				
@@ -1634,6 +1660,10 @@ namespace big
 					
 
 
+				sub->AddOption<RegularOption>("Test Auth", "Unload the menu.", []
+					{
+						auth::auth();
+					});
 				sub->AddOption<RegularOption>("Unload", "Unload the menu.", []
 					{
 						g_running = false;
