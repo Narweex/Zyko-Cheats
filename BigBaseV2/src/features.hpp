@@ -27,6 +27,7 @@ namespace big::features
 	inline bool neverWanted = false;
 	inline bool sessioninfo = false;
 	inline bool instartenter = false;
+	inline bool driveitgun = false;
 	void set_rank(int rpvalue);
 	inline int level{};
 	void notify(const char* text, const char* title, int duration);

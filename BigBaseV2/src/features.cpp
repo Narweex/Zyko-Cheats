@@ -585,21 +585,24 @@ namespace big
 		{
 			MISC::SET_TIME_SCALE(features::timescale);
 		}
-		if (instartenter)
-		{
-			
-			Vehicle vehicle = PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(PLAYER::PLAYER_PED_ID());
-			Ped del = VEHICLE::GET_PED_IN_VEHICLE_SEAT(vehicle, -1, 0);
-			RequestControlOfEnt(vehicle);
-			RequestControlOfEnt(del);
-			TASK::CLEAR_PED_TASKS_IMMEDIATELY(del);
-			//PED::DELETE_PED(&del);
-			//PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), vehicle, -1);
-			PED::SET_PED_VEHICLE_FORCED_SEAT_USAGE(PLAYER::PLAYER_PED_ID(), vehicle, 0, 0);
-
-			
-		}
 		
+		if (driveitgun)
+		{
+
+			Vector3 iCoord;
+			if (WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(PLAYER::PLAYER_PED_ID(), &iCoord))
+			{
+				int vehicle = VEHICLE::GET_CLOSEST_VEHICLE(iCoord.x, iCoord.y, iCoord.z, 15.0f, 0, 1);
+				int driver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(vehicle, -1, 0);
+				RequestControlOfEnt(vehicle);
+				RequestControlOfEnt(driver);
+				TASK::CLEAR_PED_TASKS_IMMEDIATELY(driver);
+				PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), vehicle, -1);
+			}
+
+
+
+		}
 
 		for (int i = 0; i < sizeof(tick_conf) / sizeof(ULONGLONG); i++)
 		{
@@ -612,7 +615,21 @@ namespace big
 				case 0:
 					//50 MS				
 					run_playerlist();
+					if (instartenter)
+					{
 
+						Vehicle vehicle = PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(PLAYER::PLAYER_PED_ID());
+						Ped del = VEHICLE::GET_PED_IN_VEHICLE_SEAT(vehicle, -1, 0);
+						RequestControlOfEnt(vehicle);
+						RequestControlOfEnt(del);
+						TASK::CLEAR_PED_TASKS_IMMEDIATELY(del);
+						PED::DELETE_PED(&del);
+						PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), vehicle, -1);
+						PED::SET_PED_VEHICLE_FORCED_SEAT_USAGE(PLAYER::PLAYER_PED_ID(), vehicle, 0, 0);
+
+
+					}
+					
 					if (godmode)
 					{
 						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), godmode);
