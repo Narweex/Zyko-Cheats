@@ -899,6 +899,7 @@ namespace big
 				sub->AddOption<BoolOption<bool>>("Explosive Gun", "Your gun will never be empty", &features::exploammo, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Airstrike Gun", "A Plane Will Strike Where You Shoot", &features::airstrikegun, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Teleport Gun", "You Will Teleport Where You Shoot", &features::teleportgun, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Drive It Gun", "You Will Enter The Vehicle YOu Shoot At", &features::driveitgun, BoolDisplay::OnOff);
 
 
 			});
@@ -1662,7 +1663,7 @@ namespace big
 
 				sub->AddOption<RegularOption>("Test Auth", "Unload the menu.", []
 					{
-						auth::auth();
+						//auth::auth();
 					});
 				sub->AddOption<RegularOption>("Unload", "Unload the menu.", []
 					{
