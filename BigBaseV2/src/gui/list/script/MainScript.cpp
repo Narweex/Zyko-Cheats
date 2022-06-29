@@ -164,7 +164,7 @@ namespace big
 						PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
 						PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
 					});
-				
+
 
 				sub->AddOption<BoolOption<bool>>("Super Run - Override", "Run Boiiiiiii", &features::superrunbool, BoolDisplay::OnOff);
 				if (features::superrunbool) {
@@ -712,7 +712,7 @@ namespace big
 				sub->AddOption<BoolOption<bool>>("ESP", "You will get guided where other players are", &features::playeresp, BoolDisplay::OnOff);
 				if (features::playeresp)
 				{
-					
+
 					sub->AddOption<BoolOption<bool>>("Line ESP", "You will get guided where other players are", &features::playeresp, BoolDisplay::OnOff);
 					sub->AddOption<BoolOption<bool>>("Box ESP", "You will get guided where other players are", &features::playeresp, BoolDisplay::OnOff);
 					//sub->AddOption<BoolOption<bool>>("ESP", "You will get guided where other players are", &features::playeresp, BoolDisplay::OnOff);
@@ -759,7 +759,7 @@ namespace big
 								{
 									features::kick(i);
 								}
-								
+
 							});
 						sub->AddOption<RegularOption>("Nig Nog Crash", "Nigs them out from game", []
 							{
@@ -862,7 +862,7 @@ namespace big
 						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 
 					});
-				
+
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Session Settings", SessionSettingsSubmenu, [&](RegularSubmenu* sub)
 			{
@@ -1329,7 +1329,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Players", SubmenuPlayerList, [](RegularSubmenu* sub)
 			{
 				//features::render_player_info();
-				
+
 				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 
 				for (std::uint32_t i = 0; i < 32; ++i)
@@ -1381,6 +1381,16 @@ namespace big
 		g_UiManager->AddSubmenu<PlayerSubmenu>(&features::g_selected_player, SubmenuSelectedPlayer, [](PlayerSubmenu* sub)
 			{
 				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+				g_UiManager->DrawRect(g_UiManager->m_PosX - 0.25f,
+					g_UiManager->m_PosY + 0.2f,
+					0.20f,
+					0.40f,
+					rage::rgbaColor{ 20, 20, 20, 200 });
+				g_UiManager->DrawCenteredText(g_player_list.name, g_UiManager->m_PosX - 0.27f,
+					g_UiManager->m_PosY, 0.5, g_UiManager->m_OptionFont, rage::rgbaColor{ 255, 255, 255, 255 }, false, false);
+
+				/*g_UiManager->DrawCenteredText(g_player_list.player_id, g_UiManager->m_PosX - 0.35f,
+					g_UiManager->m_PosY + 0.1, 0.3, g_UiManager->m_OptionFont, rage::rgbaColor{ 255, 255, 255, 255 }, false, false);*/
 
 				sub->AddOption<BoolOption<bool>>("Spectate", nullptr, &features::spectateplayer, BoolDisplay::OnOff);
 				sub->AddOption<SubOption>("Teleport Options", nullptr, SelectedPlayerTeleport);
@@ -1432,7 +1442,7 @@ namespace big
 					});
 				sub->AddOption<RegularOption>("Nig Nog Crash", "Crash From Game", []
 					{
-						
+
 						features::crash(features::g_selected_player);
 
 					});
@@ -1448,7 +1458,7 @@ namespace big
 						features::transactionerror(features::g_selected_player);
 
 					});
-				
+
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Players Vehicle Options", SelectedPlayerVehicle, [](RegularSubmenu* sub)
 			{
@@ -1597,7 +1607,7 @@ namespace big
 				sub->AddOption<BoolOption<bool>>("No Wanted Event", "players Cant Give You Wanted Level", &features::no_wanted_event, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Players Cant Mess With Weather", "", &features::no_weather_event, BoolDisplay::OnOff);
 
-				
+
 			});
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Language", SubmenuSettingsLanguage, [](RegularSubmenu* sub)
@@ -1658,7 +1668,7 @@ namespace big
 						{
 							features::notify_error("An error occured", "Notification", 4000);
 						});*/
-					
+
 
 
 				sub->AddOption<RegularOption>("Test Auth", "Unload the menu.", []
