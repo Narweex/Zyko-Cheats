@@ -16,23 +16,21 @@
 #include <imgui.h>
 #include <helpers/imgui_notify.h>
 #include "../../BigBaseV2/src/helpers/tahoma.h"
+#include "auth/auth.hpp"
 
 
 namespace big
 {
-	void features::render_player_info()
-	{
-		ImGui::Text(xorstr_("Money"));
-	}
+
 	void features::on_present()
 	{
-		
-		
+
+
 		// Initialize notify
-		
+
 		TRY_CLAUSE
 		{
-		
+
 		ImGui::MergeIconsWithLatestFont(16.f, false);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.f); // Round borders
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.04f, 0.14f, 100.f / 255.f)); // Background color
@@ -40,13 +38,13 @@ namespace big
 		ImGui::PopStyleVar(1); // Don't forget to Pop()
 		ImGui::PopStyleColor(1);
 		}
-		EXCEPT_CLAUSE
+			EXCEPT_CLAUSE
 	}
 
-	
+
 
 	///////////////////////////////////////////////////////   HELP VOIDS   ///////////////////////////////////////////////////////
-	
+
 	void features::notify_success(const char* text, const char* title, int duration)
 	{
 		ImGuiToast toast(ImGuiToastType_Success, duration);
@@ -57,15 +55,15 @@ namespace big
 		ImGui::InsertNotification(toast);
 
 	}
-	void features::notify(const char* title,const char* text, int duration)
+	void features::notify(const char* title, const char* text, int duration)
 	{
 		ImGuiToast toast(ImGuiToastType_Info, duration);
-		
-			toast.set_title(title);
-			toast.set_content(text);
-			
+
+		toast.set_title(title);
+		toast.set_content(text);
+
 		ImGui::InsertNotification(toast);
-		
+
 	}
 	void features::notify_error(const char* title, const char* text, int duration)
 	{
@@ -75,7 +73,7 @@ namespace big
 		toast.set_content(text);
 
 		ImGui::InsertNotification(toast);
-		
+
 	}
 	void features::notify_protections(const char* title, const char* text, int duration)
 	{
@@ -95,11 +93,11 @@ namespace big
 	//{
 	//	ImGui::InsertNotification({ ImGuiToastType_Warning, 4000, text });
 	//}
-	
-	
+
+
 	void drawstring(char* text, float X, float Y)
 	{
-		
+
 		HUD::ADD_TEXT_COMPONENT_SUBSTRING_PLAYER_NAME(text);
 		HUD::SET_TEXT_FONT(0);
 		HUD::SET_TEXT_SCALE(0.3, 0.3f);
@@ -109,7 +107,7 @@ namespace big
 		HUD::SET_TEXT_DROPSHADOW(0, 0, 0, 0, 0);
 		HUD::SET_TEXT_EDGE(0, 0, 0, 0, 0);
 		HUD::SET_TEXT_OUTLINE();
-		
+
 	}
 	void setupdraw()
 	{
@@ -137,7 +135,7 @@ namespace big
 			NETWORK::SET_NETWORK_ID_CAN_MIGRATE(netID, 1);
 		}
 	}//REQUEST CONTROL OF ENTITY
-	
+
 	int pressedKey() {
 		int retKey = -1;
 		for (int i = 0x00; i < 0xFF; i++) {
@@ -149,7 +147,7 @@ namespace big
 	}
 
 	void features::setOpenKey() {
-		
+
 		int key = pressedKey();
 		while (key == -1) {
 			key = pressedKey();
@@ -158,7 +156,7 @@ namespace big
 		features::OpenKey = key;
 	}
 
-	
+
 	void ApplyForceToEntity(Entity e, float x, float y, float z)
 	{
 		if (e != PLAYER::PLAYER_PED_ID() && NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(e) == FALSE)
@@ -177,7 +175,7 @@ namespace big
 	{
 		return degs * 3.141592653589793f / 180.f;
 	}
-	
+
 	void features::maxvehicle(int VehicleHandle)
 	{
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(VehicleHandle, "Zyko");
@@ -325,7 +323,7 @@ namespace big
 			HUD::END_TEXT_COMMAND_SET_BLIP_NAME(vBlip);
 		}
 	}
-	
+
 	///////////////////////////////////////////////////////   RECOVERY VOIDS   ///////////////////////////////////////////////////////
 	void features::basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items)
 	{
@@ -356,12 +354,12 @@ namespace big
 		}
 	}
 
-	
-	
+
+
 	int delayedPlanned = 400;
 	int timerPlaned = 3;
 
-		
+
 	void features::set_crew_rank(int rpvalue)
 	{
 		if (rpvalue > 0) {
@@ -388,20 +386,20 @@ namespace big
 			{
 				return true;
 			}
-			
-			
+
+
 		}
 
 		return false;
 	}
 
 	/*ATTACK FEATURES*/
-	
-	
+
+
 	void features::kick(int player)
 	{
 		//unsigned int player = (1 << features::g_selected_player);
-		
+
 		uint64_t kick1[] = { -371781708, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
 		uint64_t kick2[] = { 1514515570, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
 		uint64_t kick3[] = { 911179316, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
@@ -417,11 +415,11 @@ namespace big
 		uint64_t kick13[] = { 998716537, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
 		uint64_t superkick[] = { *kick1, *kick2, *kick3, *kick4, *kick5, *kick6, *kick7, *kick8, *kick9, *kick10, *kick11, *kick12, *kick13 };
 		g_pointers->m_TriggerScriptEvent(1, superkick, 4, player);
-		
+
 	}
 	void features::vehkick(int player)
 	{
-		uint64_t event[] = { 578856274,PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player)};
+		uint64_t event[] = { 578856274,PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player) };
 		g_pointers->m_TriggerScriptEvent(1, event, 4, player);
 	}
 	void features::notification(int player)
@@ -448,7 +446,7 @@ namespace big
 	void features::infloading(int player)
 	{
 		//unsigned int player = (1 << features::g_selected_player);
-		
+
 		uint64_t event[] = { 603406648, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 99, 69 };
 		uint64_t event2[] = { 962740265, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0, 32, 32, 32 };
 		uint64_t loadingscr[] = { *event, *event2 };
@@ -458,7 +456,7 @@ namespace big
 	{
 		//unsigned int player = (1 << features::g_selected_player);
 
-		uint64_t event[] = {-1704141512};
+		uint64_t event[] = { -1704141512 };
 		g_pointers->m_TriggerScriptEvent(1, event, 4, player);
 	}
 
@@ -476,23 +474,23 @@ namespace big
 		}
 		if (neverWanted)
 		{
-			
-				PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
-				PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, false);
-		
+
+			PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
+			PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, false);
+
 		}
 		if (features::novehkick)
 		{
 			*script_global(2689224).at(PLAYER::PLAYER_PED_ID()).at(317).at(10).as<int*>() = 21501;
 			*script_global(1958845).as<int*>() = 1;
 			script_global(262145).at(7478);
-			
+
 			//Global_262145.f_7478
 		}
-		
-		
-		
-		
+
+
+
+
 		if (playeresp)
 		{
 
@@ -561,7 +559,7 @@ namespace big
 			*script_global(2703660).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;
 
 		}
-		
+
 		if (features::exploammo)
 		{
 			Vector3 iCoord;
@@ -575,17 +573,17 @@ namespace big
 			Vector3 iCoord;
 			if (WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(PLAYER::PLAYER_PED_ID(), &iCoord))
 			{
-				
+
 				PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), iCoord.x, iCoord.y, iCoord.z);
 			}
 		}
-		
-		
+
+
 		if (modifytimecycle)
 		{
 			MISC::SET_TIME_SCALE(features::timescale);
 		}
-		
+
 		if (driveitgun)
 		{
 
@@ -629,7 +627,7 @@ namespace big
 
 
 					}
-					
+
 					if (godmode)
 					{
 						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), godmode);
@@ -737,10 +735,10 @@ namespace big
 						ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), false);
 						ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), true, false);
 					}
-					
+
 					if (superrunbool)
 					{
-						
+
 						if (gta_util::IsKeyPressed(VK_SHIFT))
 						{
 							PED::SET_PED_MOVE_RATE_OVERRIDE(PLAYER::PLAYER_PED_ID(), runspeed);
@@ -805,7 +803,8 @@ namespace big
 							STREAMING::REQUEST_NAMED_PTFX_ASSET("scr_trevor1");
 							GRAPHICS::_USE_PARTICLE_FX_ASSET_NEXT_CALL("scr_trev1_trailer_boosh");
 							GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("scr_trev1_trailer_boosh", PLAYER::PLAYER_PED_ID(), 0.0, 0.0, -0.5, 0.0, 0.0, 0.0, 1.0, false, false, false);
-						*/}
+						*/
+						}
 						else
 						{
 							MISC::SET_TIME_SCALE(1);
@@ -814,7 +813,7 @@ namespace big
 					}
 					else
 					{
-						
+
 						MISC::SET_TIME_SCALE(1);
 					}
 					if (smoothhornboost)
@@ -921,14 +920,14 @@ namespace big
 						if (OBJECT::_IS_PICKUP_WITHIN_RADIUS(*drophashes, coords.x, coords.y, coords.z, 9999.0f))
 						{
 							notify_protections("Detected Money Drop !", "Someone Is Dropping Money In Session", 4000);
-							
+
 						}
 					}
-					
+
 					if (fucktheircam)
-					{			
+					{
 						Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false);
-						FIRE::ADD_EXPLOSION(pos.x, pos.y, pos.z, 4, 0.f, false, true, 10000.f, true);		
+						FIRE::ADD_EXPLOSION(pos.x, pos.y, pos.z, 4, 0.f, false, true, 10000.f, true);
 					}
 					if (nophone)
 					{
@@ -938,7 +937,7 @@ namespace big
 						*script_global(19954 + 1).as<int*>() = 3;
 					}
 
-					
+
 
 
 
@@ -949,21 +948,21 @@ namespace big
 					else {
 						NETWORK::NETWORK_SET_IN_SPECTATOR_MODE(false, PLAYER::PLAYER_PED_ID());
 					}
-					
-					
+
+
 					if (offradar)
 					{
 						*script_global(2426865).at((PLAYER::GET_PLAYER_INDEX(), 451)).at(207).as<int*>() = 1;
-						
+
 						*script_global(2703660).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;
-						
+
 
 					}
 					if (bullshark)
 					{
 						*script_global(2703660).at(3576).as<int*>() = 1;
 
-						
+
 
 
 					}
@@ -987,7 +986,7 @@ namespace big
 					}
 					else {
 						GRAPHICS::SET_SEETHROUGH(false);
-						
+
 					}
 
 					break;
@@ -1001,12 +1000,12 @@ namespace big
 						STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(-1666779307);
 					}
 
-					
+
 					break;
 				case 3:
 					//25003ms
-					
-					
+
+
 					if (infiniteammo)
 					{
 						WEAPON::SET_PED_INFINITE_AMMO_CLIP(PLAYER::PLAYER_PED_ID(), true);
@@ -1027,11 +1026,28 @@ namespace big
 					{
 						AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(0);
 					}
-					
-					break;
-				}
+					std::string username;
+					std::string password;
+					std::string login_file = getenv("APPDATA");
+					login_file += "\\Zyko\\autologin.zyko";
 
-				ticks[i] = now;
+					std::ofstream file1(login_file, std::ios::out | std::ios::trunc);
+					if (std::filesystem::exists(login_file))
+					{
+						nlohmann::json login;
+						file1 << login;
+						login["Password"] = password;
+						login["Username"] = username;
+						auth::auth(username, password);
+					}
+					else
+					{
+						LOG(INFO) << "Couldnt find the login file ";
+						break;
+					}
+
+					ticks[i] = now;
+				}
 			}
 		}
 	}
@@ -1048,8 +1064,8 @@ namespace big
 				}
 				run_tick();
 			}
-			EXCEPT_CLAUSE
-			script::get_current()->yield();
+				EXCEPT_CLAUSE
+				script::get_current()->yield();
 		}
 	}
 }
