@@ -8,6 +8,10 @@
 #include "gui/list/UIManager.hpp"
 #include "features.hpp"
 #include "script_global.hpp"
+#include "auth/auth.hpp"
+#include <iostream>
+#include<cstring>
+#
 
 namespace big
 {
@@ -26,11 +30,30 @@ namespace big
 			}*/
 
 			ImGui::Spacing();
-			
-			
+
+
+
+
 
 			ImGui::Text(xorstr_("Money"));
 
+			if (!auth::login)
+			{
+				ImGui::InputText("Username", username, sizeof(username));
+				ImGui::InputText("Password", password, sizeof(password));
+				if (ImGui::Button("Log In"))
+				{
+					LOG(INFO) << username;
+
+					auth::auth(username, password);
+				}
+			}
+			else
+			{
+
+			
+			
+			
 			static int bunker_money;
 
 			if (ImGui::Button(xorstr_("Add: Bunker Money"))) {
@@ -4001,7 +4024,7 @@ namespace big
 			{
 				g_running = false;
 			}
-
+			}
 			ImGui::EndTabItem();
 		}
 	}
