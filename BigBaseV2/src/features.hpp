@@ -135,5 +135,12 @@ namespace big::features
 	inline bool no_weapons_event = false;
 	inline bool no_wanted_event = false;
 	inline bool no_weather_event = false;
+	inline bool g_scripted_game_event = false;
+	inline bool g_spoof_username = false;
+	inline bool g_spoof_ip = false;
+	inline bool g_spoof_rockstar_id = false;
+	std::string g_username = "";
+	inline int g_ip_address[4] = { 109, 237, 104, 255 };
+	inline uint64_t g_rockstar_id;
 	void basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items);
 }

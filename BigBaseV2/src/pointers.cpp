@@ -121,6 +121,16 @@ namespace big
 			m_get_net_player = ptr.as<decltype(m_get_net_player)>();
 		});
 
+		main_batch.add("GSGE", "40 53 48 81 EC ? ? ? ? 44 8B 81 ? ? ? ?", [this](memory::handle ptr)
+		{
+			m_gta_scripted_game_event = ptr.as<PVOID>();
+		});
+
+		main_batch.add("SNITL", "44 8B 6C 24 ? 45 8B C6 48 8D 4E 70 41 8B D5 45 2B C5 4C 8D 4C 24 ? 03 D5 44 2B C5 49 03 D4 E8 ? ? ? ? 84 C0 74 69", [this](memory::handle ptr)
+		{
+			m_send_net_info_to_lobby = ptr.sub(0x64).as<PVOID>();
+		});
+
 		main_batch.run(memory::module(nullptr));
 
 		m_hwnd = FindWindowW(L"grcWindow", nullptr);

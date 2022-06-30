@@ -48,6 +48,9 @@ namespace big
 		functions::construct_basket_t m_construct_basket{};
 		functions::add_item_to_basket_t m_add_item_to_basket{};
 		functions::process_transaction m_process_transaction{};
+
+		PVOID m_gta_scripted_game_event{};
+		PVOID m_send_net_info_to_lobby{};
 	};
 
 	inline pointers* g_pointers{};

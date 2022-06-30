@@ -1,5 +1,6 @@
 #pragma once
 #include "CNetGamePlayer.hpp"
+#include "netPlayerData.hpp"
 
 namespace big
 {
@@ -21,6 +22,8 @@ namespace big
 		int speed{};
 		int alpha{};
 		Hash zone{};
+		rage::netAddress online_ip{};
+		uint16_t online_port{};
 	};
     void run_playerlist();
 	void update_playerlist();

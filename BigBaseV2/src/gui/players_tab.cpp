@@ -60,7 +60,7 @@ namespace big
 						//ImGui::Text(xorstr_("Player Location: %"), HUD::GET_STREET_NAME_FROM_HASH_KEY(g_player_list.zone));
 					
 
-						
+						ImGui::Text(xorstr_("IP: %d.%d.%d.%d:%d"), g_player_list.online_ip.m_field1, g_player_list.online_ip.m_field2, g_player_list.online_ip.m_field3, g_player_list.online_ip.m_field4, g_player_list.online_port);
 						
 						ImGui::EndGroup();
 

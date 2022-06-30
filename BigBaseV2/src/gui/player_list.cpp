@@ -47,7 +47,8 @@ namespace big
 			//Vector3 playerpos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(g_selected_player), 1);
 			//g_player_list.zone = ZONE::GET_HASH_OF_MAP_AREA_AT_COORDS(playerpos.x, playerpos.y, playerpos.z);
 			
-			
+			g_player_list.online_ip = net_player->get_net_data()->m_external_ip;
+			g_player_list.online_port = net_player->get_net_data()->m_external_port;
 
 
 		}

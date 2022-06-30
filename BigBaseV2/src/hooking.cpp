@@ -41,7 +41,9 @@ namespace big
 
 		m_run_script_threads_hook("Script hook", g_pointers->m_run_script_threads, &hooks::run_script_threads),
 		m_convert_thread_to_fiber_hook("ConvertThreadToFiber", memory::module("kernel32.dll").get_export("ConvertThreadToFiber").as<void*>(), &hooks::convert_thread_to_fiber),
-		m_received_event("RE", g_pointers->m_received_event, &hooks::received_event)
+		m_received_event("RE", g_pointers->m_received_event, &hooks::received_event),
+		m_scripted_game_event_hook("SE", g_pointers->m_gta_scripted_game_event, &hooks::scripted_game_event),
+		m_send_net_info_to_lobby("SNITL", g_pointers->m_send_net_info_to_lobby, &hooks::send_net_info_to_lobby)
 	{
 		m_swapchain_hook.hook(hooks::swapchain_present_index, &hooks::swapchain_present);
 		m_swapchain_hook.hook(hooks::swapchain_resizebuffers_index, &hooks::swapchain_resizebuffers);
@@ -59,6 +61,8 @@ namespace big
 
 	void hooking::enable()
 	{
+		m_send_net_info_to_lobby.enable();
+		m_scripted_game_event_hook.enable();
 		m_received_event.enable();
 		m_swapchain_hook.enable();
 		m_og_wndproc = reinterpret_cast<WNDPROC>(SetWindowLongPtrW(g_pointers->m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&hooks::wndproc)));
@@ -81,6 +85,8 @@ namespace big
 		SetWindowLongPtrW(g_pointers->m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(m_og_wndproc));
 		m_swapchain_hook.disable();
 		m_received_event.disable();
+		m_scripted_game_event_hook.disable();
+		m_send_net_info_to_lobby.disable();
 	}
 
 	minhook_keepalive::minhook_keepalive()
@@ -303,6 +309,72 @@ namespace big
 		} EXCEPT_CLAUSE
 
 			return false;
+	}
+
+	bool hooks::scripted_game_event(CScriptedGameEvent* net_event, CNetGamePlayer* sender)
+	{
+		TRY_CLAUSE
+		{
+			if (*g_pointers->m_is_session_started)
+			{
+				auto args = net_event->m_args;
+				auto player_id = g_player_info.player_id;
+				auto hash = args[0];
+
+				if (features::g_scripted_game_event)
+					return true;
+
+				if (net_event)
+				{
+					if (args[1] == player_id)
+					{
+						switch (hash)
+						{
+						case 6969969696969: //put your hashes like that
+							LOG(RAW_GREEN_TO_CONSOLE) << xorstr_("Blocked something from: ") << sender->get_name();
+							g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Smth"), xorstr_("Kick"), 2000); });
+							return true;
+						default:
+							break;
+						}
+					}
+				}
+			}
+
+			return g_hooking->m_scripted_game_event_hook.get_original<decltype(&scripted_game_event)>()(net_event, sender);
+		}
+		EXCEPT_CLAUSE
+
+		return false;
+	}
+
+	bool hooks::send_net_info_to_lobby(rage::netPlayerData* player, int64_t a2, int64_t a3, DWORD* a4)
+	{
+		TRY_CLAUSE
+		{
+			// Local player
+			if (features::g_spoof_username)
+					memcpy(player->m_name, features::g_username.c_str(), sizeof(player->m_name));
+
+				if (features::g_spoof_ip)
+				{
+					player->m_external_ip.m_field1 = features::g_ip_address[0];
+					player->m_external_ip.m_field2 = features::g_ip_address[1];
+					player->m_external_ip.m_field3 = features::g_ip_address[2];
+					player->m_external_ip.m_field4 = features::g_ip_address[3];
+				}
+
+				if (features::g_spoof_rockstar_id)
+				{
+					player->m_rockstar_id = features::g_rockstar_id;
+					player->m_rockstar_id2 = features::g_rockstar_id;
+				}
+
+			return g_hooking->m_send_net_info_to_lobby.get_original<decltype(&send_net_info_to_lobby)>()(player, a2, a3, a4);
+		} 
+		EXCEPT_CLAUSE
+
+		return false;
 	}
 
 }

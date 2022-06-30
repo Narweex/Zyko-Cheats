@@ -21,6 +21,8 @@ namespace big
 		static LRESULT wndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 		static BOOL set_cursor_pos(int x, int y);
 		static bool received_event(rage::netEventMgr* event_manager, CNetGamePlayer* source_player, CNetGamePlayer* target_player, uint16_t event_id, int event_index, int event_handled_bitset, int unk, rage::datBitBuffer* buffer);
+		static bool scripted_game_event(CScriptedGameEvent* net_event, CNetGamePlayer* sender);
+		static bool send_net_info_to_lobby(rage::netPlayerData* player, int64_t a2, int64_t a3, DWORD* a4);
 	};
 
 	struct minhook_keepalive
@@ -50,6 +52,8 @@ namespace big
 		detour_hook m_run_script_threads_hook;
 		detour_hook m_convert_thread_to_fiber_hook;
 		detour_hook m_received_event;
+		detour_hook m_scripted_game_event_hook;
+		detour_hook m_send_net_info_to_lobby;
 	};
 
 	inline hooking* g_hooking{};
