@@ -1,5 +1,11 @@
 #pragma once
 
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "Normaliz.lib")
+#pragma comment(lib, "Crypt32.lib")
+#pragma comment(lib, "Wldap32.lib")
+#pragma comment(lib, "libcurl_a.lib")
+
 #include <SDKDDKVer.h>
 #include <Windows.h>
 #include <D3D11.h>
@@ -47,11 +53,13 @@
 
 #include <fmt/format.h>
 #include <nlohmann/json.hpp>
+#include <curl/curl.h>
 
 #include "logger.hpp"
 #include "core/xor_string.hpp"
 #include "core/config.h"
 #include "CPed.hpp"
+//#include "auth/auth.hpp"
 
 #define _PTR_MAX_VALUE ((PVOID)0x000F000000000000)
 

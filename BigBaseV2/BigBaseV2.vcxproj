@@ -112,8 +112,8 @@
       <PrecompiledHeaderFile>common.hpp</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <DisableSpecificWarnings>4100;4201;4307;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x601;NDEBUG;BIGBASEV2_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\vendor\GTAV-Classes;..\vendor\fmtlib\include;..\vendor\json\single_include;..\vendor\MinHook\include;..\vendor\ImGui;..\vendor\g3log\src;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>CURL_STATICLIB;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x601;NDEBUG;BIGBASEV2_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\vendor\curl\include;..\vendor\GTAV-Classes;..\vendor\fmtlib\include;..\vendor\json\single_include;..\vendor\MinHook\include;..\vendor\ImGui;..\vendor\g3log\src;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>common.hpp</ForcedIncludeFiles>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -131,9 +131,10 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\bin\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\bin\lib;..\BigBaseV2\src;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Release\BigBaseV2.lib</ImportLibrary>
       <GenerateMapFile>true</GenerateMapFile>
+      <AdditionalDependencies>libcurl_a.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -249,6 +250,7 @@
     <ClInclude Include="src\script_local.hpp" />
     <ClInclude Include="src\script_mgr.hpp" />
     <ClInclude Include="src\shv_runner.h" />
+    <ClInclude Include="src\thread_pool.hpp" />
     <ClInclude Include="src\vmt_hook.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -283,6 +285,7 @@
     <ClCompile Include="src\script_local.cpp" />
     <ClCompile Include="src\script_mgr.cpp" />
     <ClCompile Include="src\shv_runner.cpp" />
+    <ClCompile Include="src\thread_pool.cpp" />
     <ClCompile Include="src\vmt_hook.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -298,6 +301,9 @@
     <ProjectReference Include="..\vendor\g3log\g3log.vcxproj">
       <Project>{81AD640F-EDC1-8CC0-B643-3020221789F1}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="src\libcurl_a.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

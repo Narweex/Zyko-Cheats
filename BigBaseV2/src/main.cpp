@@ -11,7 +11,6 @@
 #include "gui/list/UIManager.hpp"
 #include "features.hpp"
 #include "natives.hpp"
-#include "auth/auth.hpp"
 
 BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 {

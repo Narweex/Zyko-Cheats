@@ -16,8 +16,6 @@
 #include <imgui.h>
 #include <helpers/imgui_notify.h>
 #include "../../BigBaseV2/src/helpers/tahoma.h"
-#include "auth/auth.hpp"
-
 
 namespace big
 {

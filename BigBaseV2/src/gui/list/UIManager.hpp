@@ -147,7 +147,7 @@ namespace big::UserInterface
 			void DrawPlayerInfo();
 		}
 			
-	private:
+	public:
 		bool m_OpenKeyPressed = false;
 		bool m_BackKeyPressed = false;
 		bool m_EnterKeyPressed = false;

@@ -18,7 +18,7 @@
 #include "Translation.hpp"
 #include "../../BigBaseV2/src/gui/player_list.h"
 #include <shellapi.h>
-#include "auth/auth.hpp"
+#include "thread_pool.hpp"
 
 namespace big
 {
@@ -701,6 +701,21 @@ namespace big
 				sub->AddOption<SubOption>("Players", "All players in session", SubmenuPlayerList);
 				sub->AddOption<SubOption>("All Players", "You can mess with all of them in once", SessionAllPlayersSubmenu);
 				sub->AddOption<SubOption>("Session settings", "Modify The Session", SessionSettingsSubmenu);
+				sub->AddOption<RegularOption>("RID test", nullptr, []
+					{
+						static bool done = false;
+
+						g_thread_pool->push([&] //thread pool for not making fps lag
+							{
+								features::rid = get_rid_from_name("Yodo2222");
+								done = true;
+							});
+
+						if (done)
+							LOG(INFO) << features::rid;
+
+						// You can use keyboard get input func for getting target name and then display it on option text
+					});
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("All Players", SessionAllPlayersSubmenu, [&](RegularSubmenu* sub)
 			{
@@ -1673,7 +1688,7 @@ namespace big
 
 				sub->AddOption<RegularOption>("Test Auth", "Unload the menu.", []
 					{
-						//auth::auth();
+						auth::auth();
 					});
 				sub->AddOption<RegularOption>("Unload", "Unload the menu.", []
 					{

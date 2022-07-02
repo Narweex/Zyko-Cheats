@@ -8,7 +8,7 @@
 #include "gui/list/UIManager.hpp"
 #include "features.hpp"
 #include "script_global.hpp"
-#include "auth/auth.hpp"
+
 #include <iostream>
 #include<cstring>
 #
@@ -37,7 +37,7 @@ namespace big
 
 			ImGui::Text(xorstr_("Money"));
 
-			if (!auth::login)
+			/*if (!auth::login)
 			{
 				ImGui::InputText("Username", username, sizeof(username));
 				ImGui::InputText("Password", password, sizeof(password));
@@ -50,7 +50,7 @@ namespace big
 			}
 			else
 			{
-
+			 */
 			
 			
 			
@@ -4026,6 +4026,6 @@ namespace big
 			}
 			}
 			ImGui::EndTabItem();
-		}
+		//}
 	}
 }

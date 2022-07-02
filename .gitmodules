@@ -21,3 +21,7 @@
 [submodule "vendor/GTAV-Classes"]
 	path = vendor/GTAV-Classes
 	url = https://github.com/Yimura/GTAV-Classes.git
+	ignore = dirty
+[submodule "vendor/curl"]
+	path = vendor/curl
+	url = https://github.com/curl/curl.git
