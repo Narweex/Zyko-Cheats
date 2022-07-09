@@ -856,7 +856,10 @@ namespace big
 							});
 						sub->AddOption<RegularOption>("Cage Player", "Trap In cage", []
 							{
-								OBJECT::CREATE_OBJECT(959275690, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false).z - 1.f, true, false, false);
+								for (int i = 0; i < 32; i++)
+								{
+									OBJECT::CREATE_OBJECT(959275690, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i), false).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i), false).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i), false).z - 1.f, true, false, false);
+								}
 							});
 						sub->AddOption<RegularOption>("Tube Player", "Trap In Tube", []
 							{
@@ -1621,6 +1624,7 @@ namespace big
 				sub->AddOption<BoolOption<bool>>("No Weapons Events", "Players Cant Take Or Give You Weapons", &features::no_weapons_event, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("No Wanted Event", "players Cant Give You Wanted Level", &features::no_wanted_event, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Players Cant Mess With Weather", "", &features::no_weather_event, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Block Reports", "", &features::no_report_event, BoolDisplay::OnOff);
 
 
 			});
@@ -1684,11 +1688,11 @@ namespace big
 							features::notify_error("An error occured", "Notification", 4000);
 						});*/
 
+				sub->AddOption<BoolOption<bool>>("Numpad Control", " 8 - Up | 2 - Down | 4 - Left | 6 - Right | 5 - Select |\n 0 - Back", &features::numpadcontrol, BoolDisplay::OnOff);
 
 
 				sub->AddOption<RegularOption>("Test Auth", "Unload the menu.", []
 					{
-						auth::auth();
 					});
 				sub->AddOption<RegularOption>("Unload", "Unload the menu.", []
 					{
