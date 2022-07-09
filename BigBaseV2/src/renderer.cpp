@@ -121,7 +121,7 @@ namespace big
 
 	void renderer::wndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
-		if (msg == WM_KEYUP && wparam == features::OpenKey|| gta_util::IsKeyPressed(VK_INSERT))
+		if (msg == WM_KEYUP && wparam == features::OpenKey)
 		{
 			//Persist and restore the cursor position between menu instances.
 			static POINT cursor_coords{};

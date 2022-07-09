@@ -4,7 +4,7 @@
 
 namespace big::features
 {
-	inline int OpenKey = VK_MULTIPLY;
+	inline int OpenKey = VK_INSERT;
 	void run_tick();
 	void script_func();
 	void on_present();
@@ -12,10 +12,10 @@ namespace big::features
 	inline ULONGLONG ticks[] = { 0, 0, 0, 0 };
 	inline ULONGLONG tick_conf[] = { 50, 250, 2000, 25003 };
 	inline int g_current_tick_job{};
-
+	/*Controls*/
+	inline bool numpadcontrol = false;
 
 	/*Playerinfo*/
-	void render_player_info();
 	/* Self */
 	void crash(int player);
 	void transactionerror(int player);
@@ -125,6 +125,7 @@ namespace big::features
 	/*PROTECTIONS*/
 	inline bool g_received_event = true;
 	inline bool g_explosion_event = false;
+	inline bool no_report_event = false;
 	inline bool g_ptfx_event = false;
 	inline bool g_log_net_event_data = false;
 	inline bool no_freeze_event = false;

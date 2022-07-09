@@ -16,6 +16,7 @@
 #include <imgui.h>
 #include <helpers/imgui_notify.h>
 #include "../../BigBaseV2/src/helpers/tahoma.h"
+#include "auth/auth.hpp"
 
 namespace big
 {
@@ -631,10 +632,10 @@ namespace big
 						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), godmode);
 
 					}
-					else
+					/*else
 					{
 						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), false);
-					}
+					}*/
 
 					if (noclip)
 					{
@@ -748,11 +749,11 @@ namespace big
 						ENTITY::SET_ENTITY_MAX_SPEED(entity, 5000);
 						ENTITY::SET_ENTITY_MAX_SPEED(PLAYER::PLAYER_PED_ID(), 5000);
 					}
-					else
+					/*else
 					{
 						Entity entity = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false));
 						ENTITY::SET_ENTITY_MAX_SPEED(entity, 540);
-					}
+					}*/
 					if (forcefield) {
 						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), forcefield);
 						Player playerPed = PLAYER::PLAYER_PED_ID();
@@ -805,7 +806,7 @@ namespace big
 						}
 						else
 						{
-							MISC::SET_TIME_SCALE(1);
+							//MISC::SET_TIME_SCALE(1);
 							GRAPHICS::SET_TIMECYCLE_MODIFIER("li");;
 						}
 					}
@@ -950,7 +951,7 @@ namespace big
 
 					if (offradar)
 					{
-						*script_global(2426865).at((PLAYER::GET_PLAYER_INDEX(), 451)).at(207).as<int*>() = 1;
+						*script_global(2426865).at((PLAYER::PLAYER_PED_ID(), 451)).at(207).as<int*>() = 1;
 
 						*script_global(2703660).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;
 
@@ -990,13 +991,7 @@ namespace big
 					break;
 				case 2:
 					//2000ms
-					if (selfdrop)
-					{
-						Ped iPed = PLAYER::PLAYER_PED_ID();
-						Vector3 pCoords = ENTITY::GET_ENTITY_COORDS(iPed, 0);
-						OBJECT::CREATE_AMBIENT_PICKUP(0x1E9A99F8, pCoords.x, pCoords.y, pCoords.z, 0, 2500, -1666779307, FALSE, TRUE);// This works and all but seems to cause native execution errors on slower PC's.  
-						STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(-1666779307);
-					}
+					
 
 
 					break;
@@ -1024,25 +1019,7 @@ namespace big
 					{
 						AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(0);
 					}
-					std::string username;
-					std::string password;
-					std::string login_file = getenv("APPDATA");
-					login_file += "\\Zyko\\autologin.zyko";
-
-					std::ofstream file1(login_file, std::ios::out | std::ios::trunc);
-					if (std::filesystem::exists(login_file))
-					{
-						nlohmann::json login;
-						file1 << login;
-						login["Password"] = password;
-						login["Username"] = username;
-						auth::auth(username, password);
-					}
-					else
-					{
-						LOG(INFO) << "Couldnt find the login file ";
-						break;
-					}
+					
 
 					ticks[i] = now;
 				}

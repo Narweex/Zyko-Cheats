@@ -214,32 +214,45 @@ namespace big
 				{
 					case (int)RockstarEvent::NETWORK_CLEAR_PED_TASKS_EVENT:
 					{
-						if (!g_player_info.is_cutscene_playing() && !g_player_info.network_is_activity_session())
+						if (features::no_freeze_event)
 						{
+							if (!g_player_info.is_cutscene_playing() && !g_player_info.network_is_activity_session())
+							{
 							//4000
 							//persist_modder::save(4000, 2, event_name);
 							g_fiber_pool->queue_job([=] { features::notify_protections("Received Event", event_name, 4000); });
 							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 							return false;
-						}
+							}
+						
 						break;
+					}	
 					}
+					
 					case (int)RockstarEvent::REPORT_CASH_SPAWN_EVENT:
 					{
+					if (features::no_pickup_event)
+					{
+
+						
 						//persist_modder::save(4000, 2, event_name);
 						LOG(HACKER) << xorstr_("Detected Cash drop from: ") << source_player->get_name();
 						g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
 						break;
 					}
+					}
 					case (int)RockstarEvent::NETWORK_CHECK_CODE_CRCS_EVENT:
+					
 					case (int)RockstarEvent::REPORT_MYSELF_EVENT:
 					{
+						if(features::no_report_event)
 						//persist_modder::save(4000, 3, event_name);
 						break;
 					}
 					case (int)RockstarEvent::REQUEST_CONTROL_EVENT:
 					{
-						if (g_player_info.is_in_vehicle())
+						if(features::no_freeze_event)
+						/*if (g_player_info.is_in_vehicle())*/
 						{
 							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 							return false;
@@ -248,41 +261,57 @@ namespace big
 					}
 					case (int)RockstarEvent::GAME_CLOCK_EVENT:
 					{
+					if (features::no_weather_event)
+					{						
 						//persist_modder::save(4000, 3, event_name);
 						g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
 						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 						return false;
+					}
 					}
 					case (int)RockstarEvent::GAME_WEATHER_EVENT:
 					{
-						//persist_modder::save(4000, 3, event_name);
-						g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
-						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
-						return false;
+						if (features::no_weather_event)
+						{
+							//persist_modder::save(4000, 3, event_name);
+							g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
+							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
+							return false;
+						}
 					}
 					case (int)RockstarEvent::KICK_VOTES_EVENT:
 					{
+						if (features::no_votekick_event)
+						{						
 						g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
 						LOG(RAW_GREEN_TO_CONSOLE) << source_player->get_name() << xorstr_(" voted to kick the: ") << target_player->get_name();
 						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 						return false;
+						}
 					}
 					case (int)RockstarEvent::REMOVE_WEAPON_EVENT:
 					{
+						if (features::no_weapons_event)
+						{						
 						//persist_modder::save(4000, 2, event_name);
 						g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });					
 						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 						return false;
+						}
 					}
 					case (int)RockstarEvent::GIVE_WEAPON_EVENT:
 					{
-						//persist_modder::save(4000, 2, event_name);
-						g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });					
-						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
-						return false;
+						if (features::no_weapons_event)
+						{
+							//persist_modder::save(4000, 2, event_name);
+							g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
+							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
+							return false;
+						}
 					}
 					case (int)RockstarEvent::EXPLOSION_EVENT:
 					{
+						
 						if (features::g_explosion_event)
 						{
 							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
