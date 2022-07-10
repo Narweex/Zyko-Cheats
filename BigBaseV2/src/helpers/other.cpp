@@ -79,7 +79,7 @@ namespace big
         uint64_t rid = 0;
 
         // Request
-        CURL* curl = curl_easy_init();
+        /*CURL* curl = curl_easy_init();
         if (curl)
         {
             curl_easy_setopt(curl, CURLOPT_URL, site.c_str());
@@ -90,7 +90,7 @@ namespace big
 
             curl_easy_perform(curl);
             curl_easy_cleanup(curl);
-        }
+        }*/
 
         if (result.empty() || result == xorstr_("User not found."))
             return rid;

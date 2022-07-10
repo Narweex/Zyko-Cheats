@@ -53,7 +53,7 @@
 
 #include <fmt/format.h>
 #include <nlohmann/json.hpp>
-#include <curl/curl.h>
+//#include <curl/curl.h>
 
 #include "logger.hpp"
 #include "core/xor_string.hpp"

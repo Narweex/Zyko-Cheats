@@ -4011,7 +4011,65 @@ namespace big
 
 			ImGui::Spacing();
 
+			if (ImGui::TreeNode(xorstr_("Misc")))
+			{
+				if (ImGui::Button(xorstr_("Force Cloud Save")))
+				{
+					QUEUE_JOB_BEGIN_CLAUSE()
+					{
+						STATS::STAT_SAVE(0, 0, 3, 0);
 
+					}	QUEUE_JOB_END_CLAUSE
+				}
+
+				if (ImGui::Button(xorstr_("Max Club Popularity")))
+				{
+					QUEUE_JOB_BEGIN_CLAUSE()
+					{
+						STATS::STAT_SET_INT(RAGE_JOAAT("MP0_CLUB_POPULARITY"), 1000, TRUE);
+						STATS::STAT_SAVE(0, 0, 3, 0);
+
+						STATS::STAT_SET_INT(RAGE_JOAAT("MP1_CLUB_POPULARITY"), 1000, TRUE);
+						STATS::STAT_SAVE(0, 0, 3, 0);
+
+					}	QUEUE_JOB_END_CLAUSE
+				}
+
+				if (ImGui::Button(xorstr_("Unlock Gender Change")))
+				{
+					QUEUE_JOB_BEGIN_CLAUSE()
+					{
+						STATS::STAT_SET_INT(RAGE_JOAAT("MP0_ALLOW_GENDER_CHANGE"), 52, TRUE);
+						STATS::STAT_SAVE(0, 0, 3, 0);
+
+						STATS::STAT_SET_INT(RAGE_JOAAT("MP1_ALLOW_GENDER_CHANGE"), 52, TRUE);
+						STATS::STAT_SAVE(0, 0, 3, 0);
+					}	QUEUE_JOB_END_CLAUSE
+				}
+
+				if (ImGui::Button(xorstr_("Clear Total Earned/Spent Stats")))
+				{
+					QUEUE_JOB_BEGIN_CLAUSE()
+					{
+						STATS::STAT_SET_INT(RAGE_JOAAT("MPPLY_TOTAL_EVC"), (uint64_t)0, TRUE);
+						STATS::STAT_SET_INT(RAGE_JOAAT("MPPLY_TOTAL_SVC"), (uint64_t)0, TRUE);
+						STATS::STAT_SAVE(0, 0, 3, 0);
+					}	QUEUE_JOB_END_CLAUSE
+				}
+
+				if (ImGui::Button(xorstr_("Apply Chad KD")))
+				{
+					QUEUE_JOB_BEGIN_CLAUSE()
+					{
+						STATS::STAT_SET_INT(RAGE_JOAAT("MPPLY_KILLS_PLAYERS"), -INT_MAX, TRUE);
+						STATS::STAT_SET_INT(RAGE_JOAAT("MPPLY_DEATHS_PLAYER"), 0, TRUE);
+						STATS::STAT_SAVE(0, 0, 3, 0);
+					}	QUEUE_JOB_END_CLAUSE
+				}
+				ImGui::TreePop();
+			}
+
+			ImGui::Spacing();
 
 			if (ImGui::Button("List Mode"))
 			{
