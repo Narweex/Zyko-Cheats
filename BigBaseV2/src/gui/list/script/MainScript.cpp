@@ -19,6 +19,7 @@
 #include "../../BigBaseV2/src/gui/player_list.h"
 #include <shellapi.h>
 #include "thread_pool.hpp"
+#include "../../BigBaseV2/src/gui/list_playerinfo.h"
 
 namespace big
 {
@@ -109,7 +110,8 @@ namespace big
 		SubmenuVehSpawnerHelicopters,
 		SelectedPlayerVehicle,
 		AllPlayerVehicle,
-		SessionSettingsSubmenu
+		SessionSettingsSubmenu,
+		RockstarAdminSubmenu
 	};
 
 	void MainScript::gui_init()
@@ -885,7 +887,17 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Session Settings", SessionSettingsSubmenu, [&](RegularSubmenu* sub)
 			{
 				sub->AddOption<BoolOption<bool>>("Notify For Money Drop", "You Will Get Notified When Someone Drops Money", &features::moneynotify, BoolDisplay::OnOff);
+				sub->AddOption<SubOption>("Admin Detection", "", RockstarAdminSubmenu);
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Admin Detection", RockstarAdminSubmenu, [&](RegularSubmenu* sub)
+			{
+				sub->AddOption<BoolOption<bool>>("Rockstar Admin Detection", "You Will Get Notified When There Is R* Admin In Your Session", &features::rockstaradmin, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Notify On Detection", "You Will Get Notified When There Is R* Admin In Your Session", &features::detectionnotify, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Leave On Detection", "You Will Get Notified When There Is R* Admin In Your Session", &features::leaveondetect, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Exit Game", "You Will Get Notified When There Is R* Admin In Your Session", &features::crashgame, BoolDisplay::OnOff);
 
+
+				
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Weapon Menu", Weaponz, [](RegularSubmenu* sub)
 			{
@@ -1093,6 +1105,20 @@ namespace big
 								if (PED::IS_PED_IN_ANY_VEHICLE(Handle, 0))
 									Handle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0);
 								ENTITY::SET_ENTITY_COORDS(Handle, WaypointPos.x, WaypointPos.y, WaypointPos.z, 0, 0, 0, 1);
+							}
+						}
+					});
+				sub->AddOption<RegularOption>("Teleport To Objective ", "Teleport to Objective", []
+					{
+						{
+							if (HUD::DOES_BLIP_EXIST(1))
+							{
+								Vector3 coords = HUD::GET_BLIP_COORDS(1);
+								ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), coords.x, coords.y, coords.z, 0, 0, 0, 1);
+							}
+							else
+							{
+								features::notify_error("Teleport unsuccesful", "Could not find your objective", 5000);
 							}
 						}
 					});
@@ -1399,16 +1425,7 @@ namespace big
 		g_UiManager->AddSubmenu<PlayerSubmenu>(&features::g_selected_player, SubmenuSelectedPlayer, [](PlayerSubmenu* sub)
 			{
 				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
-				g_UiManager->DrawRect(g_UiManager->m_PosX - 0.25f,
-					g_UiManager->m_PosY + 0.2f,
-					0.20f,
-					0.40f,
-					rage::rgbaColor{ 20, 20, 20, 200 });
-				g_UiManager->DrawCenteredText(g_player_list.name, g_UiManager->m_PosX - 0.27f,
-					g_UiManager->m_PosY, 0.5, g_UiManager->m_OptionFont, rage::rgbaColor{ 255, 255, 255, 255 }, false, false);
-
-				/*g_UiManager->DrawCenteredText(g_player_list.player_id, g_UiManager->m_PosX - 0.35f,
-					g_UiManager->m_PosY + 0.1, 0.3, g_UiManager->m_OptionFont, rage::rgbaColor{ 255, 255, 255, 255 }, false, false);*/
+				list_playerinfo::render_playerinfo();
 
 				sub->AddOption<BoolOption<bool>>("Spectate", nullptr, &features::spectateplayer, BoolDisplay::OnOff);
 				sub->AddOption<SubOption>("Teleport Options", nullptr, SelectedPlayerTeleport);
@@ -1613,6 +1630,8 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Protections", Protections, [](RegularSubmenu* sub)
 			{
 				sub->AddOption<BoolOption<bool>>("Notify For Blocked Events", "", &features::g_received_event, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Crash Protection", "", &features::g_crash_protex, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Kick Protection", "", &features::g_kick_protex, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Log Net Events", "Logs the events in a txt file", &features::g_log_net_event_data, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("No Explosions", "Blocks Explosions from other players", &features::g_explosion_event, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("No Particles", "Blocks Particle FX Effects", &features::g_ptfx_event, BoolDisplay::OnOff);
