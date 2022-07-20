@@ -40,6 +40,12 @@ namespace big::features
 	void play_particle(const char* particle);
 	void maxvehicle(int VehicleHandle);
 	void setOpenKey();
+	inline bool notifyadmin;
+	inline bool detectionnotify;
+	inline bool leaveondetect;
+	inline bool crashgame;
+	inline bool troll = true;
+	//const char* adminname = "";
 	inline bool croshair = false;
 	inline bool superman = false;
 	inline bool playeresp = false;
@@ -137,6 +143,9 @@ namespace big::features
 	inline bool no_wanted_event = false;
 	inline bool no_weather_event = false;
 	inline bool g_scripted_game_event = false;
+	inline bool g_crash_protex = false;
+	inline bool g_kick_protex = false;
+	inline bool rockstaradmin = false;
 	inline bool g_spoof_username = false;
 	inline bool g_spoof_ip = false;
 	inline bool g_spoof_rockstar_id = false;

@@ -349,6 +349,7 @@ namespace big
 				auto args = net_event->m_args;
 				auto player_id = g_player_info.player_id;
 				auto hash = args[0];
+				
 
 				if (features::g_scripted_game_event)
 					return true;
@@ -359,12 +360,29 @@ namespace big
 					{
 						switch (hash)
 						{
-						case 6969969696969: //put your hashes like that
-							LOG(RAW_GREEN_TO_CONSOLE) << xorstr_("Blocked something from: ") << sender->get_name();
-							g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Smth"), xorstr_("Kick"), 2000); });
+							if (features::g_crash_protex)
+							{
+						case 844746317: case 1228916411: //put your hashes like that
+							LOG(RAW_GREEN_TO_CONSOLE) << xorstr_("Blocked crash from: ") << sender->get_name();
+	/*Crashes*/				g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Blocked crash"), sender->get_name(), 2000); });
 							return true;
+							}
+						
+							if (features::g_kick_protex)
+							{
+						case -1386010354: case 1757755807: case -393294520: case -371781708: case 1514515570:  case 911179316: case 846342319: case 2085853000: case -1970125962: case -1013679841: case -1767058336: case -1892343528: case 1494472464: case 296518236: case 998716537://put your hashes like that
+							LOG(RAW_GREEN_TO_CONSOLE) << xorstr_("Blocked crash from: ") << sender->get_name();
+	/*Kicks*/				g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Blocked crash"), sender->get_name(), 2000); });
+							return true;
+							}
+						
+
+
+						
 						default:
 							break;
+						
+						
 						}
 					}
 				}
