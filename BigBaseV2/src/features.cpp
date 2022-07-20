@@ -16,6 +16,7 @@
 #include <imgui.h>
 #include <helpers/imgui_notify.h>
 #include "../../BigBaseV2/src/helpers/tahoma.h"
+#include "gui/list/Lists.hpp"
 //#include "auth/auth.hpp"
 
 namespace big
@@ -30,7 +31,7 @@ namespace big
 		TRY_CLAUSE
 		{
 
-		ImGui::MergeIconsWithLatestFont(16.f, false);
+		//ImGui::MergeIconsWithLatestFont(16.f, false);  ////////CRASHING
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.f); // Round borders
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.04f, 0.14f, 100.f / 255.f)); // Background color
 		ImGui::RenderNotifications(); // <-- Here we render all notifications
@@ -40,7 +41,8 @@ namespace big
 			EXCEPT_CLAUSE
 	}
 
-
+	
+	
 
 	///////////////////////////////////////////////////////   HELP VOIDS   ///////////////////////////////////////////////////////
 
@@ -626,6 +628,7 @@ namespace big
 
 
 					}
+					
 
 					if (godmode)
 					{
@@ -987,17 +990,238 @@ namespace big
 						GRAPHICS::SET_SEETHROUGH(false);
 
 					}
+					if (rockstaradmin)
+					{
+						/*if (!NETWORK::NETWORK_IS_SESSION_ACTIVE())
+							break;
+						else
+						{*/
+						for (int i = 0; i < 33; i++) {
+							Player player = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i);
+							const char* Name = PLAYER::GET_PLAYER_NAME(PLAYER::INT_TO_PLAYERINDEX(i));
+							const char* RockstarAdminList[]
+							{
 
+							"OzarkEnjoyer",
+							"Spacer-galore"				  ,
+							"RollD20"					  ,
+							"SecretWizzle54"			  ,
+							"Wawaweewa_I_Like"			  ,
+							"BackBoyoDrill"				  ,
+							"NoAuthorityHere"			  ,
+							"ScentedString"				  ,
+							"CapnZebraZorse"			  ,
+							"godlyGoodestBoi"			  ,
+							"whiskylifter"				  ,
+							"pigeon_nominat"			  ,
+							"SlightlyEvilHoss"			  ,
+							"ChangryMonkey"				  ,
+							"StompoGrande"				  ,
+							"x_Shannandoo_x"			  ,
+							"Long-boi-load"				  ,
+							"NootN0ot"					  ,
+							"applecloning"				  ,
+							"BeoMonstarh"				  ,
+							"BlobbyFett22"				  ,
+							"ExoSnowBoarder"			  ,
+							"ExtremeThanks15"			  ,
+							"BailMail99"				  ,
+							"ForrestTrump69"			  ,
+							"KingOfGolf"				  ,
+							"KrustyShackles"			  ,
+							"PassiveSalon"				  ,
+							"PearBiscuits34"			  ,
+							"SlowMoKing"				  ,
+							"Smooth_Landing"			  ,
+							"SuperTrevor123"			  ,
+							"Tamehippo"					  ,
+							"uwu-bend"					  ,
+							"VickDMF"					  ,
+							"AlpacaBarista"				  ,
+							"The_Real_Harambe"			  ,
+							"Flares4Lyfe"				  ,
+							"FluteOfMilton"				  ,
+							"PipPipJongles"				  ,
+							"YUyu-lampon"				  ,
+							"DeadOnAir"					  ,
+							"Poppernopple"				  ,
+							"KrunchyCh1cken"			  ,
+							"BlessedChu"				  ,
+							"Surgeio"					  ,
+							"WindmillDuncan"			  ,
+							"Paulverines"				  ,
+							"ZombieTom66"				  ,
+							"st1nky_p1nky"				  ,
+							"OilyLordAinsley"			  ,
+							"FruitPuncher15"			  ,
+							"PisswasserMax"				  ,
+							"BanSparklinWater"			  ,
+							"BrucieJuiceyIV"			  ,
+							"RapidRaichu"				  ,
+							"kingmario11"				  ,
+							"DigitalFox9"				  ,
+							"FoxesAreCool69"			  ,
+							"SweetPlumbus"				  ,
+							"IM-_-Wassup"				  ,
+							"WickedFalcon4054"			  ,
+							"aquabull"					  ,
+							"Ghostofwar1"				  ,
+							"DAWNBILLA"					  ,
+							"Aur3lian"					  ,
+							"JulianApost4te"			  ,
+							"DarkStar7171"				  ,
+							"xCuteBunny"				  ,
+							"random_123"				  ,
+							"random123"					  ,
+							"flyingcobra16"				  ,
+							"CriticalRegret"			  ,
+							"ScentedPotter"				  ,
+							"Huginn5"					  ,
+							"Sonknuck-"					  ,
+							"HammerDa"					  ,
+							"johnet123"					  ,
+							"bipolarcarp"				  ,
+							"jakw0lf"					  ,
+							"Kakorot02"					  ,
+							"CrazyCatPilots"			  ,
+							"G_ashman"					  ,
+							"Rossthetic"				  ,
+							"StrongBelwas1"				  ,
+							"TonyMSD1"					  ,
+							"AMoreno14"					  ,
+							"PayneInUrAbs"				  ,
+							"shibuz_gamer123"			  ,
+							"M1thras"					  ,
+							"Th3_Morr1gan"				  ,
+							"Z3ro_Chill"				  ,
+							"Titan261"					  ,
+							"Coffee_Collie"				  ,
+							"BananaGod951"				  ,
+							"RDR_Dev"					  ,
+							"trajan5"					  ,
+							"thewho146"					  ,
+							"Bangers_RSG"				  ,
+							"Bash_RSG"					  ,
+							"Bubblez_RSG"				  ,
+							"ChefRSG"					  ,
+							"Chunk_RSG"					  ,
+							"HotTub_RSG"				  ,
+							"JPEGMAFIA_RSG"				  ,
+							"Klang_RSG"					  ,
+							"Lean1_RSG"					  ,
+							"Ton_RSG"					  ,
+							"RSGWolfman"				  ,
+							"TheUntamedVoid"			  ,
+							"TylerTGTAB"				  ,
+							"Wilted_s"					  ,
+							"RSGINTJoe"					  ,
+							"RSGGuestV"					  ,
+							"RSGGuest50"				  ,
+							"RSGGuest40"				  ,
+							"Logic_rsg"					  ,
+							"RSGGuest12"				  ,
+							"RSGGuest7"					  ,
+							"ScottM_RSG"				  ,
+							"Rockin5"					  ,
+							"playrockstar6"				  ,
+							"PlayRockstar5"				  ,
+							"PlayRockstar1"				  ,
+							"Player8_RSG"				  ,
+							"Player7_RSG"				  ,
+							"MaxPayneDev16"				  ,
+							"MaxPayneDev15"				  ,
+							"MaxPayneDev14"				  ,
+							"MaxPayneDev13"				  ,
+							"MaxPayneDev12"				  ,
+							"MaxPayneDev11"				  ,
+							"MaxPayneDev10"				  ,
+							"MaxPayneDev9"				  ,
+							"MaxPayneDev8"				  ,
+							"MaxPayneDev7"				  ,
+							"MaxPayneDev6"				  ,
+							"MaxPayneDev5"				  ,
+							"MaxPayneDev4"				  ,
+							"MaxPayneDev3"				  ,
+							"MaxPayneDev2"				  ,
+							"MaxPayneDev1"				  ,
+							"MaxPayne3Dev12"			  ,
+							"MaxPayne3Dev11"			  ,
+							"MaxPayne3Dev9"				  ,
+							"GTAdev4"					  ,
+							"GTAdev3"
+							};
+							if (Name = *RockstarAdminList)
+							{
+								if (features::detectionnotify)
+								{
+									features::notifyadmin = true;
+
+								}
+								if (features::leaveondetect)
+								{
+									//Null
+								}
+								if (features::crashgame)
+								{
+									LOG(WARNING) << "YOUR GAME HAS BEEN TURNED OFF BECAUSE WE DETECTED ROCKSTAR ADMIN IN YOUR SESSION";
+									exit(0);
+								}
+								
+
+								
+								//Name = features::adminname;
+							}
+							else {
+								
+								features::notifyadmin = false;
+								return;
+								
+
+							}
+						}
+
+					}
 					break;
 				case 2:
 					//2000ms
 					
+					
 
+					
+
+					
 
 					break;
 				case 3:
 					//25003ms
+					
+					if (features::notifyadmin)
+					{
+						features::notify_protections("ADMIN DETECTION", "Rockstar Admin Detected Leave Immediatelly", 8000);
+						LOG(WARNING) << "Rockstar Admin Has Joined Your Session";
+						if (features::leaveondetect)
+						{
+							features::notify_protections("Automatically leaving session", "You Might Experience Some Instability", 8000);
+						}
+						
+						
 
+						
+					}
+					if (features::troll)
+					{
+						for (int i = 0; i < 33; i++) {
+							Player player = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i);
+							const char* Name = PLAYER::GET_PLAYER_NAME(PLAYER::INT_TO_PLAYERINDEX(i));
+							const char* RockstarAdminList[]
+							{
+							"OzarkEnjoyer",
+							};
+						}
+						features::notify_protections("Easter egg lmao", "Zyko Admin Is In Your Session", 8000);
+					}
+
+						
 
 					if (infiniteammo)
 					{
