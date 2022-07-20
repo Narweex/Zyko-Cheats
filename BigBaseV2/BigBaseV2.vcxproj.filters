@@ -25,6 +25,9 @@
     <Filter Include="persist">
       <UniqueIdentifier>{5de052e0-a974-4468-b629-8aa455475494}</UniqueIdentifier>
     </Filter>
+    <Filter Include="gui\components">
+      <UniqueIdentifier>{45310b70-eec3-4854-a1f7-062929296042}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.hpp" />
@@ -232,6 +235,9 @@
     </ClInclude>
     <ClInclude Include="src\shv_runner.h" />
     <ClInclude Include="src\thread_pool.hpp" />
+    <ClInclude Include="src\gui\components\components.hpp">
+      <Filter>gui\components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\common.cpp" />
@@ -291,6 +297,15 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="src\thread_pool.cpp" />
+    <ClCompile Include="src\gui\components\button.cpp">
+      <Filter>gui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\components\text.cpp">
+      <Filter>gui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\components\child.cpp">
+      <Filter>gui\components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="src\libcurl_a.lib" />

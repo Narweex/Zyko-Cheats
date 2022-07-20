@@ -22,6 +22,7 @@ namespace big
 		ImFont* m_font_awesome;
 		ImFont* m_notosans_regular;
 		ImFont* m_staanliches;
+		ImFont* m_title_font;
 		void wndproc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	private:
 		comptr<IDXGISwapChain> m_dxgi_swapchain;

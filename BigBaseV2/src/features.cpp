@@ -23,21 +23,15 @@ namespace big
 
 	void features::on_present()
 	{
-
-
-		// Initialize notify
-
 		TRY_CLAUSE
 		{
-
-		ImGui::MergeIconsWithLatestFont(16.f, false);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.f); // Round borders
-		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.04f, 0.14f, 100.f / 255.f)); // Background color
-		ImGui::RenderNotifications(); // <-- Here we render all notifications
-		ImGui::PopStyleVar(1); // Don't forget to Pop()
-		ImGui::PopStyleColor(1);
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.f); // Round borders
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.04f, 0.14f, 100.f / 255.f)); // Background color
+			ImGui::RenderNotifications(); // <-- Here we render all notifications
+			ImGui::PopStyleVar(1); // Don't forget to Pop()
+			ImGui::PopStyleColor(1);
 		}
-			EXCEPT_CLAUSE
+		EXCEPT_CLAUSE
 	}
 
 

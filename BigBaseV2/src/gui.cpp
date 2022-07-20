@@ -16,98 +16,263 @@
 #include "gui/base_tab.h"
 #include "gui/players_tab.h"
 #include "gui/self_tab.h"
+#include "gui/components/components.hpp"
 
 namespace big
 {
 	void gui::dx_init()
 	{
-		auto &style = ImGui::GetStyle();
+		auto& style = ImGui::GetStyle();
 		style.WindowPadding = { 10.f, 10.f };
 		style.PopupRounding = 0.f;
-		style.FramePadding = { 8.f, 4.f };
+		style.FramePadding = { 8.f, 0.5f };
 		style.ItemSpacing = { 10.f, 8.f };
-		style.ItemInnerSpacing = { 6.f, 6.f };
+		style.ItemInnerSpacing = { 6.f, 4.f };
 		style.TouchExtraPadding = { 0.f, 0.f };
 		style.IndentSpacing = 21.f;
 		style.ScrollbarSize = 15.f;
 		style.GrabMinSize = 8.f;
-		style.WindowBorderSize = 0.5f;
-		style.ChildBorderSize = 0.f;
-		style.PopupBorderSize = 0.f;
+		style.WindowBorderSize = 4.f;
+		style.ChildBorderSize = 4.f;
+		style.PopupBorderSize = 4.f;
 		style.FrameBorderSize = 0.f;
 		style.TabBorderSize = 0.f;
-		style.WindowRounding = 0.f;
-		style.ChildRounding = 0.f;
-		style.FrameRounding = 0.f;
-		style.ScrollbarRounding = 0.f;
-		style.GrabRounding = 0.f;
-		style.TabRounding = 0.f;
+		style.WindowRounding = 4.f;
+		style.ChildRounding = 4.f;
+		style.FrameRounding = 4.f;
+		style.ScrollbarRounding = 4.f;
+		style.GrabRounding = 4.f;
+		style.TabRounding = 4.f;
 		style.WindowTitleAlign = { 0.5f, 0.5f };
 		style.ButtonTextAlign = { 0.5f, 0.5f };
 		style.DisplaySafeAreaPadding = { 3.f, 3.f };
 
-		auto &colors = style.Colors;
-		colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 0.99f);
-		colors[ImGuiCol_TextDisabled] = ImVec4(0.00f, 0.90f, 0.19f, 1.00f);
-		colors[ImGuiCol_WindowBg] = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
-		colors[ImGuiCol_ChildBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-		colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
-		colors[ImGuiCol_Border] = ImVec4(0.50f, 0.50f, 0.50f, 0.10f);
-		colors[ImGuiCol_BorderShadow] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-		colors[ImGuiCol_FrameBg] = ImVec4(0.085f, 0.085f, 0.085f, 1.00f);
-		colors[ImGuiCol_FrameBgHovered] = ImVec4(0.20f, 0.20f, 0.20f, 0.78f);
-		colors[ImGuiCol_FrameBgActive] = ImVec4(0.28f, 0.27f, 0.27f, 0.54f);
-		colors[ImGuiCol_TitleBg] = ImVec4(0.17f, 0.17f, 0.17f, 1.00f);
-		colors[ImGuiCol_TitleBgActive] = ImVec4(0.19f, 0.19f, 0.19f, 1.00f);
-		colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
-		colors[ImGuiCol_MenuBarBg] = ImVec4(0.94f, 0.94f, 0.94f, 1.00f);
-		colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.53f);
-		colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
-		colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
-		colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
-		colors[ImGuiCol_CheckMark] = ImVec4(0.69f, 0.02f, 0.70f, 1.0f);
-		colors[ImGuiCol_SliderGrab] = ImVec4(0.34f, 0.34f, 0.34f, 1.00f);
-		colors[ImGuiCol_SliderGrabActive] = ImVec4(0.39f, 0.38f, 0.38f, 1.00f);
-		colors[ImGuiCol_Button] = ImVec4(0.41f, 0.41f, 0.41f, 0.78f); 
-		colors[ImGuiCol_ButtonHovered] = ImVec4(0.7f, 0.02f, 0.75f, 0.7f);
-		colors[ImGuiCol_ButtonActive] = ImVec4(0.41f, 0.41f, 0.41f, 0.87f);
-		colors[ImGuiCol_Header] = ImVec4(0.37f, 0.37f, 0.37f, 0.31f);
-		colors[ImGuiCol_HeaderHovered] = ImVec4(0.38f, 0.38f, 0.38f, 0.37f);
-		colors[ImGuiCol_HeaderActive] = ImVec4(0.37f, 0.37f, 0.37f, 0.51f);
-		colors[ImGuiCol_Separator] = ImVec4(0.7f, 0.02f, 0.75f, 1.0f);
-		colors[ImGuiCol_SeparatorHovered] = ImVec4(0.46f, 0.46f, 0.46f, 0.50f);
-		colors[ImGuiCol_SeparatorActive] = ImVec4(0.46f, 0.46f, 0.46f, 0.64f);
-		colors[ImGuiCol_ResizeGrip] = ImVec4(0.26f, 0.26f, 0.26f, 1.00f);
-		colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
-		colors[ImGuiCol_ResizeGripActive] = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);
-		colors[ImGuiCol_Tab] = ImVec4(0.21f, 0.21f, 0.21f, 0.86f);
-		colors[ImGuiCol_TabHovered] = ImVec4(0.7f, 0.02f, 0.75f, 0.7f);
-		colors[ImGuiCol_TabActive] = ImVec4(0.34f, 0.34f, 0.34f, 0.86f);
-		colors[ImGuiCol_TabUnfocused] = ImVec4(0.10f, 0.10f, 0.10f, 0.97f);
-		colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);
-		colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
-		colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
-		colors[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
-		colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
-		colors[ImGuiCol_TextSelectedBg] = ImVec4(0.26f, 0.59f, 0.98f, 0.35f);
-		colors[ImGuiCol_DragDropTarget] = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
-		colors[ImGuiCol_NavHighlight] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
-		colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
-		colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
-		colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
+		ImVec4* colors = ImGui::GetStyle().Colors;
+		colors[ImGuiCol_Text] = ImColor(255, 255, 255);
+		colors[ImGuiCol_TextDisabled] = ImColor(255, 255, 255);
+		colors[ImGuiCol_WindowBg] = ImColor(19, 14, 24, 240);
+		colors[ImGuiCol_ChildBg] = ImColor(70, 70, 70, 100);
+		colors[ImGuiCol_PopupBg] = ImColor(19, 14, 24, 240);
+		colors[ImGuiCol_Border] = ImColor(120, 0, 255);
+		colors[ImGuiCol_BorderShadow] = ImColor(0, 0, 0);
+		colors[ImGuiCol_FrameBg] = ImColor(120, 0, 255, 108);
+		colors[ImGuiCol_FrameBgHovered] = ImColor(120, 0, 255, 108);
+		colors[ImGuiCol_FrameBgActive] = ImColor(120, 0, 255, 108);
+		colors[ImGuiCol_ScrollbarBg] = ImColor(0, 0, 0, 0);
+		colors[ImGuiCol_ScrollbarGrab] = ImColor(158, 0, 255);
+		colors[ImGuiCol_ScrollbarGrabHovered] = ImColor(192, 0, 238);
+		colors[ImGuiCol_ScrollbarGrabActive] = ImColor(192, 0, 238);
+		colors[ImGuiCol_CheckMark] = ImColor(158, 0, 255);
+		colors[ImGuiCol_SliderGrab] = ImColor(158, 0, 255);
+		colors[ImGuiCol_SliderGrabActive] = ImColor(192, 0, 238);
+		colors[ImGuiCol_Button] = ImColor(152, 0, 255, 183);
+		colors[ImGuiCol_ButtonHovered] = ImColor(142, 0, 255, 230);
+		colors[ImGuiCol_ButtonActive] = ImColor(142, 0, 255, 255);
+		colors[ImGuiCol_Header] = ImColor(152, 0, 255, 154);
+		colors[ImGuiCol_HeaderHovered] = ImColor(169, 0, 255, 160);
+		colors[ImGuiCol_HeaderActive] = ImColor(169, 0, 255, 160);
+		colors[ImGuiCol_Separator] = ImColor(152, 0, 255);
+		colors[ImGuiCol_Tab] = ImColor(142, 0, 255);
+		colors[ImGuiCol_TabActive] = ImColor(115, 0, 193, 255);
+		colors[ImGuiCol_NavHighlight] = ImColor(120, 0, 255, 255);
 	}
+
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus;
 
 	void gui::dx_on_tick()
 	{
 		TRY_CLAUSE
 		{
-			if (ImGui::Begin("Zyko Cheats"))
+			// Main Window
+			ImGui::SetNextWindowSize(ImVec2(800.f, 630.f), ImGuiCond_Always);
+			ImGui::SetNextWindowPos(ImVec2(400.f, 200.f), ImGuiCond_FirstUseEver);
+
+			if (ImGui::Begin(xorstr_("##window"), NULL, flags))
 			{
-				ImGui::BeginTabBar("tabbar");
-				base_tab::render_base_tab();
-				players_tab::render_players_tab();
-			//	self_tab::render_self_tab();
-				ImGui::EndTabBar();
+				// Window
+				g_gui.g_window = ImGui::GetWindowPos();
+
+				// H/W
+				g_gui.height = ImGui::GetWindowHeight();
+				g_gui.width = ImGui::GetWindowWidth();
+
+				// Tabs Render
+				ImGui::SameLine(160.f);
+				ImGui::BeginGroup();
+				{
+					switch (g_gui.g_tab)
+					{
+					case 0:
+						base_tab::render_base_tab();
+						break;
+					case 1:
+						if (ImGui::Button("unload")) {
+							g_running = false;
+						}
+						break;
+					case 2:
+						players_tab::render_players_tab();
+						break;
+					case 3:
+						if (ImGui::Button("unload")) {
+							g_running = false;
+						}
+						break;
+					case 4:
+						if (ImGui::Button("unload")) {
+							g_running = false;
+						}
+						break;
+					case 5:
+						if (ImGui::Button("unload")) {
+							g_running = false;
+						}
+						break;
+					case 6:
+						if (ImGui::Button("unload")) {
+							g_running = false;
+						}
+						break;
+					case 7:
+						if (ImGui::Button("unload")) {
+							g_running = false;
+						}
+						break;
+					case 8:
+						if (ImGui::Button("unload")) {
+							g_running = false;
+						}
+						break;
+					case 9:
+						if (ImGui::Button("unload")) {
+							g_running = false;
+						}
+					case 10:
+						if (ImGui::Button("unload")) {
+							g_running = false;
+						}
+					case 11:
+						if (ImGui::Button("unload")) {
+							g_running = false;
+						}
+						break;
+					case 12:
+						if (ImGui::Button("unload")) {
+							g_running = false;
+						}
+						break;
+					case 13:
+						if (ImGui::Button("unload")) {
+							g_running = false;
+						}
+						break;
+					case 14:
+						if (ImGui::Button("unload")) {
+							g_running = false;
+						}
+						break;
+					}
+				}
+				ImGui::EndGroup();
+			}
+			ImGui::End();
+
+			ImGui::SetNextWindowPos(ImVec2(g_gui.g_window.x, g_gui.g_window.y), ImGuiCond_Always);
+			ImGui::SetNextWindowSize(ImVec2(150.f, g_gui.height), ImGuiCond_Always);
+
+			// ImGuiWindowFlags_NoBackground
+			if (ImGui::Begin(xorstr_("##tabs"), NULL, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar))
+			{
+				// Tabs
+				struct tabs
+				{
+					const char* icon{};
+					int num{};
+				};
+
+				ImGui::PushStyleVar(ImGuiStyleVar_SelectableTextAlign, ImVec2(0.5f, 0.f));
+
+				std::vector<tabs> tabs_v
+				{
+					{ ICON_FA_USER" Self", 0},
+					{ ICON_FK_SITEMAP" Lobby", 1 },
+					{ ICON_FK_USERS" Players", 2 },
+					{ ICON_FK_GLOBE" Online", 3 },
+				};
+
+				std::vector<tabs> tabs_e
+				{
+					
+					{ ICON_FK_BOMB" Weapon", 4 },
+					{ ICON_FK_CAR" Vehicle", 5 },
+					{ ICON_FK_MAP_MARKER" Teleport", 6 },
+					{ ICON_FA_SHIELD_ALT" Protections", 7 },
+					{ ICON_FA_ELLIPSIS_H" Misc", 8 },
+					{ ICON_FK_COG" Settings", 9 },
+				};
+
+				std::vector<tabs> tabs_b
+				{
+
+					{ ICON_FA_FROG" Something", 10 },
+					{ ICON_FA_FROG" Something2", 11 },
+					{ ICON_FA_FROG" Something3", 12 },
+				};
+
+				std::vector<tabs> tabs_a
+				{
+
+					{ ICON_FA_FROG" Something4", 13 },
+					{ ICON_FA_FROG" Something5", 14 },
+				};
+
+
+				components::small_text(xorstr_("Test text"));
+				// Tabs
+				for (const auto& rs : tabs_v)
+				{
+					ImGui::Spacing();
+					if (ImGui::Selectable(rs.icon, g_gui.g_tab == rs.num, NULL))
+					{
+						g_gui.g_tab = rs.num;
+					}	
+				}
+
+				components::small_text(xorstr_("Some text"));
+
+				for (const auto& rs : tabs_e)
+				{
+					ImGui::Spacing();
+					if (ImGui::Selectable(rs.icon, g_gui.g_tab == rs.num, NULL))
+					{
+						g_gui.g_tab = rs.num;
+					}	
+				}
+
+				components::small_text(xorstr_("Another random text"));
+
+				for (const auto& rs : tabs_b)
+				{
+					ImGui::Spacing();
+					if (ImGui::Selectable(rs.icon, g_gui.g_tab == rs.num, NULL))
+					{
+						g_gui.g_tab = rs.num;
+					}
+				}
+
+				components::small_text(xorstr_("poggo text"));
+
+				for (const auto& rs : tabs_a)
+				{
+					ImGui::Spacing();
+					if (ImGui::Selectable(rs.icon, g_gui.g_tab == rs.num, NULL))
+					{
+						g_gui.g_tab = rs.num;
+					}
+				}
+
+				ImGui::PopStyleVar();
+
 			}
 			ImGui::End();
 		}

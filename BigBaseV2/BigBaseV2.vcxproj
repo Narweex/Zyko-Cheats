@@ -210,6 +210,7 @@
     <ClInclude Include="src\gta_util.hpp" />
     <ClInclude Include="src\gui.hpp" />
     <ClInclude Include="src\gui\base_tab.h" />
+    <ClInclude Include="src\gui\components\components.hpp" />
     <ClInclude Include="src\gui\list\AbstractOption.hpp" />
     <ClInclude Include="src\gui\list\AbstractSubmenu.hpp" />
     <ClInclude Include="src\gui\list\BaseOption.hpp" />
@@ -263,6 +264,9 @@
     <ClCompile Include="src\fiber_pool.cpp" />
     <ClCompile Include="src\gui.cpp" />
     <ClCompile Include="src\gui\base_tab.cpp" />
+    <ClCompile Include="src\gui\components\button.cpp" />
+    <ClCompile Include="src\gui\components\child.cpp" />
+    <ClCompile Include="src\gui\components\text.cpp" />
     <ClCompile Include="src\gui\list\script\MainScript.cpp" />
     <ClCompile Include="src\gui\list\UIManager.cpp" />
     <ClCompile Include="src\gui\players_tab.cpp" />

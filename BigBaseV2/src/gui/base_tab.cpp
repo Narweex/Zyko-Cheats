@@ -18,8 +18,7 @@ namespace big
 	void base_tab::render_base_tab()
 	{
 
-		if (ImGui::BeginTabItem("Recovery"))
-		{
+		
 			/*if (ImGui::Button(xorstr_("Clear Wanted Level"))) {
 				PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_PED_ID(), 0);
 				PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_PED_ID());
@@ -30,10 +29,6 @@ namespace big
 			}*/
 
 			ImGui::Spacing();
-
-
-
-
 
 			ImGui::Text(xorstr_("Money"));
 
@@ -4082,8 +4077,5 @@ namespace big
 			{
 				g_running = false;
 			}
-			}
-			ImGui::EndTabItem();
-		//}
 	}
 }
