@@ -1928,3 +1928,15 @@ enum class RockstarEvent : uint16_t
 	BLOCK_WEAPON_SELECTION,
 	NETWORK_CHECK_CATALOG_CRC
 };
+
+enum eScriptGlobals : std::uint32_t 
+{
+	TransitionState = 1574980,
+	SessionType = 1575004,
+	InitSession = 1574587,
+	SessionUNK1 = 31506,
+	SessionUNK2 = 1574626,
+	SessionUNK3 = 1574999,
+	SessionUNK4 = 1574979,
+	SessionSCTV = 2726482
+};

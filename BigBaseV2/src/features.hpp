@@ -123,6 +123,22 @@ namespace big::features
 	inline std::uint32_t g_selected_player{};
 	bool is_modder(Player player);
 
+	enum ChangeSessionID
+	{
+		GTAO = -1,
+		FindPublicSession = 0,
+		StartNewPublicSession = 1,
+		ClosedCrewSession = 2,
+		CrewSession = 3,
+		ClosedFriendSession = 6,
+		FindFriendsSession = 9,
+		StartSoloSession = 10,
+		InviteOnlySession = 11,
+		JoinCrewSession = 12,
+		JoinSCTV = 13,
+	};
+	void change_session(ChangeSessionID ID);
+
 	/*Trolling and kicks*/
 	void kick(int player);
 	void notification(int player);

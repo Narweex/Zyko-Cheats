@@ -453,6 +453,16 @@ namespace big
 		g_pointers->m_TriggerScriptEvent(1, event, 4, player);
 	}
 
+	void features::change_session(ChangeSessionID ID)
+	{
+		*script_global(SessionUNK1).as<int*>() = 0;
+		*script_global(SessionType).as<int*>() = ID;
+		*script_global(InitSession).at(2).as<int*>() = 0;
+		*script_global(SessionSCTV).as<int*>() = 0;
+		*script_global(InitSession).as<int*>() = 1;
+		*script_global(SessionUNK2).as<int*>() = 0;
+		*script_global(SessionUNK3).as<int*>() = -1;
+	}
 
 	void features::run_tick()
 	{
