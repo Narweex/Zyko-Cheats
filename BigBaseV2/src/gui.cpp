@@ -10,9 +10,9 @@
 #include "pointers.hpp"
 #include "renderer.hpp"
 #include "script.hpp"
-
+#include "gui/recovery_tab.h"
 #include <imgui.h>
-
+#include "auth/auth.hpp"
 #include "gui/base_tab.h"
 #include "gui/players_tab.h"
 #include "gui/self_tab.h"
@@ -106,71 +106,149 @@ namespace big
 						base_tab::render_base_tab();
 						break;
 					case 1:
-						if (ImGui::Button("unload")) {
-							g_running = false;
+						if (!auth::login)
+						{
+							ImGui::Text(xorstr_("NoNoNo, Login First"));
+						}
+						else
+						{
+
+
+							if (ImGui::Button("unload")) {
+								g_running = false;
+							}
 						}
 						break;
 					case 2:
-						players_tab::render_players_tab();
+						if (!auth::login)
+						{
+							ImGui::Text(xorstr_("NoNoNo, Login First"));
+						}
+						else
+						{
+							players_tab::render_players_tab();
+						}
 						break;
 					case 3:
-						if (ImGui::Button("unload")) {
-							g_running = false;
+						if (!auth::login)
+						{
+							ImGui::Text(xorstr_("NoNoNo, Login First"));
+						}
+						else
+						{
+							if (ImGui::Button("unload")) {
+								g_running = false;
+							}
 						}
 						break;
 					case 4:
-						if (ImGui::Button("unload")) {
-							g_running = false;
+						if (!auth::login)
+						{
+							ImGui::Text(xorstr_("NoNoNo, Login First"));
+						}
+						else
+						{
+							if (ImGui::Button("unload")) {
+								g_running = false;
+							}
 						}
 						break;
 					case 5:
-						if (ImGui::Button("unload")) {
-							g_running = false;
+						if (!auth::login)
+						{
+							ImGui::Text(xorstr_("NoNoNo, Login First"));
+						}
+						else
+						{
+							if (ImGui::Button("unload")) {
+								g_running = false;
+							}
 						}
 						break;
 					case 6:
-						if (ImGui::Button("unload")) {
-							g_running = false;
+						if (!auth::login)
+						{
+							ImGui::Text(xorstr_("NoNoNo, Login First"));
+						}
+						else
+						{
+							if (ImGui::Button("unload")) {
+								g_running = false;
+							}
 						}
 						break;
 					case 7:
-						if (ImGui::Button("unload")) {
-							g_running = false;
+						if (!auth::login)
+						{
+							ImGui::Text(xorstr_("NoNoNo, Login First"));
+						}
+						else
+						{
+							if (ImGui::Button("unload")) {
+								g_running = false;
+							}
 						}
 						break;
 					case 8:
-						if (ImGui::Button("unload")) {
-							g_running = false;
+						if (!auth::login)
+						{
+							ImGui::Text(xorstr_("NoNoNo, Login First"));
+						}
+						else
+						{
+							if (ImGui::Button("unload")) {
+								g_running = false;
+							}
 						}
 						break;
 					case 9:
-						if (ImGui::Button("unload")) {
-							g_running = false;
+						if (!auth::login)
+						{
+							ImGui::Text(xorstr_("NoNoNo, Login First"));
 						}
+						else
+						{
+							if (ImGui::Button("unload")) {
+								g_running = false;
+							}
+						}
+						break;
 					case 10:
-						if (ImGui::Button("unload")) {
-							g_running = false;
+						if (!auth::login)
+						{
+							ImGui::Text(xorstr_("NoNoNo, Login First"));
 						}
+						else
+						{
+							recovery_tab::render_recovery_tab();
+						}
+						break;
 					case 11:
-						if (ImGui::Button("unload")) {
-							g_running = false;
+						if (!auth::login)
+						{
+							ImGui::Text(xorstr_("NoNoNo, Login First"));
+						}
+						else
+						{
+							if (ImGui::Button("unload")) {
+								g_running = false;
+							}
 						}
 						break;
 					case 12:
-						if (ImGui::Button("unload")) {
-							g_running = false;
+						if (!auth::login)
+						{
+							ImGui::Text(xorstr_("NoNoNo, Login First"));
 						}
-						break;
-					case 13:
-						if (ImGui::Button("unload")) {
-							g_running = false;
+						else
+						{
+							if (ImGui::Button("unload")) {
+								g_running = false;
+							}
 						}
-						break;
-					case 14:
-						if (ImGui::Button("unload")) {
-							g_running = false;
-						}
-						break;
+							break;
+
+						
 					}
 				}
 				ImGui::EndGroup();
@@ -195,39 +273,36 @@ namespace big
 				std::vector<tabs> tabs_v
 				{
 					{ ICON_FA_USER" Self", 0},
-					{ ICON_FK_SITEMAP" Lobby", 1 },
-					{ ICON_FK_USERS" Players", 2 },
-					{ ICON_FK_GLOBE" Online", 3 },
+					{ ICON_FK_BOMB" Weapon", 4 },
+					{ ICON_FK_CAR" Vehicle", 5 },
+					{ ICON_FK_MAP_MARKER" Teleport", 6 },
+					
 				};
 
 				std::vector<tabs> tabs_e
 				{
 					
-					{ ICON_FK_BOMB" Weapon", 4 },
-					{ ICON_FK_CAR" Vehicle", 5 },
-					{ ICON_FK_MAP_MARKER" Teleport", 6 },
+					{ ICON_FK_SITEMAP" Lobby", 1 },
+					{ ICON_FK_USERS" Players", 2 },
+					{ ICON_FK_GLOBE" Online", 3 },
 					{ ICON_FA_SHIELD_ALT" Protections", 7 },
-					{ ICON_FA_ELLIPSIS_H" Misc", 8 },
-					{ ICON_FK_COG" Settings", 9 },
+					{ ICON_FA_COIN" Recovery", 10 },
+					
 				};
 
 				std::vector<tabs> tabs_b
 				{
-
-					{ ICON_FA_FROG" Something", 10 },
+					{ ICON_FA_ELLIPSIS_H" Misc", 8 },
+					{ ICON_FK_COG" Settings", 9 },
+					
 					{ ICON_FA_FROG" Something2", 11 },
 					{ ICON_FA_FROG" Something3", 12 },
 				};
 
-				std::vector<tabs> tabs_a
-				{
-
-					{ ICON_FA_FROG" Something4", 13 },
-					{ ICON_FA_FROG" Something5", 14 },
-				};
+				
 
 
-				components::small_text(xorstr_("Test text"));
+				components::small_text(xorstr_("Self/Basic"));
 				// Tabs
 				for (const auto& rs : tabs_v)
 				{
@@ -238,7 +313,7 @@ namespace big
 					}	
 				}
 
-				components::small_text(xorstr_("Some text"));
+				components::small_text(xorstr_("Online"));
 
 				for (const auto& rs : tabs_e)
 				{
@@ -249,7 +324,7 @@ namespace big
 					}	
 				}
 
-				components::small_text(xorstr_("Another random text"));
+				components::small_text(xorstr_("Recovery"));
 
 				for (const auto& rs : tabs_b)
 				{
@@ -260,7 +335,7 @@ namespace big
 					}
 				}
 
-				components::small_text(xorstr_("poggo text"));
+				/*components::small_text(xorstr_("poggo text"));
 
 				for (const auto& rs : tabs_a)
 				{
@@ -269,7 +344,7 @@ namespace big
 					{
 						g_gui.g_tab = rs.num;
 					}
-				}
+				}*/
 
 				ImGui::PopStyleVar();
 
