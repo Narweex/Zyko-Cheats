@@ -1425,7 +1425,7 @@ namespace big
 		g_UiManager->AddSubmenu<PlayerSubmenu>(&features::g_selected_player, SubmenuSelectedPlayer, [](PlayerSubmenu* sub)
 			{
 				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
-				list_playerinfo::render_playerinfo();
+				//list_playerinfo::render_playerinfo();
 
 				sub->AddOption<BoolOption<bool>>("Spectate", nullptr, &features::spectateplayer, BoolDisplay::OnOff);
 				sub->AddOption<SubOption>("Teleport Options", nullptr, SelectedPlayerTeleport);
@@ -1710,19 +1710,12 @@ namespace big
 				sub->AddOption<BoolOption<bool>>("Numpad Control", " 8 - Up | 2 - Down | 4 - Left | 6 - Right | 5 - Select |\n 0 - Back", &features::numpadcontrol, BoolDisplay::OnOff);
 
 
-				sub->AddOption<RegularOption>("Test Auth", "Unload the menu.", []
-					{
-					});
+				
 				sub->AddOption<RegularOption>("Unload", "Unload the menu.", []
 					{
 						g_running = false;
 					});
-				sub->AddOption<RegularOption>("Change Open Key", "Game will freeze until you input a new key", []
-					{
-						features::notify("Press any key", "", 5000);
-						Sleep(10000);
-						features::setOpenKey();
-					});
+				
 				//sub->AddOption<SubOption>("Header", nullptr, SubmenuSettingsHeader);
 				sub->AddOption<SubOption>("Infobar", nullptr, SubmenuSettingsSubmenuBar);
 				sub->AddOption<SubOption>("Links", nullptr, SUbmenuSettingsLinks);
