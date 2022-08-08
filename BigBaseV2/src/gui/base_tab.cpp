@@ -39,27 +39,30 @@ namespace big
 		}
 		else
 		{
+		
+			
+			
+			
+		
+			
+			ImGui::BeginChild("##options1", ImVec2(300, 280), true);
+			
 			ImGui::Text(xorstr_(" Self"));
-			ImGui::SameLine();
-			ImGui::NextColumn();
-			ImGui::Text(xorstr_(" Movement"));
 			ImGui::NewLine();
-			
-			ImGui::BeginChild("##options1", ImVec2(300, 250), true);
-			
-
 			ImGui::Checkbox(xorstr_("Godmode"), &features::godmode);
 			ImGui::Checkbox(xorstr_("Noclip"), &features::noclip);
 			ImGui::Checkbox(xorstr_("Never Wanted"), &features::neverWanted);
-			ImGui::SliderInt(xorstr_("Wanted Level"), &features::wantedLevel, 0, 5);
+			ImGui::SliderInt(xorstr_("Level"), &features::wantedLevel, 0, 5);
+			if (ImGui::Button(xorstr_("Set Wanted Level"), ImVec2(200, 25))){features::setwanted();}
 			ImGui::Checkbox(xorstr_("Enter Vehicles Instantly"), &features::instartenter);
 			ImGui::Checkbox(xorstr_("Forcefield"), &features::forcefield);
 			ImGui::EndChild();
 
 			ImGui::SameLine();
 			
-			ImGui::BeginChild("##optionsmovement", ImVec2(300, 250), true);
-			
+			ImGui::BeginChild("##optionsmovement", ImVec2(300, 280), true);
+			ImGui::Text(xorstr_(" Movement"));
+			ImGui::NewLine();
 			ImGui::Checkbox(xorstr_("Movement Override"), &features::superrunbool);
 			ImGui::Checkbox(xorstr_("Super Run"), &features::ultrarunbool);
 			ImGui::Checkbox(xorstr_("Super Jump"), &features::superjumpbool);
@@ -68,18 +71,21 @@ namespace big
 			ImGui::Checkbox(xorstr_("Superman"), &features::superman);
 			ImGui::EndChild();
 
+			
+			ImGui::NewLine();
+			ImGui::BeginChild("##optionsglobals", ImVec2(300, 270), true);
 			ImGui::Text(xorstr_(" Globals"));
-			ImGui::SameLine();
-			ImGui::BeginChild("##optionsglobals", ImVec2(250, 200), true);
 			ImGui::Checkbox(xorstr_("Off Radar"), &features::offradar);
 			ImGui::Checkbox(xorstr_("Bullshark testosterone"), &features::bullshark);
 			
 			ImGui::EndChild();
 
 			ImGui::SameLine();
-			ImGui::Text(xorstr_(" Player"));
+			
 			ImGui::SameLine();
-			ImGui::BeginChild("##optionsplayer", ImVec2(200, 200), true);
+			ImGui::BeginChild("##optionsplayer", ImVec2(300, 270), true);
+			ImGui::Text(xorstr_(" Player"));
+			ImGui::SliderInt(xorstr_("Player Opacity"), &features::playeralpha, 0, 255);
 			ImGui::Checkbox(xorstr_("Off Radar"), &features::offradar);
 			ImGui::Checkbox(xorstr_("Bullshark testosterone"), &features::bullshark);
 
@@ -90,7 +96,7 @@ namespace big
 
 
 
-			ImGui::Spacing();
+			/*ImGui::Spacing();
 
 			if (ImGui::Button("List Mode"))
 			{
@@ -102,7 +108,7 @@ namespace big
 			if (ImGui::Button("Unload"))
 			{
 				g_running = false;
-			}
+			}*/
 		}
 	}
 }
