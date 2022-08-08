@@ -168,7 +168,20 @@ namespace big
 	{
 		return degs * 3.141592653589793f / 180.f;
 	}
-
+	void big::features::tpobjective()
+	{
+		if (HUD::DOES_BLIP_EXIST(143 || 144 || 145 || 146))
+		{
+			Vector3 prdel = HUD::GET_BLIP_COORDS(143 || 144 || 145 || 146);
+			PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(),prdel.x, prdel.y, prdel.z+5 );
+		}
+		
+	}
+	void features::setwanted()
+	{
+		PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
+		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
+	}
 	void features::maxvehicle(int VehicleHandle)
 	{
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(VehicleHandle, "Zyko");
@@ -482,6 +495,10 @@ namespace big
 			PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, false);
 
 		}
+		else
+		{
+			PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
+		}
 		if (features::novehkick)
 		{
 			*script_global(2689224).at(PLAYER::PLAYER_PED_ID()).at(317).at(10).as<int*>() = 21501;
@@ -640,7 +657,7 @@ namespace big
 					{
 						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), false);
 					}*/
-
+					ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
 					if (noclip)
 					{
 
@@ -737,6 +754,8 @@ namespace big
 					{
 						ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), false);
 						ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), true, false);
+						ENTITY::FREEZE_ENTITY_POSITION(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true), false);
+						ENTITY::SET_ENTITY_COLLISION(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true), true, false);
 					}
 
 					if (superrunbool)

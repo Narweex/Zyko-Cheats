@@ -17,6 +17,8 @@
 #include "gui/players_tab.h"
 #include "gui/self_tab.h"
 #include "gui/components/components.hpp"
+#include <gui/list/UIManager.hpp>
+#include "gui/spawn_tab.h"
 
 namespace big
 {
@@ -196,9 +198,7 @@ namespace big
 						}
 						else
 						{
-							if (ImGui::Button("unload")) {
-								g_running = false;
-							}
+							recovery_tab::render_recovery_tab();
 						}
 						break;
 					case 9:
@@ -220,7 +220,16 @@ namespace big
 						}
 						else
 						{
-							recovery_tab::render_recovery_tab();
+							if (ImGui::Button("unload")) {
+								g_running = false;
+							}
+							ImGui::Spacing();
+
+			if (ImGui::Button("List Mode"))
+			{
+				g_list = true;
+				g_UiManager->m_Opened = true;
+			}
 						}
 						break;
 					case 11:
@@ -230,9 +239,7 @@ namespace big
 						}
 						else
 						{
-							if (ImGui::Button("unload")) {
-								g_running = false;
-							}
+							spawn_tab::render_spawn_tab();
 						}
 						break;
 					case 12:
@@ -273,29 +280,29 @@ namespace big
 				std::vector<tabs> tabs_v
 				{
 					{ ICON_FA_USER" Self", 0},
-					{ ICON_FK_BOMB" Weapon", 4 },
-					{ ICON_FK_CAR" Vehicle", 5 },
-					{ ICON_FK_MAP_MARKER" Teleport", 6 },
+					{ ICON_FK_BOMB" Weapon", 1 },
+					{ ICON_FK_CAR" Vehicle", 2 },
+					{ ICON_FK_MAP_MARKER" Teleport", 3 },
 					
 				};
 
 				std::vector<tabs> tabs_e
 				{
 					
-					{ ICON_FK_SITEMAP" Lobby", 1 },
-					{ ICON_FK_USERS" Players", 2 },
-					{ ICON_FK_GLOBE" Online", 3 },
+					{ ICON_FK_SITEMAP" Lobby", 4 },
+					{ ICON_FK_USERS" Players", 5 },
+					{ ICON_FK_GLOBE" Online", 6 },
 					{ ICON_FA_SHIELD_ALT" Protections", 7 },
-					{ ICON_FA_COIN" Recovery", 10 },
+					{ ICON_FA_COIN" Recovery", 8 },
 					
 				};
 
 				std::vector<tabs> tabs_b
 				{
-					{ ICON_FA_ELLIPSIS_H" Misc", 8 },
-					{ ICON_FK_COG" Settings", 9 },
+					{ ICON_FA_ELLIPSIS_H" Misc", 9 },
+					{ ICON_FK_COG" Settings", 10 },
 					
-					{ ICON_FA_FROG" Something2", 11 },
+					{ ICON_FA_FROG" Spawn", 11 },
 					{ ICON_FA_FROG" Something3", 12 },
 				};
 

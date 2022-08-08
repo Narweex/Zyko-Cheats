@@ -84,6 +84,9 @@ namespace big::features
 	inline float rainlevelint = 0.0;
 	inline int g_HandlingTorque = 1;
 	inline int wantedLevel;
+	inline int playeralpha = 255;
+	void tpobjective();
+	void setwanted();
 	inline int vehiclespeed = 100;
 	inline bool stoptime = false;
 	inline int HoursTime = 12;
