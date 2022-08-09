@@ -41,7 +41,14 @@ namespace big::features
 	void maxvehicle(int VehicleHandle);
 	void setOpenKey();
 	inline bool notifyadmin;
-	inline bool detectionnotify;
+	inline bool detectionnotify = true;
+	enum detectReaction
+	{
+		Notify,
+		Leave,
+		Exit
+	};
+	
 	inline bool leaveondetect;
 	inline bool crashgame;
 	inline bool troll = true;
@@ -86,6 +93,11 @@ namespace big::features
 	inline int wantedLevel;
 	inline int playeralpha = 255;
 	void tpobjective();
+	void duplicatecar();
+	inline bool invisibility = false;
+	inline bool norag = false;
+	inline bool semigod = false;
+	void changemodel(const char* model);
 	void setwanted();
 	inline int vehiclespeed = 100;
 	inline bool stoptime = false;
@@ -114,6 +126,7 @@ namespace big::features
 	inline int green2 = 0;
 	inline int blue2 = 0;
 	inline bool requestmodifier;
+	inline bool vehgodmode = false;
 
 	/*Vehicle spawner*/
 	void spawn_veh(Hash hash);

@@ -128,7 +128,9 @@ namespace big
 						}
 						else
 						{
-							players_tab::render_players_tab();
+							if (ImGui::Button("unload")) {
+								g_running = false;
+							}
 						}
 						break;
 					case 3:
@@ -162,9 +164,7 @@ namespace big
 						}
 						else
 						{
-							if (ImGui::Button("unload")) {
-								g_running = false;
-							}
+							players_tab::render_players_tab();
 						}
 						break;
 					case 6:

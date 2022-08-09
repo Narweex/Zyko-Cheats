@@ -15,7 +15,7 @@
 #include "gui/player_list.h"
 #include <imgui.h>
 #include <helpers/imgui_notify.h>
-#include "../../BigBaseV2/src/helpers/tahoma.h"
+#include "gui/list/Lists.hpp"
 //#include "auth/auth.hpp"
 
 namespace big
@@ -167,6 +167,13 @@ namespace big
 	float degToRad(float degs)
 	{
 		return degs * 3.141592653589793f / 180.f;
+	}
+	void features::duplicatecar()
+	{
+		Vehicle handle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true);
+		const char* vehicle = HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(handle));
+
+		features::spawn_veh(rage::joaat(vehicle));
 	}
 	void big::features::tpobjective()
 	{
@@ -383,6 +390,16 @@ namespace big
 			STATS::STAT_SAVE(0, 0, 3, 0);
 		}
 	}
+	void features::changemodel(const char* model)
+	{
+		DWORD model1 = MISC::GET_HASH_KEY(model);
+		STREAMING::REQUEST_MODEL(model1);
+		//while (!STREAMING::HAS_MODEL_LOADED(rage::joaat(model)) /*MISC::WAIT(0);*/
+		PLAYER::SET_PLAYER_MODEL(PLAYER::PLAYER_ID(), (model1));
+		/*PED::SET_PED_DEFAULT_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID());*/
+		/*WAIT(10);*/
+		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model1);
+	}
 	int moddervalue;
 	bool features::is_modder(Player player)
 	{
@@ -575,11 +592,11 @@ namespace big
 		}
 		if (offradar) {
 
-			*script_global(2689224).at(PLAYER::GET_PLAYER_INDEX(), 451).at(207).as<int*>() = offradar;
+			*script_global(2689224).at(PLAYER::GET_PLAYER_INDEX(), 451).at(207).as<int*>() = 1;
 			*script_global(2703660).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;
 
 		}
-
+		
 		if (features::exploammo)
 		{
 			Vector3 iCoord;
@@ -647,9 +664,33 @@ namespace big
 
 
 					}
+					if (features::vehgodmode)
+					{
+						Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
+						if(PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+						return;
+						
+							
+						
+						ENTITY::SET_ENTITY_INVINCIBLE(veh, true);
+						ENTITY::SET_ENTITY_PROOFS(veh, true, true, true, true, true, true, true, true);
+						VEHICLE::SET_DISABLE_VEHICLE_PETROL_TANK_DAMAGE(veh, true);
+						VEHICLE::SET_DISABLE_VEHICLE_PETROL_TANK_FIRES(veh, true);
+						VEHICLE::SET_VEHICLE_CAN_BE_VISIBLY_DAMAGED(veh, false);
+						VEHICLE::SET_VEHICLE_CAN_BREAK(veh, false);
+						VEHICLE::SET_VEHICLE_ENGINE_CAN_DEGRADE(veh, false);
+						VEHICLE::SET_VEHICLE_EXPLODES_ON_HIGH_EXPLOSION_DAMAGE(veh, false);
+						VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, false);
+						VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(veh, false);
+					}
 
 					if (godmode)
 					{
+						
+						if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID(), 1) || !ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))
+							break;
+						else
+							continue;
 						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), godmode);
 
 					}
@@ -657,7 +698,25 @@ namespace big
 					{
 						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), false);
 					}*/
-					ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
+					if (features::invisibility)
+					{
+						ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 0, false);
+
+					}
+					else
+					{
+						ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
+					}
+					if (features::norag)
+					{
+						PED::SET_PED_RAGDOLL_ON_COLLISION(PLAYER::PLAYER_PED_ID(), !features::norag);
+						PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(PLAYER::PLAYER_PED_ID(), !features::norag);
+						PED::SET_PED_CAN_RAGDOLL(PLAYER::PLAYER_PED_ID(), !features::norag);
+					}
+					if (features::semigod)
+					{
+
+					}
 					if (noclip)
 					{
 
@@ -932,6 +991,7 @@ namespace big
 						PLAYER::GET_PLAYER_SPRINT_STAMINA_REMAINING(PLAYER::PLAYER_PED_ID());
 						PLAYER::RESTORE_PLAYER_STAMINA(PLAYER::PLAYER_PED_ID(), 100);
 					}
+					
 					if (moneynotify)
 					{
 						Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
@@ -1020,7 +1080,32 @@ namespace big
 					break;
 				case 3:
 					//25003ms
+					if (features::notifyadmin)
+					{
+						const char* handle{};
+						for (int i = 0; i < 32; i++)
+						{
+							 handle = PLAYER::GET_PLAYER_NAME(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i));
 
+						}
+						if (handle = *Lists::R1Admins)
+						{
+
+							features::notify_protections("!!! Rockstar Admin Detected !!!", "You Should Leave Session Immediatelly", 7000);
+							if (features::leaveondetect)
+							{
+								features::notify("Changing Session", "Changed because of admin detection", 7000);
+								features::change_session(features::FindPublicSession);
+
+							}
+							else if (features::crashgame)
+							{
+								exit(0);
+							}
+
+
+						}
+					}
 
 					if (infiniteammo)
 					{
