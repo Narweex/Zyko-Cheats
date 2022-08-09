@@ -30,6 +30,162 @@ namespace big::Lists
 		"Nine",
 		"Ten"
 	};
+	inline std::vector<const char*> models1
+	{
+		"Acult01AMY",
+		"A_C_Pigeon",
+		"Acult01AMY"
+	};
+	inline const char* R1Admins[]
+	{
+"Spartanian123_yt",
+"Spacer-galore     ",
+"RollD20		   ",
+"SecretWizzle54    ",
+"Wawaweewa_I_Like  ",
+"BackBoyoDrill 	   ",
+"NoAuthorityHere   ",
+"ScentedString 	   ",
+"CapnZebraZorse    ",
+"godlyGoodestBoi   ",
+"whiskylifter 	   ",
+"pigeon_nominate   ",
+"SlightlyEvilHoss  ",
+"ChangryMonkey 	   ",
+"StompoGrande 	   ",
+"x_Shannandoo_x    ",
+"Long-boi-load 	   ",
+"NootN0ot 		   ",
+"applecloning 	   ",
+"BeoMonstarh 	   ",
+"BlobbyFett22 	   ",
+"ExoSnowBoarder    ",
+"ExtremeThanks15   ",
+"BailMail99 	   ",
+"ForrestTrump69    ",
+"KingOfGolf 	   ",
+"KrustyShackles    ",
+"PassiveSalon  	   ",
+"PearBiscuits34    ",
+"SlowMoKing 	   ",
+"Smooth_Landing    ",
+"SuperTrevor123    ",
+"Tamehippo 		   ",
+"uwu-bend 		   ",
+"VickDMF 		   ",
+"AlpacaBarista 	   ",
+"The_Real_Harambe  ",
+"Flares4Lyfe 	   ",
+"FluteOfMilton	   ",
+"PipPipJongles	   ",
+"YUyu - lampon	   ",
+"DeadOnAir 		   ",
+"Poppernopple 	   ",
+"KrunchyCh1cken    ",
+"BlessedChu 	   ",
+"Surgeio 		   ",
+"WindmillDuncan    ",
+"Paulverines 	   ",
+"ZombieTom66 	   ",
+"st1nky_p1nky 	   ",
+"OilyLordAinsley   ",
+"FruitPuncher15	   ",
+"PisswasserMax 	   ",
+"BanSparklinWater  ",
+"BrucieJuiceyIV    ",
+"RapidRaichu 	   ",
+"kingmario11 	   ",
+"DigitalFox9 	   ",
+"FoxesAreCool69    ",
+"SweetPlumbus 	   ",
+"IM -_- Wassup	   ",
+"WickedFalcon4054  ",
+"aquabull 		   ",
+"Ghostofwar1 	   ",
+"DAWNBILLA 		   ",
+"Aur3lian		   ",
+"JulianApost4te    ",
+"DarkStar7171 	   ",
+"xCuteBunny 	   ",
+"random_123 	   ",
+"random123 		   ",
+"flyingcobra16 	   ",
+"CriticalRegret    ",
+"ScentedPotter 	   ",
+"Huginn5 		   ",
+"Sonknuck - 	   ",
+"HammerDaddy69 	   ",
+"johnet123 		   ",
+"bipolarcarp 	   ",
+"jakw0lf 		   ",
+"Kakorot02 		   ",
+"CrazyCatPilots    ",
+"G_ashman 		   ",
+"Rossthetic 	   ",
+"StrongBelwas1 	   ",
+"TonyMSD1 		   ",
+"AMoreno14 		   ",
+"PayneInUrAbs	   ",
+"shibuz_gamer123   ",
+"M1thras 		   ",
+"Th3_Morr1gan 	   ",
+"Z3ro_Chill 	   ",
+"Titan261 		   ",
+"Coffee_Collie 	   ",
+"BananaGod951 	   ",
+"RDR_Dev		   ",
+"trajan5 		   ",
+"thewho146 		   ",
+"Bangers_RSG 	   ",
+"Bash_RSG 		   ",
+"Bubblez_RSG 	   ",
+"ChefRSG 		   ",
+"Chunk_RSG 		   ",
+"HotTub_RSG		   ",
+"JPEGMAFIA_RSG 	   ",
+"Klang_RSG 		   ",
+"Lean1_RSG 		   ",
+"Ton_RSG		   ",
+"RSGWolfman 	   ",
+"TheUntamedVoid    ",
+"TylerTGTAB 	   ",
+"Wilted_spinach    ",
+"RSGINTJoe 		   ",
+"RSGGuestV 		   ",
+"RSGGuest50 	   ",
+"RSGGuest40 	   ",
+"Logic_rsg 		   ",
+"RSGGuest12 	   ",
+"RSGGuest7 		   ",
+"ScottM_RSG 	   ",
+"Rockin5 		   ",
+"playrockstar6	   ",
+"PlayRockstar5	   ",
+"PlayRockstar1	   ",
+"Player8_RSG 	   ",
+"Player7_RSG 	   ",
+"MaxPayneDev16	   ",
+"MaxPayneDev15	   ",
+"MaxPayneDev14	   ",
+"MaxPayneDev13	   ",
+"MaxPayneDev12	   ",
+"MaxPayneDev11	   ",
+"MaxPayneDev10	   ",
+"MaxPayneDev9 	   ",
+"MaxPayneDev8 	   ",
+"MaxPayneDev7 	   ",
+"MaxPayneDev6 	   ",
+"MaxPayneDev5 	   ",
+"MaxPayneDev4 	   ",
+"MaxPayneDev3 	   ",
+"MaxPayneDev2 	   ",
+"MaxPayneDev1 	   ",
+"MaxPayne3Dev12    ",
+"MaxPayne3Dev11    ",
+"MaxPayne3Dev9 	   ",
+"GTAdev4 		   ",
+"GTAdev3 		   "
+	};
 	inline std::vector<std::string> Import_Export
 	{
 		"BLAZER5", "BOXVILLE5", "DIABLOUS", "DIABLOUS2", "COMET3", "DUNE4", "DUNE5", "ELEGY", "FCR", "FCR2", "ITALIGTB", "ITALIGTB2", "NERO", "NERO2",
@@ -193,7 +349,7 @@ namespace big::Lists
 		"FROGGER2", "MAVERICK", "POLMAV", "SAVAGE", "SKYLIFT",
 		"SUPERVOLITO", "SUPERVOLITO2", "SWIFT", "SWIFT2", "VALKYRIE",
 		"VALKYRIE2", "VOLATUS", "HAVOK", "MICROLIGHT", "HUNTER", "AKULA",
-		"AVENGER", "AVENGER2", "SEASPARROW"
+		"AVENGER", "AVENGER2", "SEASPARROW", "CONADA"
 	};
 
 	inline std::vector<std::string> Industrial1
@@ -236,7 +392,7 @@ namespace big::Lists
 		"VIRGO2", "VIRGO3", "VOODOO", "VOODOO2", "ELLIE",
 		"CLIQUE", "DEVIANT", "IMPALER", "IMPALER2", "IMPALER3", "IMPALER4",
 		"IMPERATOR", "IMPERATOR2", "IMPERATOR3", "SLAMVAN4", "SLAMVAN5", "SLAMVAN6",
-		"TULIP", "VAMOS","GAUNTLET3", "GAUNTLET4", "YOSEMITE"
+		"TULIP", "VAMOS","GAUNTLET3", "GAUNTLET4", "YOSEMITE", "GREENWOOD"
 	};
 
 	inline std::vector<std::string> OffRoad1
@@ -248,7 +404,7 @@ namespace big::Lists
 		"REBEL", "REBEL2", "SANDKING", "SANDKING2", "TECHNICAL", "TECHNICAL2", "TECHNICAL3", "NIGHTSHARK",
 		"TROPHYTRUCK", "TROPHYTRUCK2",
 		"COMET4", "RIATA", "KAMACHO", "CARACARA","CARACARA2", "FREECRAWLER", "MENACER",
-		"BRUISER", "BRUISER2", "BRUISER3", "BRUTUS", "BRUTUS2", "BRUTUS3", "RCBANDITO", "HELLION"
+		"BRUISER", "BRUISER2", "BRUISER3", "BRUTUS", "BRUTUS2", "BRUTUS3", "RCBANDITO", "HELLION", "DRAUGUR"
 
 	};
 
@@ -293,7 +449,7 @@ namespace big::Lists
 		"SULTAN", "SURANO", "SPECTER", "SPECTER2", "TAMPA2", "TROPOS", "VERLIERER2",
 		"RUSTON", "RAIDEN", "PARIAH",  "NEON", "FLASHGT", "GB200",
 		"HOTRING", "SCHLAGEN", "ZR380", "ZR3802", "ZR3803", "JUGULAR", "LOCUST", "NEBULA",
-		"PARAGON", "PARAGON2"
+		"PARAGON", "PARAGON2", "CORSITA", "SM722"
 	};
 
 	inline std::vector<std::string> SportsClassics1
@@ -316,7 +472,7 @@ namespace big::Lists
 		"TEMPESTA", "TURISMOR", "TYRUS", "VACCA", "VOLTIC", "VOLTIC2", "ZENTORNO", "PENETRATOR", "GP1",
 		"XA21", "VAGNER", "VIGILANTE", "VISIONE", "CYCLONE", "SC1", "AUTARCH", "ENTITY2",
 		"TEZERACT", "TAIPAN", "TYRANT", "SCRAMJET", "DEVESTE", "ITALIGTO", "EMERUS", "KRIEGER",
-		 "S80","THRAX", "ZORRUSSO"
+		 "S80","THRAX", "ZORRUSSO", "LM87", "TORERO"
 	};
 
 	inline std::vector<std::string> SUVs1

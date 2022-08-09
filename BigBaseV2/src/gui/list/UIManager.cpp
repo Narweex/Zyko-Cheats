@@ -224,7 +224,7 @@ namespace big::UserInterface
 
 		char rightText[32] = {};
 		std::snprintf(rightText, sizeof(rightText) - 1, "%zu / %zu", sub->GetSelectedOption() + 1, sub->GetNumOptions());
-
+		
 		DrawRect(
 			m_PosX,
 			m_DrawBaseY + (m_SubmenuBarHeight / 2.f),
@@ -244,8 +244,16 @@ namespace big::UserInterface
 			m_SubmenuBarTextSize, m_SubmenuBarFont,
 			m_SubmenuBarTextColor,
 			false, true);
+		DrawRect(
+			m_PosX,
+			m_DrawBaseY + m_SubmenuBarHeight - 0.001,
+			m_Width,
+			0.002f,
+			rage::rgbaColor(25, 125, 0, 250));
+		
 
 		m_DrawBaseY += m_SubmenuBarHeight;
+		
 	}
 
 	
@@ -274,6 +282,7 @@ namespace big::UserInterface
 			m_OptionFont,
 			selected ? m_OptionSelectedTextColor : m_OptionUnselectedTextColor,
 			false, false);
+		
 
 		if (opt->GetFlag(OptionFlag::Enterable))
 		{
@@ -292,7 +301,8 @@ namespace big::UserInterface
 
 	void UIManager::DrawFooter()
 	{
-		DrawLeftText("0.0.5.Beta",
+		
+		DrawLeftText("0.0.9.Beta",
 			m_PosX + (m_Width / m_OptionPadding) - 0.04f,/*m_PosX + 0.08f*/
 			m_DrawBaseY,
 			0.24f,
@@ -340,6 +350,12 @@ namespace big::UserInterface
 			rotation);
 
 		m_DrawBaseY += m_FooterHeight;
+		DrawRect(
+			m_PosX,
+			m_DrawBaseY - m_FooterHeight,
+			m_Width,
+			0.002f,
+			rage::rgbaColor(25, 125, 0, 250));
 	}
 
 	void UIManager::DrawDescription()
