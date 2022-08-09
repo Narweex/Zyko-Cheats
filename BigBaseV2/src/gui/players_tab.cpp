@@ -17,8 +17,8 @@ namespace big
 	void players_tab::render_players_tab()
 	{
 		ImGui::Columns(2, xorstr_("##player_tab"), false);
-		components::child("sex", ImVec2(300, 400));
-		for (int i = 0; i < 5; i++)
+		//components::child("sex", ImVec2(300, 400));
+		/*for (int i = 0; i < 5; i++)
 		{
 			ImGui::Text(std::to_string(i).c_str());
 		}
@@ -34,7 +34,7 @@ namespace big
 		components::child("sex5", ImVec2(300, 400));
 		components::end_child();
 		components::child("sex6", ImVec2(300, 400));
-		components::end_child();
+		components::end_child();*/
 		if (*g_pointers->m_is_session_started)
 		{
 			if (ImGui::ListBoxHeader(xorstr_("##playerlist"), ImVec2(200, -1)))
