@@ -19,7 +19,7 @@
 #include "../../BigBaseV2/src/gui/player_list.h"
 #include <shellapi.h>
 #include "thread_pool.hpp"
-#include "../../BigBaseV2/src/gui/list_playerinfo.h"
+#include "../../BigBaseV2/src/gui/list/playerinfo.h"
 
 namespace big
 {
@@ -71,6 +71,7 @@ namespace big
 		AllPlayerTrolling,
 		recovery,
 		SubmenuVehicleMovement,
+		SubmenuModelChanger,
 		misc,
 		Protections,
 		WaterSubmenu,
@@ -156,8 +157,12 @@ namespace big
 
 		g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Self Options"), SubmenuSelf, [](RegularSubmenu* sub)
 			{
+				
 				sub->AddOption<SubOption>("Visions", "Change Player Visions", vis);
+				sub->AddOption<SubOption>("Model Changer", "Change your Model", SubmenuModelChanger);
 				sub->AddOption<BoolOption<bool>>("God Mode", "You Cannot Die", &features::godmode, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Semi God Mode", "Cant Be Detected But Doesnt Work Against Explosions", &features::semigod, BoolDisplay::OnOff);
+
 				sub->AddOption<BoolOption<bool>>("Noclip", "WASD - Direction | SPACE - Up | Shift - Down", &features::noclip, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Never Wanted", "Police Wont Start Coming After You", &features::neverWanted, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Instantly Enter Vehicles", "Come On Lets GO!!!", &features::instartenter, BoolDisplay::OnOff);
@@ -176,6 +181,7 @@ namespace big
 				if (features::ultrarunbool) {
 					sub->AddOption<NumberOption<float>>("Run Speed", nullptr, &features::runspeed1, 0.1, 5.0, 0.1, 3, true, "< ", " >", [] {});
 				}
+				sub->AddOption<BoolOption<bool>>("No Ragdoll", "You are invisible", &features::norag, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Flash Mode", "Run Like Flash", &features::flashrun, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Super Jump", "Ever wanted to jump higher?", &features::superjumpbool, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Ultra Jump", "Jump Really High", &features::ultrajumpbool, BoolDisplay::OnOff);
@@ -205,6 +211,8 @@ namespace big
 					{
 						PED::ADD_ARMOUR_TO_PED(PLAYER::PLAYER_PED_ID(), 200);
 					});
+				sub->AddOption<BoolOption<bool>>("Invisibility", "You are invisible", &features::invisibility, BoolDisplay::OnOff);
+
 				sub->AddOption<NumberOption<int>>("Player Opacity", "Visibility Of Your Player", &features::playeropacity, 0, 255, 1, 3, true, "< ", " >", [] {
 					ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeropacity, 0);
 					});
@@ -253,6 +261,17 @@ namespace big
 				sub->AddOption<ChooseOption<const char*, std::size_t>>("Array", nullptr, &Lists::DemoList, &Lists::DemoListPos);
 				sub->AddOption<ChooseOption<std::uint64_t, std::size_t>>("Vector", nullptr, &vector, &vectorPos);*/
 			});
+			g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Model Changer"), SubmenuModelChanger, [](RegularSubmenu* sub)
+				{
+					for(auto& model:Lists::models1)
+					{ 
+						sub->AddOption<RegularOption>(model, "Clears Vision", [model]
+							{
+								features::changemodel(model);
+							});
+					}
+					
+				});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Visions", vis, [](RegularSubmenu* sub)
 			{
 
@@ -438,7 +457,7 @@ namespace big
 				sub->AddOption<SubOption>("Vehicle Spawner", nullptr, SubmenuVehicleSpawner);
 				sub->AddOption<SubOption>("Vehicle Movement", nullptr, SubmenuVehicleMovement);
 				sub->AddOption<SubOption>("Vehicle Colors", nullptr, SubmenuVehicleColors);
-				//sub->AddOption<BoolOption<bool>>("Vehicle Godmode", nullptr, &g_MainScript->vehiclegodmode, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Vehicle Godmode", nullptr, &features::vehgodmode, BoolDisplay::OnOff);
 				sub->AddOption<RegularOption>("Max Tuning", "Tune the Vehicle To Maximum", []
 					{
 						int Vehicle;
@@ -452,7 +471,10 @@ namespace big
 					});
 				sub->AddOption<BoolOption<bool>>("Repair Vehicle Loop", "Repair Vehicle Automatically When Demaged", &features::fixloop, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Seatbelt", "You Cant Fall Of Vehicle", &features::seatbelt, BoolDisplay::OnOff);
-
+				sub->AddOption<RegularOption>("Duplicate Current Vehicle", "Spawn Another One", []
+					{
+						features::duplicatecar();
+					});
 				//sub->AddOption<RegularOption>("Set License Plate", "Set Custom Text", []
 				//	{
 				//		CharKeyboard("Text", 21, "nig");
@@ -891,12 +913,20 @@ namespace big
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Admin Detection", RockstarAdminSubmenu, [&](RegularSubmenu* sub)
 			{
-				sub->AddOption<BoolOption<bool>>("Rockstar Admin Detection", "You Will Get Notified When There Is R* Admin In Your Session", &features::rockstaradmin, BoolDisplay::OnOff);
-				sub->AddOption<BoolOption<bool>>("Notify On Detection", "You Will Get Notified When There Is R* Admin In Your Session", &features::detectionnotify, BoolDisplay::OnOff);
-				sub->AddOption<BoolOption<bool>>("Leave On Detection", "You Will Get Notified When There Is R* Admin In Your Session", &features::leaveondetect, BoolDisplay::OnOff);
-				sub->AddOption<BoolOption<bool>>("Exit Game", "You Will Get Notified When There Is R* Admin In Your Session", &features::crashgame, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Rockstar Admin Detection", "You Know What It Is", &features::rockstaradmin, BoolDisplay::OnOff);
+				if (features::rockstaradmin)
+				{
 
+				
+				sub->AddOption<BoolOption<bool>>("Notify On Detection", "You Will Get Notified When There Is R* Admin In Your Session", &features::notifyadmin, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Leave On Detection", "You Will Automatically Leave When There Is R* Admin In Your Session", &features::leaveondetect, BoolDisplay::OnOff);
+				if (!features::leaveondetect)
+				{
+					sub->AddOption<BoolOption<bool>>("Exit Game", "Your Game Will Turn Off When There Is A Rockstar Admin", &features::crashgame, BoolDisplay::OnOff);
 
+				}
+
+				}
 				
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Weapon Menu", Weaponz, [](RegularSubmenu* sub)
@@ -1108,19 +1138,14 @@ namespace big
 							}
 						}
 					});
-				sub->AddOption<RegularOption>("Teleport To Objective ", "Teleport to Objective", []
+				sub->AddOption<RegularOption>("Teleport To Objective ", "Teleport to Objective", [] { {features::tpobjective(); }});
+				sub->AddOption<RegularOption>("show coords ", "ok", []
 					{
-						{
-							if (HUD::DOES_BLIP_EXIST(1))
-							{
-								Vector3 coords = HUD::GET_BLIP_COORDS(1);
-								ENTITY::SET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), coords.x, coords.y, coords.z, 0, 0, 0, 1);
-							}
-							else
-							{
-								features::notify_error("Teleport unsuccesful", "Could not find your objective", 5000);
-							}
-						}
+						Vector3 neger = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+						float iks = neger.x;
+						float yps = neger.y;
+						float zet = neger.z;
+						features::notify("idk", "idk", 20000);
 					});
 				sub->AddOption<SubOption>("Airport's", nullptr, air);
 				sub->AddOption<SubOption>("IPL's", nullptr, ipls);
@@ -1372,8 +1397,7 @@ namespace big
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Players", SubmenuPlayerList, [](RegularSubmenu* sub)
 			{
-				//features::render_player_info();
-
+				playerinfo::render_playerinfo();
 				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 
 				for (std::uint32_t i = 0; i < 32; ++i)
