@@ -302,7 +302,7 @@ namespace big::UserInterface
 	void UIManager::DrawFooter()
 	{
 		
-		DrawLeftText("0.0.9.Beta",
+		DrawLeftText("0.1.0.Beta",
 			m_PosX + (m_Width / m_OptionPadding) - 0.04f,/*m_PosX + 0.08f*/
 			m_DrawBaseY,
 			0.24f,
