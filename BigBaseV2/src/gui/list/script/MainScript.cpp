@@ -205,12 +205,9 @@ namespace big
 
 				sub->AddOption<RegularOption>("Max Health", "Adds Health To The Player", []
 					{
-						ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 400, 100);
+						features::maxhealth();
 					});
-				sub->AddOption<RegularOption>("Max Armour", "Adds Armour To The Player", []
-					{
-						PED::ADD_ARMOUR_TO_PED(PLAYER::PLAYER_PED_ID(), 200);
-					});
+				sub->AddOption<RegularOption>("Max Armour", "Adds Armour To The Player", []{features::maxarmor();});
 				sub->AddOption<BoolOption<bool>>("Invisibility", "You are invisible", &features::invisibility, BoolDisplay::OnOff);
 
 				sub->AddOption<NumberOption<int>>("Player Opacity", "Visibility Of Your Player", &features::playeropacity, 0, 255, 1, 3, true, "< ", " >", [] {
@@ -225,16 +222,8 @@ namespace big
 					{
 						PED::SET_PED_RANDOM_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID(), true);
 					});
-				sub->AddOption<RegularOption>("Reset Ped", "Reset Player", []
-					{
-						PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
-						PED::SET_PED_DEFAULT_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID());
-						PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID());
-					});
-				sub->AddOption<RegularOption>("Suicide", "Kills Ped", []
-					{
-						ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0, 0);
-					});
+				sub->AddOption<RegularOption>("Reset Ped", "Reset Player", [] {features::resetped();});
+				sub->AddOption<RegularOption>("Suicide", "Kills Ped", []{features::suicide();});
 				/*sub->AddOption<RegularOption>(xorstr_("RegularOption_demo"), "A regular option.", []
 					{
 						LOG(INFO) << "Test Option pressed";
