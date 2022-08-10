@@ -21,6 +21,9 @@ namespace big
 		eGameState* m_game_state{};
 		bool* m_is_session_started{};
 
+		using FindScriptEvent = bool(std::int32_t eventGroup, std::int32_t eventIndex, std::int64_t* args, std::uint32_t argCount);
+		FindScriptEvent* m_get_event_data;
+
 		CPedFactory** m_ped_factory{};
 		CNetworkPlayerMgr** m_network_player_mgr{};
 

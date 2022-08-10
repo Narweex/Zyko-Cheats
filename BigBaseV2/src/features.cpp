@@ -16,7 +16,8 @@
 #include <imgui.h>
 #include <helpers/imgui_notify.h>
 #include "gui/list/Lists.hpp"
-//#include "auth/auth.hpp"
+#include "auth/auth.hpp"
+#include "auth/anti_debug.hpp"
 
 namespace big
 {
@@ -128,7 +129,21 @@ namespace big
 			NETWORK::SET_NETWORK_ID_CAN_MIGRATE(netID, 1);
 		}
 	}//REQUEST CONTROL OF ENTITY
+	//bool features::GetEventData(std::int32_t eventGroup, std::int32_t eventIndex, std::int64_t* args, std::uint32_t argCount)
+	//{
+	//	auto result = static_cast<decltype(&GetEventData)>(eventGroup, eventIndex, args, argCount);
 
+	//	if (result && features::g_log_net_event_data)
+	//	{
+	//		LOG(INFO)<<"Script event group: "<< eventGroup;
+	//		LOG(INFO) << "Script event index: " << eventIndex;
+	//		LOG(INFO) << "Script event argcount: "<< argCount;
+	//		for (std::uint32_t i = 0; i < argCount; ++i)
+	//			LOG(INFO) << "Script event args[%u] : %"<< PRIi64, i, args[i];
+	//	}
+
+	//	return result;
+	//}
 	int pressedKey() {
 		int retKey = -1;
 		for (int i = 0x00; i < 0xFF; i++) {
@@ -184,11 +199,26 @@ namespace big
 		}
 		
 	}
-	void features::setwanted()
+	void features::clearwanted()
 	{
-		PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
-		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
+		PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_PED_ID());
 	}
+	void features::resetped()
+	{
+		PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
+		PED::SET_PED_DEFAULT_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID());
+		PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID());
+
+	}
+	void features::suicide()
+	{
+		ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0, 0);
+	}
+	void features::maxhealth(){ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 400, 100);}
+	void features::maxarmor(){PED::ADD_ARMOUR_TO_PED(PLAYER::PLAYER_PED_ID(), 200);}
+	void features::setwanted(){
+		PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
+		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);}
 	void features::maxvehicle(int VehicleHandle)
 	{
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(VehicleHandle, "Zyko");
@@ -219,6 +249,11 @@ namespace big
 		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 9, 1, 0);
 		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 10, 1, 0);
 	}
+	bool nigger() {
+		if (auth::login) { auth::auth(username, password); Sleep(10000); };}
+	
+	
+	
 	///////////////////////////////////////////////////////   SPAWN VOIDS   ///////////////////////////////////////////////////////
 	void features::spawn_obj(const char* object)
 	{
@@ -309,6 +344,7 @@ namespace big
 		//if (strong) {
 		//	VEHICLE::SET_VEHICLE_STRONG(veh, true);
 		//}
+
 
 		if (features::vehicle_blip) {
 			Hash Model = ENTITY::GET_ENTITY_MODEL(veh);
@@ -1070,7 +1106,7 @@ namespace big
 						GRAPHICS::SET_SEETHROUGH(false);
 
 					}
-
+					
 					break;
 				case 2:
 					//2000ms
@@ -1080,6 +1116,9 @@ namespace big
 					break;
 				case 3:
 					//25003ms
+					
+					
+					
 					if (features::notifyadmin)
 					{
 						const char* handle{};

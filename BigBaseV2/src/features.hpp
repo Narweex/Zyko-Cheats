@@ -127,6 +127,12 @@ namespace big::features
 	inline int blue2 = 0;
 	inline bool requestmodifier;
 	inline bool vehgodmode = false;
+	void clearwanted();
+	void resetped();
+	void suicide();
+	void maxhealth();
+	void maxarmor();
+	//inline bool nigger = false;
 
 	/*Vehicle spawner*/
 	void spawn_veh(Hash hash);
@@ -161,7 +167,7 @@ namespace big::features
 	void kill(int player);
 	void vehkick(int player);
 	/*PROTECTIONS*/
-	inline bool g_received_event = true;
+	inline bool g_received_event = false;
 	inline bool g_explosion_event = false;
 	inline bool no_report_event = false;
 	inline bool g_ptfx_event = false;
