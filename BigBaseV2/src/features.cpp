@@ -723,10 +723,10 @@ namespace big
 					if (godmode)
 					{
 						
-						if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID(), 1) || !ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))
+						/*if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID(), 1) || !ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))
 							break;
 						else
-							continue;
+							continue;*/
 						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), godmode);
 
 					}
@@ -753,7 +753,7 @@ namespace big
 					{
 
 					}
-					if (noclip)
+					if (features::noclip)
 					{
 
 						static const int controls[] = { 21, 32, 33, 34, 35, 36 };
