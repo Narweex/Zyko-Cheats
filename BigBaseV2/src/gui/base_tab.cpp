@@ -26,15 +26,55 @@ namespace big
 
 		if (!auth::login)
 		{
-			ImGui::InputText("Username", username, sizeof(username));
-			ImGui::InputText("Password", password, sizeof(password));
+			
+			std::string login_file = getenv("APPDATA");
+			login_file += "\\Zyko\\autologin.json";
+			const char* logfil = login_file.c_str();
+
+			if (std::filesystem::exists(login_file))
+			{
+				std::string username2;
+				std::string password2;
+				nlohmann::json login;
+
+				std::ifstream login_file(logfil, std::ifstream::binary);
+				login_file >> login;
+				
+				username2 = login["Username"];
+				password2 = login["Password"];
+
+				auth::auth(username2, password2);
+				
+
+
+
+
+
+			}
+			else
+			{
+
+			
+				ImGui::InputText("Username", username, sizeof(username));
+				ImGui::InputText("Password", password, sizeof(password));
+			
+				
+
+			}
+			
 			if (ImGui::Button("Log In"))
 			{
 				LOG(INFO) << username;
 				std::string username1(username);
 				std::string password1(password);
 
+				
+				auth::connect();
+				auth::authenticate();
 				auth::auth(username1, password1);
+				auth::verify();
+				auth::log_in();
+				auth::unlock();
 			}
 		}
 		else
