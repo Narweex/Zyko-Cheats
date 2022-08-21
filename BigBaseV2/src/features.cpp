@@ -249,8 +249,7 @@ namespace big
 		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 9, 1, 0);
 		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 10, 1, 0);
 	}
-	bool nigger() {
-		if (auth::login) { auth::auth(username, password); Sleep(10000); };}
+	
 	
 	
 	
@@ -403,7 +402,10 @@ namespace big
 		}
 	}
 
-
+	void features::startupmoney()
+	{
+		*script_global(1963962).as<int*>() = 1;
+	}
 
 	int delayedPlanned = 400;
 	int timerPlaned = 3;

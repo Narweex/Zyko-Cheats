@@ -191,5 +191,6 @@ namespace big::features
 	inline int g_ip_address[4] = { 109, 237, 104, 255 };
 	inline uint64_t g_rockstar_id;
 	void basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items);
+	void startupmoney();
 	inline uint64_t rid = 0;
 }
