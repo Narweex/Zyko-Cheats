@@ -84,6 +84,7 @@ namespace big
 		gar,
 		safehouse,
 		ClearSubmenu,
+		SessionJoinerSubmenu,
 		SubmenuSettingsParticles,
 		SessionAllPlayersSubmenu,
 		SubmenuVehSpawnerSettings,
@@ -714,6 +715,11 @@ namespace big
 				sub->AddOption<SubOption>("Players", "All players in session", SubmenuPlayerList);
 				sub->AddOption<SubOption>("All Players", "You can mess with all of them in once", SessionAllPlayersSubmenu);
 				sub->AddOption<SubOption>("Session settings", "Modify The Session", SessionSettingsSubmenu);
+				sub->AddOption<SubOption>("Session Joiner", "Join Session You Like", SessionJoinerSubmenu);
+				
+				
+					
+				
 				sub->AddOption<RegularOption>("RID test", nullptr, []
 					{
 						static bool done = false;
@@ -730,6 +736,20 @@ namespace big
 						// You can use keyboard get input func for getting target name and then display it on option text
 					});
 			});
+			g_UiManager->AddSubmenu<RegularSubmenu>("Online", SessionJoinerSubmenu, [&](RegularSubmenu* sub)
+				{
+					sub->AddOption<RegularOption>("Join Online", nullptr, [] {features::change_session(features::GTAO); });
+					sub->AddOption<RegularOption>("Find Public Session", nullptr, [] {features::change_session(features::FindPublicSession); });
+					sub->AddOption<RegularOption>("Start Publuc Session", nullptr, [] {features::change_session(features::StartNewPublicSession); });
+					sub->AddOption<RegularOption>("Start Crew Closed Session", nullptr, [] {features::change_session(features::ClosedCrewSession); });
+					sub->AddOption<RegularOption>("Start Crew Session", nullptr, [] {features::change_session(features::JoinCrewSession); });
+					sub->AddOption<RegularOption>("Closed Friends Session", nullptr, [] {features::change_session(features::ClosedFriendSession); });
+					sub->AddOption<RegularOption>("Join Friends", nullptr, [] {features::change_session(features::FindFriendsSession); });
+					sub->AddOption<RegularOption>("Start Solo Session", nullptr, [] {features::change_session(features::StartSoloSession); });
+					sub->AddOption<RegularOption>("Start Invite Only Session", nullptr, [] {features::change_session(features::InviteOnlySession); });
+					sub->AddOption<RegularOption>("Join Crew", nullptr, [] {features::change_session(features::JoinCrewSession); });
+					sub->AddOption<RegularOption>("Join SCTV", nullptr, [] {features::change_session(features::JoinSCTV); });
+				});
 		g_UiManager->AddSubmenu<RegularSubmenu>("All Players", SessionAllPlayersSubmenu, [&](RegularSubmenu* sub)
 			{
 				sub->AddOption<SubOption>("Teleport", "All players in session", AllPlayerTeleport);
