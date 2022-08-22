@@ -1,6 +1,7 @@
 #pragma once
 #include "common.hpp"
 #include "../../BigBaseV2/src/core/config.h"
+#include <WinInet.h>
 
 namespace big::features
 {
@@ -48,7 +49,7 @@ namespace big::features
 		Leave,
 		Exit
 	};
-	
+
 	inline bool leaveondetect;
 	inline bool crashgame;
 	inline bool troll = true;
@@ -71,8 +72,6 @@ namespace big::features
 	inline bool speedbypass = true;
 	inline bool noclip = false;;
 	inline int crew_level{};
-	inline int SessionInfoX = 0.020f;
-	inline int SessionInfoText = 0.4f;
 	inline bool speedometer = true;
 	inline bool loadingtext = true;
 	inline float timescale;
@@ -132,7 +131,15 @@ namespace big::features
 	void suicide();
 	void maxhealth();
 	void maxarmor();
+	void noIdleKick();
+	inline bool noidlekick;
 	//inline bool nigger = false;
+	 /*WEAPONS*/
+	void GiveAllWeapons();
+	void RemoveAllWeapons();
+	void MaxAmmo();
+	
+
 
 	/*Vehicle spawner*/
 	void spawn_veh(Hash hash);
@@ -144,7 +151,15 @@ namespace big::features
 	/* Online */
 	inline std::uint32_t g_selected_player{};
 	bool is_modder(Player player);
-
+	enum Noidlekick
+	{
+		Tunables = 262145,
+		IdleTimer = 1648034,
+		IdleTimerUNK1 = 1575072,
+		IdleTimerUNK2 = 2727891,
+		IdleTimer_Offset_1 = 1172,
+		IdleTimer_Offset_2 = 1156,
+	};
 	enum ChangeSessionID
 	{
 		GTAO = -1,
@@ -166,6 +181,7 @@ namespace big::features
 	void notification(int player);
 	void kill(int player);
 	void vehkick(int player);
+	void StealWeapons();
 	/*PROTECTIONS*/
 	inline bool g_received_event = false;
 	inline bool g_explosion_event = false;

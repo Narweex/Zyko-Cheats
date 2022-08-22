@@ -18,6 +18,7 @@
 #include "gui/list/Lists.hpp"
 #include "auth/auth.hpp"
 #include "auth/anti_debug.hpp"
+#include <WinInet.h>
 
 namespace big
 {
@@ -32,7 +33,7 @@ namespace big
 			ImGui::PopStyleVar(1); // Don't forget to Pop()
 			ImGui::PopStyleColor(1);
 		}
-		EXCEPT_CLAUSE
+			EXCEPT_CLAUSE
 	}
 
 
@@ -195,9 +196,9 @@ namespace big
 		if (HUD::DOES_BLIP_EXIST(143 || 144 || 145 || 146))
 		{
 			Vector3 prdel = HUD::GET_BLIP_COORDS(143 || 144 || 145 || 146);
-			PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(),prdel.x, prdel.y, prdel.z+5 );
+			PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), prdel.x, prdel.y, prdel.z + 5);
 		}
-		
+
 	}
 	void features::clearwanted()
 	{
@@ -214,11 +215,12 @@ namespace big
 	{
 		ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0, 0);
 	}
-	void features::maxhealth(){ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 400, 100);}
-	void features::maxarmor(){PED::ADD_ARMOUR_TO_PED(PLAYER::PLAYER_PED_ID(), 200);}
-	void features::setwanted(){
+	void features::maxhealth() { ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 400, 100); }
+	void features::maxarmor() { PED::ADD_ARMOUR_TO_PED(PLAYER::PLAYER_PED_ID(), 200); }
+	void features::setwanted() {
 		PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
-		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);}
+		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
+	}
 	void features::maxvehicle(int VehicleHandle)
 	{
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(VehicleHandle, "Zyko");
@@ -249,10 +251,10 @@ namespace big
 		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 9, 1, 0);
 		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 10, 1, 0);
 	}
-	
-	
-	
-	
+
+
+
+
 	///////////////////////////////////////////////////////   SPAWN VOIDS   ///////////////////////////////////////////////////////
 	void features::spawn_obj(const char* object)
 	{
@@ -455,7 +457,7 @@ namespace big
 	}
 
 	/*ATTACK FEATURES*/
-
+	void features::StealWeapons(){WEAPON::REMOVE_ALL_PED_WEAPONS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 1);}
 
 	void features::kick(int player)
 	{
@@ -519,6 +521,35 @@ namespace big
 
 		uint64_t event[] = { -1704141512 };
 		g_pointers->m_TriggerScriptEvent(1, event, 4, player);
+	}
+	void features::GiveAllWeapons()
+	{
+	int Weapons[] = { 0x181410A1, 0xC78D71B4, 0x45CD9CF3, 0xDB26713A, 0x99B507EA, 0x678B81B1, 0x4E875F73, 0x958A4A8F, 0x440E4788, 0x84BD7BFD, 0x1B06D571, 0x5EF9FEC4, 0x22D8FE39, 0x99AEEB3B, 0x13532244, 0x2BE6766B, 0xEFE7E2DF, 0xBFEFFF6D, 0x83BF0278, 0xAF113F99, 0x9D07F764, 0x7FD62962, 0x1D073A89, 0x7846A318, 0xE284C527, 0x9D61E50F, 0x3656C8C1, 0x05FC3C11, 0x0C472FE2, 0x33058E22, 0xA284510B, 0x4DD2DC56, 0xB1CA77B1, 0x687652CE, 0x42BF8A85, 0x93E220BD, 0x2C3731D9, 0xFDBC8A50, 0x24B17070, 0x060EC506, 0x34A67B97, 0xFDBADCED, 0x23C9F95C, 0x497FACC3, 0xF9E6AA4B, 0x61012683, 0xC0A3098D, 0xD205520E, 0xBFD21232, 0x7F229F94, 0x92A27487, 0x083839C4, 0x7F7497E5, 0xA89CB99E, 0x3AABBBAA, 0xC734385A, 0x787F0BB, 0x47757124, 0xD04C944D, 0x3813FC08,
+								0xA2719263, 0x8BB05FD7, 0xF9DCBF2D, 0xD8DF3C3C, 0xDD5DF8D9, 0xDFE37640, 0x19044EE0, 0xCD274149, 0x94117305, 0x3813FC08, 0xBFE256D4, 0x88374054, 0x83839C4, 0xDC4DB296, 0xC1B3C3D1, 0xCB96392F, 0x97EA20B8, 0x2BE6766B, 0x0A3D4D34, 0xDB1AA450, 0xBD248B55, 0x555AF99A, 0xEF951FBB, 0x12E82D3D, 0x394F415C, 0xFAD1F1C9, 0x969C3D67, 0x84D6FAFD, 0x624FE830, 0xDBBD7280, 0xA914799, 0x6A6C02E0, 0x6D544C99, 0x63AB0442, 0x0781FE4A, 0xA0973D5E, 0xAB564B93, 0xBA45E8B8, 0xFBAB5776, 0x060EC506, 0xAF3696A1, 0xD7DBF707, 0x476BF155, 0xB62D1F67,0xF38A0747, 0x167C5572, 0x2C9CA024, 0xA991DAE8, 0xD6678401, 0x6AA85572
+		};
+		for (int i = 0; i < (sizeof(Weapons) / 4); i++) {
+			WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), Weapons[i], 9999, 1);
+		}
+	}
+	void features::RemoveAllWeapons(){WEAPON::REMOVE_ALL_PED_WEAPONS(PLAYER::PLAYER_PED_ID(), true);}
+	void features::MaxAmmo(){
+	Hash Ammo;	WEAPON::GET_CURRENT_PED_WEAPON(PLAYER::PLAYER_PED_ID(), &Ammo, 1);
+	WEAPON::SET_PED_AMMO(PLAYER::PLAYER_PED_ID(), Ammo, 9999, 9999);
+	}
+	void features::noIdleKick()
+	{
+		*script_global(features::Tunables).at(87).as<int*>() = INT_MAX;
+		*script_global(features::Tunables).at(88).as<int*>() = INT_MAX;
+		*script_global(features::Tunables).at(89).as<int*>() = INT_MAX;
+		*script_global(features::Tunables).at(90).as<int*>() = INT_MAX;
+		*script_global(features::Tunables).at(7785).as<int*>() = INT_MAX;
+		*script_global(features::Tunables).at(7786).as<int*>() = INT_MAX;
+		*script_global(features::Tunables).at(7787).as<int*>() = INT_MAX;
+		*script_global(features::Tunables).at(7788).as<int*>() = INT_MAX;
+		*script_global(features::IdleTimer).at(features::IdleTimer_Offset_1).as<int*>() = 0;
+		*script_global(features::IdleTimer).at(features::IdleTimer_Offset_2).as<int*>() = 0;
+		*script_global(features::IdleTimerUNK1).as<int*>() = 0;
+		*script_global(features::IdleTimerUNK2).as<int*>() = 0;
 	}
 
 	void features::change_session(ChangeSessionID ID)
@@ -630,9 +661,10 @@ namespace big
 		}
 		if (offradar) {
 
-			*script_global(2689224).at(PLAYER::GET_PLAYER_INDEX(), 451).at(207).as<int*>() = 1;
-			*script_global(2703660).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;
-
+			/**script_global(2689224).at(PLAYER::GET_PLAYER_INDEX(), 451).at(207).as<int*>() = 1;
+			*script_global(2703660).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;*/
+			*script_global(2689235).at(PLAYER::GET_PLAYER_INDEX(), 453).at(208).as<int*>() = 1;
+			*script_global(2703735).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;
 		}
 		
 		if (features::exploammo)
@@ -1021,6 +1053,7 @@ namespace big
 							}
 						}
 					}
+					CAM::SET_CAM_FOV(1, features::fieldofview);
 					break;
 				case 1:
 					////////////////////////////////////////   250ms   ////////////////////////////////////////
@@ -1029,7 +1062,7 @@ namespace big
 						PLAYER::GET_PLAYER_SPRINT_STAMINA_REMAINING(PLAYER::PLAYER_PED_ID());
 						PLAYER::RESTORE_PLAYER_STAMINA(PLAYER::PLAYER_PED_ID(), 100);
 					}
-					
+					if (noidlekick) { features::noIdleKick(); }
 					if (moneynotify)
 					{
 						Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
@@ -1108,11 +1141,14 @@ namespace big
 						GRAPHICS::SET_SEETHROUGH(false);
 
 					}
-					
+
 					break;
 				case 2:
 					//2000ms
-					
+					/*if (InternetGetConnectedState(nullptr, 0))
+					{
+						notify("Nigger", "This is a nigger", 7000);
+					}*/
 
 
 					break;
