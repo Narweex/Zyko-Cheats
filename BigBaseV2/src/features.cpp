@@ -17,8 +17,8 @@
 #include <helpers/imgui_notify.h>
 #include "gui/list/Lists.hpp"
 #include "auth/auth.hpp"
-#include "auth/anti_debug.hpp"
-#include <WinInet.h>
+
+
 
 namespace big
 {
@@ -115,7 +115,7 @@ namespace big
 		HUD::SET_TEXT_EDGE(0, 0, 0, 0, 0);
 		HUD::SET_TEXT_OUTLINE();
 	}
-	void RequestControlOfEnt(Entity entity)
+	void features::RequestControlOfEnt(Entity entity)
 	{
 		int tick = 0;
 		while (!NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(entity) && tick <= 25)
@@ -129,22 +129,7 @@ namespace big
 
 			NETWORK::SET_NETWORK_ID_CAN_MIGRATE(netID, 1);
 		}
-	}//REQUEST CONTROL OF ENTITY
-	//bool features::GetEventData(std::int32_t eventGroup, std::int32_t eventIndex, std::int64_t* args, std::uint32_t argCount)
-	//{
-	//	auto result = static_cast<decltype(&GetEventData)>(eventGroup, eventIndex, args, argCount);
-
-	//	if (result && features::g_log_net_event_data)
-	//	{
-	//		LOG(INFO)<<"Script event group: "<< eventGroup;
-	//		LOG(INFO) << "Script event index: " << eventIndex;
-	//		LOG(INFO) << "Script event argcount: "<< argCount;
-	//		for (std::uint32_t i = 0; i < argCount; ++i)
-	//			LOG(INFO) << "Script event args[%u] : %"<< PRIi64, i, args[i];
-	//	}
-
-	//	return result;
-	//}
+	}
 	int pressedKey() {
 		int retKey = -1;
 		for (int i = 0x00; i < 0xFF; i++) {
@@ -166,11 +151,11 @@ namespace big
 	}
 
 
-	void ApplyForceToEntity(Entity e, float x, float y, float z)
+	void features::ApplyForceToEntity(Entity e, float x, float y, float z)
 	{
 		if (e != PLAYER::PLAYER_PED_ID() && NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(e) == FALSE)
 		{
-			RequestControlOfEnt(e);
+			features::RequestControlOfEnt(e);
 		}
 
 		ENTITY::APPLY_FORCE_TO_ENTITY(e, 1, x, y, z, 0, 0, 0, 0, 1, 1, 1, 0, 1);
@@ -191,15 +176,7 @@ namespace big
 
 		features::spawn_veh(rage::joaat(vehicle));
 	}
-	void big::features::tpobjective()
-	{
-		if (HUD::DOES_BLIP_EXIST(143 || 144 || 145 || 146))
-		{
-			Vector3 prdel = HUD::GET_BLIP_COORDS(143 || 144 || 145 || 146);
-			PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), prdel.x, prdel.y, prdel.z + 5);
-		}
-
-	}
+	
 	void features::clearwanted()
 	{
 		PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_PED_ID());
@@ -215,12 +192,70 @@ namespace big
 	{
 		ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0, 0);
 	}
-	void features::maxhealth() { ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 400, 100); }
-	void features::maxarmor() { PED::ADD_ARMOUR_TO_PED(PLAYER::PLAYER_PED_ID(), 200); }
-	void features::setwanted() {
-		PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
-		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
+	void features::teleport_to_objective()
+	{
+		Entity e;
+		Vector3 wayp;
+		Ped playerPed = PLAYER::PLAYER_PED_ID();
+		if (PED::IS_PED_IN_ANY_VEHICLE(playerPed, FALSE))
+			e = PED::GET_VEHICLE_PED_IS_USING(playerPed);
+		else e = playerPed;
+		bool blipFound = false;
+		if (ENTITY::IS_ENTITY_A_VEHICLE(e)) RequestControlOfEnt(e);
+		for (int i = 0; i <= 1000; i++)
+		{
+			int blipIterator = HUD::IS_WAYPOINT_ACTIVE() ? HUD::_GET_BLIP_INFO_ID_ITERATOR() : 1;
+			//This is for the race 
+			for (Blip i = HUD::GET_FIRST_BLIP_INFO_ID(blipIterator);
+				HUD::DOES_BLIP_EXIST(i) != 0; i = HUD::GET_NEXT_BLIP_INFO_ID(blipIterator)) {
+				if (HUD::GET_BLIP_INFO_ID_TYPE(i) == 4 && HUD::GET_BLIP_COLOUR(i) == 5 /* != ColorBlue*/
+					&& HUD::IS_BLIP_ON_MINIMAP(i) == 1) {
+					wayp = HUD::GET_BLIP_INFO_ID_COORD(i);
+					blipFound = true;
+					//notifyMap("color is: %d, type is: %d", UI::GET_BLIP_COLOUR(i), UI::GET_BLIP_INFO_ID_TYPE(i));
+					PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), wayp.x, wayp.y, wayp.z);
+				}
+				bool groundFound = false;
+				static float groundCheckHeight[] =
+				{ 100.0, 150.0, 50.0, 0.0, 200.0, 250.0, 300.0, 350.0, 400.0, 450.0, 500.0, 550.0, 600.0, 650.0, 700.0, 750.0, 800.0 };
+				for (int i = 0; i < sizeof(groundCheckHeight) / sizeof(float); i++)
+				{
+					ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, wayp.x, wayp.y, groundCheckHeight[i], 0, 0, 1);
+					SYSTEM::WAIT(1);
+					if (MISC::GET_GROUND_Z_FOR_3D_COORD(wayp.x, wayp.y, groundCheckHeight[i], &wayp.z, 0, 0))
+					{
+						groundFound = true;
+						wayp.z += 3.0;
+						break;
+					}
+				}
+				// if ground not found then set Z in air and give player a parachute
+				if (!groundFound)
+				{
+					wayp.z = 1000.0;
+					WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), 0xFBAB5776, 1, 0);
+				}
+			}
+			break;
+		}
+		//if (!blipFound) {
+		//	Blip i = HUD::GET_FIRST_BLIP_INFO_ID(SpriteRaceFinish);
+		//	if (HUD::DOES_BLIP_EXIST(i) != 0) {
+		//		wayp = HUD::GET_BLIP_INFO_ID_COORD(i);
+		//		blipFound = true;
+		//		notifyMap("color is: %d, type is: %d",
+		//			HUD::GET_BLIP_COLOUR(i), UI::GET_BLIP_INFO_ID_TYPE(i));
+		//	}
+		//}
+		////blipFound ? teleport_to_coords(e, wayp) : NULL;
+		//if (teleport_with_cam) {
+		//	blipFound ? Features::TPtoWithCam(wayp) : NULL;
+		//}
+		//else {
+		//	blipFound ? teleport_to_coords(e, wayp) : NULL;
+		//}
 	}
+	
 	void features::maxvehicle(int VehicleHandle)
 	{
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(VehicleHandle, "Zyko");
@@ -536,22 +571,7 @@ namespace big
 	Hash Ammo;	WEAPON::GET_CURRENT_PED_WEAPON(PLAYER::PLAYER_PED_ID(), &Ammo, 1);
 	WEAPON::SET_PED_AMMO(PLAYER::PLAYER_PED_ID(), Ammo, 9999, 9999);
 	}
-	void features::noIdleKick()
-	{
-		*script_global(features::Tunables).at(87).as<int*>() = INT_MAX;
-		*script_global(features::Tunables).at(88).as<int*>() = INT_MAX;
-		*script_global(features::Tunables).at(89).as<int*>() = INT_MAX;
-		*script_global(features::Tunables).at(90).as<int*>() = INT_MAX;
-		*script_global(features::Tunables).at(7785).as<int*>() = INT_MAX;
-		*script_global(features::Tunables).at(7786).as<int*>() = INT_MAX;
-		*script_global(features::Tunables).at(7787).as<int*>() = INT_MAX;
-		*script_global(features::Tunables).at(7788).as<int*>() = INT_MAX;
-		*script_global(features::IdleTimer).at(features::IdleTimer_Offset_1).as<int*>() = 0;
-		*script_global(features::IdleTimer).at(features::IdleTimer_Offset_2).as<int*>() = 0;
-		*script_global(features::IdleTimerUNK1).as<int*>() = 0;
-		*script_global(features::IdleTimerUNK2).as<int*>() = 0;
-	}
-
+	
 	void features::change_session(ChangeSessionID ID)
 	{
 		*script_global(SessionUNK1).as<int*>() = 0;
@@ -574,17 +594,7 @@ namespace big
 			g_player_info.player_id = PLAYER::PLAYER_ID();
 			g_player_info.player_ped = PLAYER::PLAYER_PED_ID();
 		}
-		if (neverWanted)
-		{
-
-			PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
-			PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, false);
-
-		}
-		else
-		{
-			PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
-		}
+		
 		if (features::novehkick)
 		{
 			*script_global(2689224).at(PLAYER::PLAYER_PED_ID()).at(317).at(10).as<int*>() = 21501;
@@ -594,7 +604,14 @@ namespace big
 			//Global_262145.f_7478
 		}
 
+		/*if (pedsesp)
+		{
+			Player playerPed = PLAYER::PLAYER_PED_ID();
+			for (PED::GET_PED_NEARBY_PEDS(playerPed, 150, 0)
+			{
 
+			}
+		}*/
 
 
 		if (playeresp)
@@ -630,12 +647,7 @@ namespace big
 				}
 			}
 		}
-		if (superjumpbool)
-		{
-			Player player = PLAYER::PLAYER_ID();
-			MISC::SET_SUPER_JUMP_THIS_FRAME(player);
-			Ped playerPed = PLAYER::PLAYER_PED_ID();
-		}
+		
 		if (deletegun)
 		{
 			Entity delentity;
@@ -650,22 +662,7 @@ namespace big
 				}
 			}
 		}
-		if (ultrajumpbool)
-		{
-			MISC::SET_SUPER_JUMP_THIS_FRAME(PLAYER::PLAYER_PED_ID());
-			MISC::SET_SUPER_JUMP_THIS_FRAME(PLAYER::PLAYER_ID());
-			if (PED::IS_PED_JUMPING(PLAYER::PLAYER_PED_ID()))
-			{
-				ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), true, 0, 0, 150, 0, 0, true, true, true, true, false, true, false);
-			}
-		}
-		if (offradar) {
-
-			/**script_global(2689224).at(PLAYER::GET_PLAYER_INDEX(), 451).at(207).as<int*>() = 1;
-			*script_global(2703660).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;*/
-			*script_global(2689235).at(PLAYER::GET_PLAYER_INDEX(), 453).at(208).as<int*>() = 1;
-			*script_global(2703735).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;
-		}
+		
 		
 		if (features::exploammo)
 		{
@@ -686,28 +683,9 @@ namespace big
 		}
 
 
-		if (modifytimecycle)
-		{
-			MISC::SET_TIME_SCALE(features::timescale);
-		}
+		
 
-		if (driveitgun)
-		{
-
-			Vector3 iCoord;
-			if (WEAPON::GET_PED_LAST_WEAPON_IMPACT_COORD(PLAYER::PLAYER_PED_ID(), &iCoord))
-			{
-				int vehicle = VEHICLE::GET_CLOSEST_VEHICLE(iCoord.x, iCoord.y, iCoord.z, 15.0f, 0, 1);
-				int driver = VEHICLE::GET_PED_IN_VEHICLE_SEAT(vehicle, -1, 0);
-				RequestControlOfEnt(vehicle);
-				RequestControlOfEnt(driver);
-				TASK::CLEAR_PED_TASKS_IMMEDIATELY(driver);
-				PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), vehicle, -1);
-			}
-
-
-
-		}
+		
 
 		for (int i = 0; i < sizeof(tick_conf) / sizeof(ULONGLONG); i++)
 		{
@@ -720,20 +698,10 @@ namespace big
 				case 0:
 					//50 MS				
 					run_playerlist();
-					if (instartenter)
-					{
-
-						Vehicle vehicle = PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(PLAYER::PLAYER_PED_ID());
-						Ped del = VEHICLE::GET_PED_IN_VEHICLE_SEAT(vehicle, -1, 0);
-						RequestControlOfEnt(vehicle);
-						RequestControlOfEnt(del);
-						TASK::CLEAR_PED_TASKS_IMMEDIATELY(del);
-						PED::DELETE_PED(&del);
-						PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), vehicle, -1);
-						PED::SET_PED_VEHICLE_FORCED_SEAT_USAGE(PLAYER::PLAYER_PED_ID(), vehicle, 0, 0);
-
-
-					}
+					features::player_loop();
+					features::online_loop();
+					features::weapons_loop();
+					
 					if (features::vehgodmode)
 					{
 						Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
@@ -754,147 +722,9 @@ namespace big
 						VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(veh, false);
 					}
 
-					if (godmode)
-					{
-						
-						/*if (ENTITY::IS_ENTITY_DEAD(PLAYER::PLAYER_PED_ID(), 1) || !ENTITY::DOES_ENTITY_EXIST(PLAYER::PLAYER_PED_ID()))
-							break;
-						else
-							continue;*/
-						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), godmode);
-
-					}
-					/*else
-					{
-						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), false);
-					}*/
-					if (features::invisibility)
-					{
-						ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 0, false);
-
-					}
-					else
-					{
-						ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
-					}
-					if (features::norag)
-					{
-						PED::SET_PED_RAGDOLL_ON_COLLISION(PLAYER::PLAYER_PED_ID(), !features::norag);
-						PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(PLAYER::PLAYER_PED_ID(), !features::norag);
-						PED::SET_PED_CAN_RAGDOLL(PLAYER::PLAYER_PED_ID(), !features::norag);
-					}
-					if (features::semigod)
-					{
-
-					}
-					if (features::noclip)
-					{
-
-						static const int controls[] = { 21, 32, 33, 34, 35, 36 };
-						static float speed = 20.f;
-						static float mult = 0.f;
-
-						static bool bLastNoclip = false;
-
-						static Entity prev = -1;
-						static Vector3 rot{};
-
-
-						bool bNoclip = features::noclip;
-
-						Entity ent = PLAYER::PLAYER_PED_ID();
-						bool bInVehicle = PED::IS_PED_IN_ANY_VEHICLE(ent, true);
-						if (bInVehicle) ent = PED::GET_VEHICLE_PED_IS_IN(ent, false);
-
-						// cleanup when changing entities
-						if (prev != ent)
-						{
-							ENTITY::FREEZE_ENTITY_POSITION(prev, false);
-							ENTITY::SET_ENTITY_COLLISION(prev, true, true);
-
-							prev = ent;
-						}
-
-						if (bNoclip)
-						{
-							for (int control : controls)
-								PAD::DISABLE_CONTROL_ACTION(0, control, true);
-
-							Vector3 vel = { 0.f, 0.f, 0.f };
-							float heading = 0.f;
-
-							// Left Shift
-							if (gta_util::IsKeyPressed(VK_SPACE))
-								vel.z += speed / 2;
-							// Left Control
-							if (gta_util::IsKeyPressed(VK_SHIFT))
-								vel.z -= speed / 2;
-							// Forward
-							if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 32))
-								vel.y += speed;
-							// Backward
-							if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 33))
-								vel.y -= speed;
-							// Left
-							if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 34))
-								vel.x -= speed;
-							// Right
-							if (PAD::IS_DISABLED_CONTROL_PRESSED(0, 35))
-								vel.x += speed;
-
-							rot = CAM::GET_GAMEPLAY_CAM_ROT(2);
-							ENTITY::SET_ENTITY_ROTATION(ent, 0.f, rot.y, rot.z, 2, 0);
-							ENTITY::SET_ENTITY_COLLISION(ent, false, false);
-							if (vel.x == 0.f && vel.y == 0.f && vel.z == 0.f)
-							{
-								// freeze entity to prevent drifting when standing still
-								ENTITY::FREEZE_ENTITY_POSITION(ent, true);
-
-								mult = 0.f;
-							}
-							else
-							{
-								if (mult < 20.f)
-									mult += 0.15f;
-
-								ENTITY::FREEZE_ENTITY_POSITION(ent, false);
-								Vector3 pos = (ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), 1));
-								Vector3 offset = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(ent, vel.x, vel.y, 0.f);
-								vel.x = offset.x - pos.x;
-								vel.y = offset.y - pos.y;
-
-								ENTITY::SET_ENTITY_VELOCITY(ent, vel.x * mult, vel.y * mult, vel.z * mult);
-							}
-						}
-						else if (bNoclip != bLastNoclip)
-						{
-
-							RequestControlOfEnt(PLAYER::PLAYER_PED_ID());
-							ENTITY::FREEZE_ENTITY_POSITION(ent, false);
-							ENTITY::SET_ENTITY_COLLISION(ent, true, false);
-
-						}
-
-						bLastNoclip = bNoclip;
-
-
-					}
-					else
-					{
-						ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), false);
-						ENTITY::SET_ENTITY_COLLISION(PLAYER::PLAYER_PED_ID(), true, false);
-						ENTITY::FREEZE_ENTITY_POSITION(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true), false);
-						ENTITY::SET_ENTITY_COLLISION(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true), true, false);
-					}
-
-					if (superrunbool)
-					{
-
-						if (gta_util::IsKeyPressed(VK_SHIFT))
-						{
-							PED::SET_PED_MOVE_RATE_OVERRIDE(PLAYER::PLAYER_PED_ID(), runspeed);
-						}
-					}
+				
+					
+					
 					if (speedbypass)
 					{
 						Entity entity = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false));
@@ -906,14 +736,7 @@ namespace big
 						Entity entity = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false));
 						ENTITY::SET_ENTITY_MAX_SPEED(entity, 540);
 					}*/
-					if (forcefield) {
-						ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), forcefield);
-						Player playerPed = PLAYER::PLAYER_PED_ID();
-						PED::SET_PED_CAN_RAGDOLL(playerPed, false);
-						Vector3 pCoords = ENTITY::GET_ENTITY_COORDS(playerPed, 0);
-						FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z, 7, 5.00f, 0, 1, 0, 1);
-
-					}
+					
 					if (hornboost)
 					{
 						if (PLAYER::IS_PLAYER_PRESSING_HORN(PLAYER::PLAYER_ID()))
@@ -933,40 +756,7 @@ namespace big
 					}
 
 
-					if (ultrarunbool)
-					{
-						if (gta_util::IsKeyPressed(VK_SHIFT))
-						{
-							ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), 1, 0.0f, runspeed1, 0.0f, 0.0f, 0.0f, 0.0f, 0, 1, 1, 1, 0, 1);
-						}
-					}
-					if (flashrun)
-					{
-						PED::SET_PED_MOVE_RATE_OVERRIDE(PLAYER::PLAYER_PED_ID(), 3.0);
-						GRAPHICS::SET_TIMECYCLE_MODIFIER("RaceTurboFlash");
-						if (gta_util::IsKeyPressed(VK_SHIFT))
-						{
-
-							MISC::SET_TIME_SCALE(0.5);
-							STREAMING::REQUEST_NAMED_PTFX_ASSET("scr_trevor1");
-							//GRAPHICS::_USE_PARTICLE_FX_ASSET_NEXT_CALL("scr_trevor1");
-							/*GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("scr_trev1_trailer_boosh", PLAYER::PLAYER_PED_ID(), 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 1.0, false, false, false);
-							STREAMING::REQUEST_NAMED_PTFX_ASSET("scr_trevor1");
-							GRAPHICS::_USE_PARTICLE_FX_ASSET_NEXT_CALL("scr_trev1_trailer_boosh");
-							GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("scr_trev1_trailer_boosh", PLAYER::PLAYER_PED_ID(), 0.0, 0.0, -0.5, 0.0, 0.0, 0.0, 1.0, false, false, false);
-						*/
-						}
-						else
-						{
-							//MISC::SET_TIME_SCALE(1);
-							GRAPHICS::SET_TIMECYCLE_MODIFIER("li");;
-						}
-					}
-					else
-					{
-
-						MISC::SET_TIME_SCALE(1);
-					}
+					
 					if (smoothhornboost)
 					{
 						if (PLAYER::IS_PLAYER_PRESSING_HORN(PLAYER::PLAYER_ID()))
@@ -986,139 +776,29 @@ namespace big
 							}
 						}
 					}
-					if (superman)
-					{
-
-
-						if (gta_util::IsKeyPressed(VK_SPACE))
-						{
-							ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), 1, 0, 0, 10, 0, 0, 0, 1, true, true, true, true, true);
-						}
-						Hash hash = MISC::GET_HASH_KEY("GADGET_PARACHUTE");
-						WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), hash, 1, 1);
-
-						if (ENTITY::IS_ENTITY_IN_AIR(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_RAGDOLL(PLAYER::PLAYER_PED_ID()))
-						{
-							if (gta_util::IsKeyPressed(0x57)) // W key
-							{
-								ApplyForceToEntity(PLAYER::PLAYER_PED_ID(), 3, 0, 0);
-							}
-
-							if (gta_util::IsKeyPressed(0x53)) // S key
-							{
-								ApplyForceToEntity(PLAYER::PLAYER_PED_ID(), 3, 6, 0);
-							}
-							if (gta_util::IsKeyPressed(VK_SHIFT))
-							{
-								ApplyForceToEntity(PLAYER::PLAYER_PED_ID(), 6, 0, 0);
-							}
-						}
-
-					}
+					
 					if (seatbelt)
 					{
 						PED::SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(PLAYER::PLAYER_PED_ID(), 1);
 					}
-					if (aimbot)
-					{
-						int player = PLAYER::PLAYER_ID();
-						int playerPed = PLAYER::PLAYER_PED_ID();
-
-						for (int i = 0; i < 32; i++)
-						{
-							if (i != player)
-							{
-								if (GetAsyncKeyState(VK_RBUTTON))
-								{
-									Ped targetPed = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i);
-									Vector3 targetPos = ENTITY::GET_ENTITY_COORDS(targetPed, 1);
-									BOOL exists = ENTITY::DOES_ENTITY_EXIST(targetPed);
-									BOOL dead = PLAYER::IS_PLAYER_DEAD(targetPed);
-
-									if (exists && !dead)
-									{
-										float screenX, screenY;
-										BOOL onScreen = GRAPHICS::GET_SCREEN_COORD_FROM_WORLD_COORD(targetPos.x, targetPos.y, targetPos.z, &screenX, &screenY);
-										if (ENTITY::IS_ENTITY_VISIBLE(targetPed) && onScreen)
-										{
-											if (ENTITY::HAS_ENTITY_CLEAR_LOS_TO_ENTITY(playerPed, targetPed, 17) && PED::IS_PED_SHOOTING(PLAYER::PLAYER_PED_ID()))
-											{
-												Vector3 targetCoords = PED::GET_PED_BONE_COORDS(targetPed, 31086, 0, 0, 0);
-												PED::SET_PED_SHOOTS_AT_COORD(playerPed, targetCoords.x, targetCoords.y, targetCoords.z, 1);
-
-											}
-										}
-									}
-								}
-							}
-						}
-					}
+					
 					CAM::SET_CAM_FOV(1, features::fieldofview);
 					break;
 				case 1:
 					////////////////////////////////////////   250ms   ////////////////////////////////////////
-					if (unlimitedstamina)
-					{
-						PLAYER::GET_PLAYER_SPRINT_STAMINA_REMAINING(PLAYER::PLAYER_PED_ID());
-						PLAYER::RESTORE_PLAYER_STAMINA(PLAYER::PLAYER_PED_ID(), 100);
-					}
-					if (noidlekick) { features::noIdleKick(); }
-					if (moneynotify)
-					{
-						Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-						Hash drophashes[] = {
-							0x1E9A99F8,
-							0x113FD533,
-						};
-						if (OBJECT::_IS_PICKUP_WITHIN_RADIUS(*drophashes, coords.x, coords.y, coords.z, 9999.0f))
-						{
-							notify_protections("Detected Money Drop !", "Someone Is Dropping Money In Session", 4000);
+					
+					
 
-						}
-					}
-
-					if (fucktheircam)
-					{
-						Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false);
-						FIRE::ADD_EXPLOSION(pos.x, pos.y, pos.z, 4, 0.f, false, true, 10000.f, true);
-					}
-					if (nophone)
-					{
-						//PAD::DISABLE_CONTROL_ACTION(0, 27, true);
-
-						*script_global(21285).as<int*>() = 6;
-						*script_global(19954 + 1).as<int*>() = 3;
-					}
+					
 
 
 
 
 
-					if (spectateplayer) {
-						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.25, 0.25, 0.25, 200, 94, 100, 255, 1, 1, 1, 0, 0, 0, 0);
-						NETWORK::NETWORK_SET_IN_SPECTATOR_MODE(true, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
-					}
-					else {
-						NETWORK::NETWORK_SET_IN_SPECTATOR_MODE(false, PLAYER::PLAYER_PED_ID());
-					}
+				
 
 
-					if (offradar)
-					{
-						*script_global(2426865).at((PLAYER::PLAYER_PED_ID(), 451)).at(207).as<int*>() = 1;
-
-						*script_global(2703660).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;
-
-
-					}
-					if (bullshark)
-					{
-						*script_global(2703660).at(3576).as<int*>() = 1;
-
-
-
-
-					}
+					
 					if (fixloop)
 					{
 						VEHICLE::SET_VEHICLE_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
@@ -1128,19 +808,7 @@ namespace big
 					{
 						VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())), 0);
 					}
-					if (features::nightvision) {
-						GRAPHICS::SET_NIGHTVISION(true);
-					}
-					else {
-						GRAPHICS::SET_NIGHTVISION(false);
-					}
-					if (features::thermalvision) {
-						GRAPHICS::SET_SEETHROUGH(true);
-					}
-					else {
-						GRAPHICS::SET_SEETHROUGH(false);
-
-					}
+					
 
 					break;
 				case 2:
@@ -1156,33 +824,8 @@ namespace big
 					//25003ms
 					
 					
+					if (rockstaradmin){features::admindetection();}
 					
-					if (features::notifyadmin)
-					{
-						const char* handle{};
-						for (int i = 0; i < 32; i++)
-						{
-							 handle = PLAYER::GET_PLAYER_NAME(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i));
-
-						}
-						if (handle = *Lists::R1Admins)
-						{
-
-							features::notify_protections("!!! Rockstar Admin Detected !!!", "You Should Leave Session Immediatelly", 7000);
-							if (features::leaveondetect)
-							{
-								features::notify("Changing Session", "Changed because of admin detection", 7000);
-								features::change_session(features::FindPublicSession);
-
-							}
-							else if (features::crashgame)
-							{
-								exit(0);
-							}
-
-
-						}
-					}
 
 					if (infiniteammo)
 					{

@@ -1,7 +1,7 @@
 #pragma once
 #include "common.hpp"
 #include "../../BigBaseV2/src/core/config.h"
-#include <WinInet.h>
+
 
 namespace big::features
 {
@@ -13,119 +13,34 @@ namespace big::features
 	inline ULONGLONG ticks[] = { 0, 0, 0, 0 };
 	inline ULONGLONG tick_conf[] = { 50, 250, 2000, 25003 };
 	inline int g_current_tick_job{};
-	/*Controls*/
-	inline bool numpadcontrol = false;
 
-	/*Playerinfo*/
+
+	void player_loop();
+	void online_loop();
+	void weapons_loop();
 	/* Self */
-	void crash(int player);
-	void transactionerror(int player);
-	void infloading(int player);
-	inline bool teleportgun;
-	inline bool angryplanesonplayer = false;
-	static bool demo_bool = true;
 	inline bool godmode;
 	inline bool neverWanted = false;
-	inline bool sessioninfo = false;
 	inline bool instartenter = false;
-	inline bool driveitgun = false;
-	void set_rank(int rpvalue);
-	inline int level{};
-	void notify(const char* text, const char* title, int duration);
-	void notify_success(const char* text, const char* title, int duration);
-	void notify_error(const char* text, const char* title, int duration);
-	void notify_protections(const char* title, const char* text, int duration);
-	void set_crew_rank(int rpvalue);
-	void teleport(int x, int y, int z);
-	void spawn_obj(const char* object);
-	void play_particle(const char* particle);
-	void maxvehicle(int VehicleHandle);
-	void setOpenKey();
-	inline bool notifyadmin;
-	inline bool detectionnotify = true;
-	enum detectReaction
-	{
-		Notify,
-		Leave,
-		Exit
-	};
-
-	inline bool leaveondetect;
-	inline bool crashgame;
-	inline bool troll = true;
-	//const char* adminname = "";
-	inline bool croshair = false;
 	inline bool superman = false;
-	inline bool playeresp = false;
-	inline bool fucktheircam = false;
-	inline bool bullshark = false;
-	inline bool aimbot = false;
-	inline bool selfdrop = false;
-	inline bool deletegun = false;
-	inline bool offradar = false;
-	inline bool novehkick = false;
-	inline bool fixloop = false;
+	inline bool noclip = false;
 	inline bool nightvision = false;
 	inline bool thermalvision = false;
-	inline bool exploammo = false;
-	inline bool cleanloop = false;
-	inline bool speedbypass = true;
-	inline bool noclip = false;;
-	inline int crew_level{};
-	inline bool speedometer = true;
-	inline bool loadingtext = true;
-	inline float timescale;
-	inline bool fieldov;
-	inline int fieldofview;
-	inline bool seatbelt = false;
-	inline bool airstrikegun = false;
-	inline bool moneynotify = true;
-	inline bool modifytimecycle = false;
-	inline int playeropacity = 255;
-	inline bool trafficfollowplayer = false;
-	inline bool spectateplayer = false;
-	inline bool nowater = false;
-	inline bool forcefield = false;
-	inline int worldgravity = 0;
-	inline float rainlevelint = 0.0;
-	inline int g_HandlingTorque = 1;
-	inline int wantedLevel;
-	inline int playeralpha = 255;
-	void tpobjective();
-	void duplicatecar();
 	inline bool invisibility = false;
 	inline bool norag = false;
 	inline bool semigod = false;
-	void changemodel(const char* model);
-	void setwanted();
-	inline int vehiclespeed = 100;
-	inline bool stoptime = false;
-	inline int HoursTime = 12;
-	inline int MinutesTime = 12;
-	inline bool superjumpbool = false;
-	inline bool infiniteammo = false;
-	inline int clearradius = 300;
-	inline bool smoothhornboost = false;
-	inline bool superrunbool = false;
-	inline bool ultrajumpbool = false;
-	inline bool ultrarunbool = false;
-	inline bool hornboost = false;
-	inline bool hornboosteffect = false;
-	inline int hornboostvalue = 50;
+	inline bool bullshark = false;
+	inline bool offradar = false;
+	inline float timescale;
+	inline int fieldofview;
+	inline bool modifytimecycle = false;
+	inline int playeropacity = 255;
+	inline float runspeed = 3.0;
+	inline float runspeed1 = 3.0;
+	inline bool forcefield = false;
 	inline bool unlimitedstamina = false;
 	inline bool flashrun = false;
 	inline bool mobileradio = false;
-	inline bool nophone = false;
-	inline float runspeed = 3.0;
-	inline float runspeed1 = 3.0;
-	inline int red = 0;
-	inline int green = 0;
-	inline int blue = 0;
-	inline int red2 = 0;
-	inline int green2 = 0;
-	inline int blue2 = 0;
-	inline bool requestmodifier;
-	inline bool vehgodmode = false;
 	void clearwanted();
 	void resetped();
 	void suicide();
@@ -133,33 +48,102 @@ namespace big::features
 	void maxarmor();
 	void noIdleKick();
 	inline bool noidlekick;
-	//inline bool nigger = false;
-	 /*WEAPONS*/
+	inline bool requestmodifier;
+	inline int wantedLevel;
+	inline int playeralpha = 255;
+	inline bool superrunbool = false;
+	inline bool ultrajumpbool = false;
+	inline bool ultrarunbool = false;
+	inline bool superjumpbool = false;
+	inline bool ignoreplayer = false;
+	void changemodel(const char* model);
+	void setwanted();
+
+
+	/* Weapons */
+	inline bool driveitgun = false;
+	inline bool teleportgun;
+	inline bool aimbot = false;
+	inline bool deletegun = false;
+	inline bool airstrikegun = false;
+	inline bool exploammo = false;
 	void GiveAllWeapons();
 	void RemoveAllWeapons();
 	void MaxAmmo();
-	
+	inline bool infiniteammo = false;
 
 
-	/*Vehicle spawner*/
+	/* Vehicle */
 	void spawn_veh(Hash hash);
+	void maxvehicle(int VehicleHandle);
 	inline bool vehicle_godmode = false;
 	inline bool vehicle_blip = false;
 	inline bool in_vehicle = true;
 	inline bool full_stats = true;
+	inline bool cleanloop = false;
+	inline bool speedbypass = true;
+	inline bool novehkick = false;
+	inline bool fixloop = false;
+	inline int red = 0;
+	inline int green = 0;
+	inline int blue = 0;
+	inline int red2 = 0;
+	inline int green2 = 0;
+	inline int blue2 = 0;
+	inline bool vehgodmode = false;
+	inline bool hornboost = false;
+	inline bool hornboosteffect = false;
+	inline int hornboostvalue = 50;
+	inline bool seatbelt = false;
+	inline int vehiclespeed = 100;
+	inline bool smoothhornboost = false;
+	void duplicatecar();
 
+	/* Teleport */
+	void teleport_to_objective();
+	void teleport(int x, int y, int z);
+
+	/* Recovery */
+	void set_rank(int rpvalue);
+	inline int level{};
+	void set_crew_rank(int rpvalue);
+	void basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items);
+	void startupmoney();
+	inline int crew_level{};
+	
+	/* Online */
+	inline bool playeresp = false;
+	inline bool fucktheircam = false;
+	inline bool spectateplayer = false;
+	inline bool moneynotify = true;
+	 
+	/* World*/
+	inline int worldgravity = 0;
+	inline float rainlevelint = 0.0;
+	inline bool stoptime = false;
+	inline int HoursTime = 12;
+	inline int MinutesTime = 12;
+	inline int clearradius = 300;
+
+	/* Utility */
+	void notify(const char* text, const char* title, int duration);
+	void notify_success(const char* text, const char* title, int duration);
+	void notify_error(const char* text, const char* title, int duration);
+	void notify_protections(const char* title, const char* text, int duration);
+	void spawn_obj(const char* object);
+	void play_particle(const char* particle);
+	static bool demo_bool = true;
+	inline bool numpadcontrol = false;
+	
+	/* Misc*/
+	void setOpenKey();
+	inline bool nophone = false;
+	void RequestControlOfEnt(Entity entity);
+	void ApplyForceToEntity(Entity e, float x, float y, float z);
+	
 	/* Online */
 	inline std::uint32_t g_selected_player{};
 	bool is_modder(Player player);
-	enum Noidlekick
-	{
-		Tunables = 262145,
-		IdleTimer = 1648034,
-		IdleTimerUNK1 = 1575072,
-		IdleTimerUNK2 = 2727891,
-		IdleTimer_Offset_1 = 1172,
-		IdleTimer_Offset_2 = 1156,
-	};
 	enum ChangeSessionID
 	{
 		GTAO = -1,
@@ -182,7 +166,11 @@ namespace big::features
 	void kill(int player);
 	void vehkick(int player);
 	void StealWeapons();
-	/*PROTECTIONS*/
+	void crash(int player);
+	void transactionerror(int player);
+	void infloading(int player);
+
+	/* Protections */
 	inline bool g_received_event = false;
 	inline bool g_explosion_event = false;
 	inline bool no_report_event = false;
@@ -203,10 +191,14 @@ namespace big::features
 	inline bool g_spoof_username = false;
 	inline bool g_spoof_ip = false;
 	inline bool g_spoof_rockstar_id = false;
+	inline bool leaveondetect;
+	inline bool crashgame;
+	inline bool notifyadmin;
+	void admindetection();
+	inline bool detectionnotify = true;
 	inline std::string g_username = "";
 	inline int g_ip_address[4] = { 109, 237, 104, 255 };
 	inline uint64_t g_rockstar_id;
-	void basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items);
-	void startupmoney();
+	
 	inline uint64_t rid = 0;
 }
