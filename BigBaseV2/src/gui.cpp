@@ -19,6 +19,9 @@
 #include "gui/components/components.hpp"
 #include <gui/list/UIManager.hpp>
 #include "gui/spawn_tab.h"
+#include "gui/weapons_tab.h"
+#include "gui/lobby_tab.h"
+#include "gui/vehicle_tab.h"
 
 namespace big
 {
@@ -114,11 +117,7 @@ namespace big
 						}
 						else
 						{
-
-
-							if (ImGui::Button("unload")) {
-								g_running = false;
-							}
+							weapons_tab::render_weapons_tab();
 						}
 						break;
 					case 2:
@@ -128,9 +127,7 @@ namespace big
 						}
 						else
 						{
-							if (ImGui::Button("unload")) {
-								g_running = false;
-							}
+							vehicle_tab::render_vehicle_tab();
 						}
 						break;
 					case 3:
@@ -152,9 +149,7 @@ namespace big
 						}
 						else
 						{
-							if (ImGui::Button("unload")) {
-								g_running = false;
-							}
+							lobby_tab::render_lobby_tab();
 						}
 						break;
 					case 5:
@@ -293,7 +288,7 @@ namespace big
 					{ ICON_FK_USERS" Players", 5 },
 					{ ICON_FK_GLOBE" Online", 6 },
 					{ ICON_FA_SHIELD_ALT" Protections", 7 },
-					{ ICON_FA_COIN" Recovery", 8 },
+					{ ICON_FA_MONEY_BILL" Recovery", 8 },
 					
 				};
 

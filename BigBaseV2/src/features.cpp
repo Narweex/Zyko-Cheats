@@ -17,7 +17,7 @@
 #include <helpers/imgui_notify.h>
 #include "gui/list/Lists.hpp"
 #include "auth/auth.hpp"
-
+#include "fiber_pool.hpp"
 
 
 namespace big
@@ -37,7 +37,7 @@ namespace big
 	}
 
 
-
+	
 	///////////////////////////////////////////////////////   HELP VOIDS   ///////////////////////////////////////////////////////
 
 	void features::notify_success(const char* text, const char* title, int duration)
@@ -139,7 +139,25 @@ namespace big
 		}
 		return retKey;
 	}
-
+	int r = 255, g = 0, b = 0;
+	void rainbowloop()
+	{
+		if (r > 0 && b == 0)
+		{
+			r--;
+			g++;
+		}
+		if (g > 0 && r == 0)
+		{
+			g--;
+			b++;
+		}
+		if (b > 0 && g == 0)
+		{
+			r++;
+			b--;
+		}
+	}
 	void features::setOpenKey() {
 
 		int key = pressedKey();
@@ -210,7 +228,7 @@ namespace big
 				HUD::DOES_BLIP_EXIST(i) != 0; i = HUD::GET_NEXT_BLIP_INFO_ID(blipIterator)) {
 				if (HUD::GET_BLIP_INFO_ID_TYPE(i) == 4 && HUD::GET_BLIP_COLOUR(i) == 5 /* != ColorBlue*/
 					&& HUD::IS_BLIP_ON_MINIMAP(i) == 1) {
-					wayp = HUD::GET_BLIP_INFO_ID_COORD(i);
+					Vector3 wayp = HUD::GET_BLIP_INFO_ID_COORD(i);
 					blipFound = true;
 					//notifyMap("color is: %d, type is: %d", UI::GET_BLIP_COLOUR(i), UI::GET_BLIP_INFO_ID_TYPE(i));
 					PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), wayp.x, wayp.y, wayp.z);
@@ -238,22 +256,19 @@ namespace big
 			}
 			break;
 		}
-		//if (!blipFound) {
-		//	Blip i = HUD::GET_FIRST_BLIP_INFO_ID(SpriteRaceFinish);
-		//	if (HUD::DOES_BLIP_EXIST(i) != 0) {
-		//		wayp = HUD::GET_BLIP_INFO_ID_COORD(i);
-		//		blipFound = true;
-		//		notifyMap("color is: %d, type is: %d",
-		//			HUD::GET_BLIP_COLOUR(i), UI::GET_BLIP_INFO_ID_TYPE(i));
-		//	}
-		//}
-		////blipFound ? teleport_to_coords(e, wayp) : NULL;
-		//if (teleport_with_cam) {
-		//	blipFound ? Features::TPtoWithCam(wayp) : NULL;
-		//}
-		//else {
-		//	blipFound ? teleport_to_coords(e, wayp) : NULL;
-		//}
+		if (!blipFound) {
+			Blip i = HUD::GET_FIRST_BLIP_INFO_ID(38);
+			if (HUD::DOES_BLIP_EXIST(i) != 0) {
+				wayp = HUD::GET_BLIP_INFO_ID_COORD(i);
+				blipFound = true;
+				//notifyMap("color is: %d, type is: %d",
+				HUD::GET_BLIP_COLOUR(i), HUD::GET_BLIP_INFO_ID_TYPE(i);
+			}
+		}
+		blipFound ? PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), wayp.x, wayp.y, wayp.z) : NULL;
+		
+			
+		
 	}
 	
 	void features::maxvehicle(int VehicleHandle)
@@ -441,7 +456,10 @@ namespace big
 
 	void features::startupmoney()
 	{
-		*script_global(1963962).as<int*>() = 1;
+		
+			features::notify("Dont abuse this method, only buy bunker with this and dont use it again !!!", "Warning", 7000);
+			*script_global(1963962).as<int*>() = 1;
+		
 	}
 
 	int delayedPlanned = 400;
@@ -582,7 +600,34 @@ namespace big
 		*script_global(SessionUNK2).as<int*>() = 0;
 		*script_global(SessionUNK3).as<int*>() = -1;
 	}
+	void features::cleanVehicle()
+	{
+		VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())), 0);
+	}
+	void features::repairVehicle()
+	{
+		VEHICLE::SET_VEHICLE_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
+		VEHICLE::SET_VEHICLE_DEFORMATION_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
+	}
+	void features::teleport_to_waypoint()
+	{
+		
+			Vector3 coords;
+			Entity e = PLAYER::PLAYER_PED_ID();
+			if (PED::IS_PED_IN_ANY_VEHICLE(e, 0))
+				e = PED::GET_VEHICLE_PED_IS_USING(e);
 
+			int WaypointHandle = HUD::GET_FIRST_BLIP_INFO_ID(8);
+			if (HUD::DOES_BLIP_EXIST(WaypointHandle))
+			{
+				Vector3 WaypointPos = HUD::GET_BLIP_COORDS(WaypointHandle);
+				WaypointPos.z += 5.0f;
+				int Handle = PLAYER::PLAYER_PED_ID();
+				if (PED::IS_PED_IN_ANY_VEHICLE(Handle, 0))
+					Handle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0);
+				ENTITY::SET_ENTITY_COORDS(Handle, WaypointPos.x, WaypointPos.y, WaypointPos.z, 0, 0, 0, 1);
+			}
+	}
 	void features::run_tick()
 	{
 		ULONGLONG now = GetTickCount64();
@@ -613,6 +658,20 @@ namespace big
 			}
 		}*/
 
+		if (features::rainbowcar)
+		{
+			rainbowloop();
+			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
+			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), true))
+			{
+				VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, r, g, b);
+				VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, r, g, b);
+			}
+		}
+		if (gta_util::IsKeyPressed(VK_F5))
+		{
+			features::teleport_to_waypoint();
+		}
 
 		if (playeresp)
 		{

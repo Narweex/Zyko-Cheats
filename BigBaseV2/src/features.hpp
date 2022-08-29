@@ -97,11 +97,17 @@ namespace big::features
 	inline bool seatbelt = false;
 	inline int vehiclespeed = 100;
 	inline bool smoothhornboost = false;
+	inline bool rainbowcar = false;
+	void repairVehicle();
+	void cleanVehicle();
 	void duplicatecar();
+	//int maincolour;
+	
 
 	/* Teleport */
 	void teleport_to_objective();
 	void teleport(int x, int y, int z);
+	void teleport_to_waypoint();
 
 	/* Recovery */
 	void set_rank(int rpvalue);
@@ -110,6 +116,14 @@ namespace big::features
 	void basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items);
 	void startupmoney();
 	inline int crew_level{};
+	static int bunker_money;
+	void addMoney();
+	void cayoSkipPreps();
+	void cayoHardMode();
+	void unlock_everything();
+	void unlock_achievements();
+	void max_creation_date();
+	void eight_years_playtime();
 	
 	/* Online */
 	inline bool playeresp = false;
@@ -135,6 +149,9 @@ namespace big::features
 	static bool demo_bool = true;
 	inline bool numpadcontrol = false;
 	
+	
+	
+
 	/* Misc*/
 	void setOpenKey();
 	inline bool nophone = false;
@@ -196,7 +213,7 @@ namespace big::features
 	inline bool notifyadmin;
 	void admindetection();
 	inline bool detectionnotify = true;
-	inline std::string g_username = "";
+	inline std::string g_username = "Narweex";
 	inline int g_ip_address[4] = { 109, 237, 104, 255 };
 	inline uint64_t g_rockstar_id;
 	

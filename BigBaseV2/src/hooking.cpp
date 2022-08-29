@@ -329,6 +329,16 @@ namespace big
 						}
 						break;
 					}
+					case (int)RockstarEvent::SCRIPT_ENTITY_STATE_CHANGE_EVENT:
+					{
+						if (features::g_crash_protex)
+						{
+							//persist_modder::save(4000, 1, event_name);
+							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
+							return false;
+						}
+						break;
+					}
 				}
 				if (features::g_log_net_event_data)
 					LOG(EVENT) << xorstr_("Network Event from: ") << source_player->get_name() << xorstr_(" Type: ") << event_name;
