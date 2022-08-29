@@ -19,7 +19,9 @@
 #include "../../BigBaseV2/src/gui/player_list.h"
 #include <shellapi.h>
 #include "thread_pool.hpp"
-#include "../../BigBaseV2/src/gui/list/playerinfo.h"
+#include "gui/playerinfo_gui.h"
+
+
 
 namespace big
 {
@@ -113,7 +115,12 @@ namespace big
 		SelectedPlayerVehicle,
 		AllPlayerVehicle,
 		SessionSettingsSubmenu,
-		RockstarAdminSubmenu
+		RockstarAdminSubmenu,
+		MoneySubmenu,
+		LevelSubmenu,
+		HeistSubmenu,
+		scripthook
+
 	};
 
 	void MainScript::gui_init()
@@ -144,14 +151,10 @@ namespace big
 				sub->AddOption<SubOption>("Online", "Online Options", OnlineSubmenu);
 				sub->AddOption<SubOption>("Teleport", "Teleport Options", teleports);
 				sub->AddOption<SubOption>("World Options", "World Options", WorldOptions);
-				sub->AddOption<RegularOption>("Recovery", "Switches to regular UI.", []
-					{
-						g_list = false;
-						g_gui.m_opened = true;
-					});
-				//sub->AddOption<SubOption>("Recovery", "Recovery Options", recovery);
+				sub->AddOption<SubOption>("Recovery", "Recovery Options", recovery);
 				sub->AddOption<SubOption>("Misc Options", "Other Options", misc);
 				sub->AddOption<SubOption>("Protections", "Protection Options", Protections);
+				sub->AddOption<SubOption>("Scripthook V", "SHV Mods", scripthook);
 				sub->AddOption<SubOption>("Settings", "Menu settings", SubmenuSettings);
 
 			});
@@ -172,8 +175,7 @@ namespace big
 						PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
 						PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
 					});
-
-
+				sub->AddOption<BoolOption<bool>>("Ignore Player", "Everyone will ignore you", &features::ignoreplayer, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Super Run - Override", "Run Boiiiiiii", &features::superrunbool, BoolDisplay::OnOff);
 				if (features::superrunbool) {
 					sub->AddOption<NumberOption<float>>("Run Speed", nullptr, &features::runspeed, 0.1, 5.0, 0.1, 3, true, "< ", " >", [] {});
@@ -418,6 +420,8 @@ namespace big
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Vehicle Colors", SubmenuVehicleColors, [&](RegularSubmenu* sub)
 			{
+				sub->AddOption<BoolOption<bool>>("Rainbow colour", "Makes a pog loop rgb fade", &features::rainbowcar, BoolDisplay::OnOff);
+
 				sub->AddOption<NumberOption<std::int32_t>>("Color Primary [~r~R~s~]", nullptr, &features::red, 0, 255, 10, 3, true, "< ", " >", [] {});
 				sub->AddOption<NumberOption<std::int32_t>>("Color Primary [~g~G~s~]", nullptr, &features::green, 0, 255, 10, 3, true, "< ", " >", [] {});
 				sub->AddOption<NumberOption<std::int32_t>>("Color Primary [~b~B~s~]", nullptr, &features::blue, 0, 255, 10, 3, true, "< ", " >", [] {});
@@ -454,11 +458,7 @@ namespace big
 						Vehicle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::GET_PLAYER_PED(features::g_selected_player), 0);
 						features::maxvehicle(Vehicle);
 					});
-				sub->AddOption<RegularOption>("Repair Vehicle", "Repair Damages To Currnet Vehicle", []
-					{
-						VEHICLE::SET_VEHICLE_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
-						VEHICLE::SET_VEHICLE_DEFORMATION_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
-					});
+				sub->AddOption<RegularOption>("Repair Vehicle", "Repair Damages To Currnet Vehicle", []{features::repairVehicle();});
 				sub->AddOption<BoolOption<bool>>("Repair Vehicle Loop", "Repair Vehicle Automatically When Demaged", &features::fixloop, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Seatbelt", "You Cant Fall Of Vehicle", &features::seatbelt, BoolDisplay::OnOff);
 				sub->AddOption<RegularOption>("Duplicate Current Vehicle", "Spawn Another One", []
@@ -472,9 +472,7 @@ namespace big
 				//		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(PED::GET_VEHICLE_PED_IS_IN(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID()), false), result);
 				//	});
 				sub->AddOption<RegularOption>("Clean Vehicle", "Clean Currnet Vehicle", []
-					{
-						VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())), 0);
-					});
+					{features::cleanVehicle();	});
 				sub->AddOption<BoolOption<bool>>("Clean Vehicle Loop", "Cleans Vehicle Automatically When Dirty", &features::cleanloop, BoolDisplay::OnOff);
 
 				sub->AddOption<RegularOption>("Stop Vehicle", "Set Vehicle Stationary", []
@@ -876,7 +874,6 @@ namespace big
 								PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
 							});
 						sub->AddOption<BoolOption<bool>>("Fuck Their Camera", "Just a Little Trolling", &features::fucktheircam, BoolDisplay::OnOff);
-						sub->AddOption<BoolOption<bool>>("Traffic Follows Player", "This Will Piss Them Off", &features::trafficfollowplayer, BoolDisplay::OnOff);
 						sub->AddOption<RegularOption>("Airstrike Player", "Blow Up Player With Airstrike", []
 							{
 								Ped selectedplayer = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL);
@@ -1063,7 +1060,6 @@ namespace big
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Water", WaterSubmenu, [](RegularSubmenu* sub)
 			{
-				sub->AddOption<BoolOption<bool>>("No Water Mode", "Deletes Water", &features::nowater, BoolDisplay::OnOff);
 				sub->AddOption<NumberOption<int>>("Hours", "Might Not Work In Online!", &features::HoursTime, 0, 23, 1, 1, true, "< ", " >", []
 					{
 						CLOCK::SET_CLOCK_TIME(features::HoursTime, 0, 0);
@@ -1114,25 +1110,10 @@ namespace big
 			{
 				sub->AddOption<RegularOption>("Teleport To Waypoint ", "Teleport to Waypoint", []
 					{
-						{
-							Vector3 coords;
-							Entity e = PLAYER::PLAYER_PED_ID();
-							if (PED::IS_PED_IN_ANY_VEHICLE(e, 0))
-								e = PED::GET_VEHICLE_PED_IS_USING(e);
-
-							int WaypointHandle = HUD::GET_FIRST_BLIP_INFO_ID(8);
-							if (HUD::DOES_BLIP_EXIST(WaypointHandle))
-							{
-								Vector3 WaypointPos = HUD::GET_BLIP_COORDS(WaypointHandle);
-								WaypointPos.z += 5.0f;
-								int Handle = PLAYER::PLAYER_PED_ID();
-								if (PED::IS_PED_IN_ANY_VEHICLE(Handle, 0))
-									Handle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0);
-								ENTITY::SET_ENTITY_COORDS(Handle, WaypointPos.x, WaypointPos.y, WaypointPos.z, 0, 0, 0, 1);
-							}
-						}
+						features::teleport_to_waypoint();
+						
 					});
-				sub->AddOption<RegularOption>("Teleport To Objective ", "Teleport to Objective", [] { {features::tpobjective(); }});
+				sub->AddOption<RegularOption>("Teleport To Objective ", "Teleport to Objective", [] { {features::teleport_to_objective(); }});
 				sub->AddOption<RegularOption>("show coords ", "ok", []
 					{
 						Vector3 neger = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
@@ -1391,7 +1372,7 @@ namespace big
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Players", SubmenuPlayerList, [](RegularSubmenu* sub)
 			{
-				playerinfo::render_playerinfo();
+				
 				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 
 				for (std::uint32_t i = 0; i < 32; ++i)
@@ -1443,7 +1424,8 @@ namespace big
 		g_UiManager->AddSubmenu<PlayerSubmenu>(&features::g_selected_player, SubmenuSelectedPlayer, [](PlayerSubmenu* sub)
 			{
 				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
-				//list_playerinfo::render_playerinfo();
+				
+				info_gui.dx_on_tick();
 
 				sub->AddOption<BoolOption<bool>>("Spectate", nullptr, &features::spectateplayer, BoolDisplay::OnOff);
 				sub->AddOption<SubOption>("Teleport Options", nullptr, SelectedPlayerTeleport);
@@ -1524,7 +1506,6 @@ namespace big
 			{
 				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 
-				sub->AddOption<BoolOption<bool>>("Angry Planes", "Spawns a bunch of planes that will follow and kill the player", &features::angryplanesonplayer, BoolDisplay::OnOff);
 				sub->AddOption<RegularOption>("Clone Player", "Clones Player", []
 					{
 						PED::CLONE_PED(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 1, 1, 1);
@@ -1555,7 +1536,6 @@ namespace big
 						PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
 					});
 				sub->AddOption<BoolOption<bool>>("Fuck Their Camera", "Just a Little Trolling", &features::fucktheircam, BoolDisplay::OnOff);
-				sub->AddOption<BoolOption<bool>>("Traffic Follows Player", "This Will Piss Them Off", &features::trafficfollowplayer, BoolDisplay::OnOff);
 				sub->AddOption<RegularOption>("Airstrike Player", "Blow Up Player With Airstrike", []
 					{
 						Ped selectedplayer = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL);
@@ -1614,6 +1594,37 @@ namespace big
 		//			});
 
 		//	});
+
+		g_UiManager->AddSubmenu<RegularSubmenu>("Recovery", recovery, [](RegularSubmenu* sub)
+			{
+				sub->AddOption<SubOption>("Money", nullptr, MoneySubmenu);
+				sub->AddOption<SubOption>("Level", nullptr, LevelSubmenu);
+				sub->AddOption<SubOption>("Heist Helpers", nullptr, HeistSubmenu);
+				sub->AddOption<RegularOption>("Unlock Everything", "Make sure to be atleast level 250", [] {features::unlock_everything; AUDIO::PLAY_SOUND_FRONTEND(-1, xorstr_("CHALLENGE_UNLOCKED"), xorstr_("HUD_AWARDS"), 1); });
+				sub->AddOption<RegularOption>("Unlock Achievements", "Unlocks all achievements", [] {features::unlock_achievements; AUDIO::PLAY_SOUND_FRONTEND(-1, xorstr_("CHALLENGE_UNLOCKED"), xorstr_("HUD_AWARDS"), 1); });
+				sub->AddOption<RegularOption>("Set 2013 creation date", "Your account will appear as 8 years old", [] {features::max_creation_date(); });
+
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Level", LevelSubmenu, [](RegularSubmenu* sub)
+			{
+			
+				sub->AddOption<NumberOption<int>>("Level", nullptr, &features::level, 0, 8000, 1, 1);
+				sub->AddOption<RegularOption>("Set Level", "Adds level you selected", [] {features::set_rank(features::level); AUDIO::PLAY_SOUND_FRONTEND(-1, xorstr_("CHALLENGE_UNLOCKED"), xorstr_("HUD_AWARDS"), 1); });
+				sub->AddOption<RegularOption>("Set Crew Level", "Adds level you selected", [] {features::set_crew_rank(features::level); AUDIO::PLAY_SOUND_FRONTEND(-1, xorstr_("CHALLENGE_UNLOCKED"), xorstr_("HUD_AWARDS"), 1); });
+
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Money", MoneySubmenu, [](RegularSubmenu* sub)
+			{
+				sub->AddOption<RegularOption>("500k  Startup", "Only use to get enough on bunker", [] {features::startupmoney(); });
+				sub->AddOption<NumberOption<int>>("Amount", nullptr, &features::level, 0, 25000000, 100000, 1);
+				sub->AddOption<RegularOption>("Add Money", "Adds selected amount", [] {features::addMoney(); });
+			});
+		g_UiManager->AddSubmenu<RegularSubmenu>("Heist Helpers", HeistSubmenu, [](RegularSubmenu* sub)
+			{
+				sub->AddOption<RegularOption>("Cayo Perico - Skip preps", "skips the heist preps", [] {features::cayoSkipPreps(); });
+				sub->AddOption<RegularOption>("Cayo Perico - Enable Hard Mode", "Enabled heist hard mode", [] {features::cayoHardMode(); });
+			});
+
 		g_UiManager->AddSubmenu<RegularSubmenu>("Miscellaneous", misc, [](RegularSubmenu* sub)
 			{
 				sub->AddOption<SubOption>("Object Spawner", nullptr, SubmenuSettingsObjectSpanwer);
@@ -1630,16 +1641,11 @@ namespace big
 						CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
 					});
 
-				//sub->AddOption<RegularOption>("Break Session test", "test", []
-				//	{
-				//		MISC::TERMINATE_ALL_SCRIPTS_WITH_THIS_NAME("Freemode");
-				//		//
-				//	});
+				
 			});
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Miscellaneous", misc, [](RegularSubmenu* sub)
 			{
-				sub->AddOption<BoolOption<bool>>("Money Drop On Self [~r~RISKY]", "Vibe to the music everywhere!", &features::selfdrop, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Mobile Radio", "Vibe to the music everywhere!", &features::mobileradio, BoolDisplay::OnOff);
 				//sub->AddOption<BoolOption<bool>>("Free Camera", "Vibe to the music everywhere!", &features::freecam, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Disable Phone", "English Dave wont bother you", &features::nophone, BoolDisplay::OnOff);
@@ -1696,45 +1702,29 @@ namespace big
 				}
 
 			});
-		/*g_UiManager->AddSubmenu<RegularSubmenu>("Particles", SubmenuSettingsParticles, [](RegularSubmenu* sub)
-			{
-				for (auto& particle : Lists::Particles1) {
-					sub->AddOption<RegularOption>(particle, "Play This Particle", [particle]
-						{
-							features::play_particle(particle);
-						});
-				}
-
-			});*/
+	
 
 
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Settings", SubmenuSettings, [](RegularSubmenu* sub)
 			{
-				/*sub->AddOption<RegularOption>("Switch GUI", "Switches to regular UI.", []
+				sub->AddOption<RegularOption>("Switch GUI", "Switches to click UI.", []
 					{
 						g_list = false;
 						g_gui.m_opened = true;
-					});*/
-					/*sub->AddOption<RegularOption>("notify", "Unload the menu.", []
-						{
-							features::notify_protections("Test", "Notification", 4000);
-						});
-					sub->AddOption<RegularOption>("error", "Unload the menu.", []
-						{
-							features::notify_error("An error occured", "Notification", 4000);
-						});*/
+					});
+					
 
 				sub->AddOption<BoolOption<bool>>("Numpad Control", " 8 - Up | 2 - Down | 4 - Left | 6 - Right | 5 - Select |\n 0 - Back", &features::numpadcontrol, BoolDisplay::OnOff);
 
-
-				
 				sub->AddOption<RegularOption>("Unload", "Unload the menu.", []
 					{
 						g_running = false;
 					});
-				
-				//sub->AddOption<SubOption>("Header", nullptr, SubmenuSettingsHeader);
+				sub->AddOption<RegularOption>("Close Game", "Go to desktop", []
+					{
+						exit(0);
+					});
 				sub->AddOption<SubOption>("Infobar", nullptr, SubmenuSettingsSubmenuBar);
 				sub->AddOption<SubOption>("Links", nullptr, SUbmenuSettingsLinks);
 				sub->AddOption<SubOption>("Options", nullptr, SubmenuSettingsOption);
