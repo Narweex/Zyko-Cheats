@@ -18,6 +18,42 @@
 #include "fiber_pool.hpp"
 namespace big
 {
+	void features::set_rank(int rpvalue)
+	{
+		if (rpvalue > 0) {
+			if (rpvalue > 8000)
+			{
+				rpvalue = 8000;
+			}
+
+			STATS::STAT_SET_INT(RAGE_JOAAT("MP0_CHAR_SET_RP_GIFT_ADMIN"), leveltable[rpvalue], TRUE);
+			STATS::STAT_SET_INT(RAGE_JOAAT("MP1_CHAR_SET_RP_GIFT_ADMIN"), leveltable[rpvalue], TRUE);
+		}
+	}
+	void features::startupmoney()
+	{
+
+		features::notify("Dont abuse this method, only buy bunker with this and dont use it again !!!", "Warning", 7000);
+		*script_global(1963962).as<int*>() = 1;
+
+	}
+	void features::set_crew_rank(int rpvalue)
+	{
+		if (rpvalue > 0) {
+			if (rpvalue > 1000)
+			{
+				rpvalue = 1000;
+			}
+
+			STATS::STAT_SET_INT(RAGE_JOAAT("MPPLY_CREW_LOCAL_XP_0"), leveltable[rpvalue], TRUE);
+			STATS::STAT_SET_INT(RAGE_JOAAT("MPPLY_CREW_LOCAL_XP_1"), leveltable[rpvalue], TRUE);
+			STATS::STAT_SET_INT(RAGE_JOAAT("MPPLY_CREW_LOCAL_XP_2"), leveltable[rpvalue], TRUE);
+			STATS::STAT_SET_INT(RAGE_JOAAT("MPPLY_CREW_LOCAL_XP_3"), leveltable[rpvalue], TRUE);
+			STATS::STAT_SET_INT(RAGE_JOAAT("MPPLY_CREW_LOCAL_XP_4"), leveltable[rpvalue], TRUE);
+			script::get_current()->yield(100ms);
+			STATS::STAT_SAVE(0, 0, 3, 0);
+		}
+	}
 	void features::addMoney()
 	{
 		features::notify_success("Recovery", "Money Added", 3000);

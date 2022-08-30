@@ -312,5 +312,20 @@ namespace big
 		*script_global(IdleTimerUNK1).as<int*>() = 0;
 		*script_global(IdleTimerUNK2).as<int*>() = 0;
 	}
+	void features::clearwanted()
+	{
+		PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_PED_ID());
+	}
+	void features::resetped()
+	{
+		PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
+		PED::SET_PED_DEFAULT_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID());
+		PED::CLEAR_PED_BLOOD_DAMAGE(PLAYER::PLAYER_PED_ID());
+
+	}
+	void features::suicide()
+	{
+		ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0, 0);
+	}
 
 }
