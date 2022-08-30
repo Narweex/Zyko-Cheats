@@ -82,7 +82,7 @@ namespace big
 
 					ImGui::EndGroup();
 
-					ImGui::NextColumn();
+					//ImGui::NextColumn();
 
 					ImGui::BeginGroup();
 					ImGui::Text(xorstr_("Is Alive: ")); ImGui::SameLine();

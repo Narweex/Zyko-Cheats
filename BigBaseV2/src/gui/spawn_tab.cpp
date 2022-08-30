@@ -27,7 +27,8 @@ namespace big
 
 		if (!auth::login)
 		{
-			ImGui::InputText("Username", username, sizeof(username));
+
+			/*ImGui::InputText("Username", username, sizeof(username));
 			ImGui::InputText("Password", password, sizeof(password));
 			if (ImGui::Button("Log In"))
 			{
@@ -36,7 +37,7 @@ namespace big
 				std::string password1(password);
 
 				auth::auth(username1, password1);
-			}
+			}*/
 		}
 		else
 		{

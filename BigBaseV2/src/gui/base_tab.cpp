@@ -43,7 +43,7 @@ namespace big
 				username2 = login["Username"];
 				password2 = login["Password"];
 
-				auth::auth(username2, password2);
+				//auth::auth(username2, password2);
 				
 
 
@@ -55,8 +55,8 @@ namespace big
 			{
 
 			
-				ImGui::InputText("Username", username, sizeof(username));
-				ImGui::InputText("Password", password, sizeof(password));
+				//ImGui::InputText("Username", username, sizeof(username));
+				//ImGui::InputText("Password", password, sizeof(password));
 			
 				
 
@@ -64,17 +64,17 @@ namespace big
 			
 			if (ImGui::Button("Log In"))
 			{
-				LOG(INFO) << username;
-				std::string username1(username);
-				std::string password1(password);
+				//LOG(INFO) << username;
+				//std::string username1(username);
+				//std::string password1(password);
 
-				
+				/*
 				auth::connect();
 				auth::authenticate();
 				auth::auth(username1, password1);
 				auth::verify();
 				auth::log_in();
-				auth::unlock();
+				auth::unlock();*/
 			}
 		}
 		else
@@ -119,7 +119,8 @@ namespace big
 			ImGui::Text(xorstr_(" Globals"));
 			ImGui::Checkbox(xorstr_("Off Radar"), &features::offradar);
 			ImGui::Checkbox(xorstr_("Bullshark testosterone"), &features::bullshark);
-			//ImGui::Checkbox(xorstr_("Reveal Players"), &features::revealplayers);
+			ImGui::Checkbox(xorstr_("No Idle Kick"), &features::noidlekick);
+			
 
 			ImGui::EndChild();
 
@@ -128,9 +129,10 @@ namespace big
 			ImGui::SameLine();
 			ImGui::BeginChild("##optionsplayer", ImVec2(300, 270), true);
 			ImGui::Text(xorstr_(" Player"));
-			ImGui::SliderInt(xorstr_("Player Opacity"), &features::playeralpha, 0, 255);
-			if (ImGui::Button("Clear Wanted Level")) { &features::clearwanted; }
+			ImGui::SliderInt(xorstr_("Opacity"), &features::playeralpha, 0, 255);
 			ImGui::Checkbox(xorstr_("Invisibility"), &features::invisibility);
+			ImGui::Checkbox(xorstr_("Ignore Player"), &features::ignoreplayer);
+			if (ImGui::Button("Clear Wanted Level")) { &features::clearwanted; }
 			if (ImGui::Button("Suicide")) { features::suicide(); }
 			if (ImGui::Button("Reset Ped")) { features::resetped(); }
 			if (ImGui::Button("Max Health")) { features::maxhealth(); };

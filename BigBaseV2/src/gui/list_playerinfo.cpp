@@ -20,7 +20,7 @@ namespace big
 		ImGui::SetNextWindowSize(ImVec2(0.5, 0.5));
 		if (ImGui::BeginTabItem(PLAYER::GET_PLAYER_NAME(features::g_selected_player)))
 		{
-			ImGui::Text("Helo")
+			ImGui::Text("Helo");
 		}
 	}
 }
