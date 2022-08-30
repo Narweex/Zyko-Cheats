@@ -28,6 +28,12 @@
     <Filter Include="gui\components">
       <UniqueIdentifier>{45310b70-eec3-4854-a1f7-062929296042}</UniqueIdentifier>
     </Filter>
+    <Filter Include="auth">
+      <UniqueIdentifier>{60cb060a-f954-4983-9fd7-8356063fb193}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="looped">
+      <UniqueIdentifier>{a9a87494-e2be-41f4-918b-70723f88273d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.hpp" />
@@ -238,6 +244,30 @@
     <ClInclude Include="src\gui\components\components.hpp">
       <Filter>gui\components</Filter>
     </ClInclude>
+    <ClInclude Include="src\gui\recovery_tab.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\auth.hpp">
+      <Filter>auth</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\spawn_tab.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\anti_debug.hpp">
+      <Filter>auth</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\weapons_tab.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\playerinfo_gui.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\lobby_tab.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\vehicle_tab.h">
+      <Filter>gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\common.cpp" />
@@ -306,8 +336,49 @@
     <ClCompile Include="src\gui\components\child.cpp">
       <Filter>gui\components</Filter>
     </ClCompile>
+    <ClCompile Include="src\gui\recovery_tab.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\auth\auth.cpp">
+      <Filter>auth</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\spawn_tab.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\weapons_tab.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\playerinfo_gui.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\looped\player.cpp">
+      <Filter>looped</Filter>
+    </ClCompile>
+    <ClCompile Include="src\looped\misc.cpp">
+      <Filter>looped</Filter>
+    </ClCompile>
+    <ClCompile Include="src\looped\online.cpp">
+      <Filter>looped</Filter>
+    </ClCompile>
+    <ClCompile Include="src\looped\weapons.cpp">
+      <Filter>looped</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\lobby_tab.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\vehicle_tab.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\looped\recovery.cpp">
+      <Filter>looped</Filter>
+    </ClCompile>
+    <ClCompile Include="src\looped\vehicle.cpp">
+      <Filter>looped</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="src\libcurl_a.lib" />
+    <Library Include="src\auth\libs\libssl.lib" />
+    <Library Include="src\auth\libs\libcrypto.lib" />
   </ItemGroup>
 </Project>

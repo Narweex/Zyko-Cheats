@@ -191,7 +191,7 @@ namespace big
 		if (ENTITY::IS_ENTITY_A_VEHICLE(e)) RequestControlOfEnt(e);
 		for (int i = 0; i <= 1000; i++)
 		{
-			int blipIterator = HUD::IS_WAYPOINT_ACTIVE() ? HUD::_GET_BLIP_INFO_ID_ITERATOR() : 1;
+			int blipIterator = HUD::IS_WAYPOINT_ACTIVE() ? HUD::_GET_WAYPOINT_BLIP_SPRITE() : 1;
 			//This is for the race 
 			for (Blip i = HUD::GET_FIRST_BLIP_INFO_ID(blipIterator);
 				HUD::DOES_BLIP_EXIST(i) != 0; i = HUD::GET_NEXT_BLIP_INFO_ID(blipIterator)) {
