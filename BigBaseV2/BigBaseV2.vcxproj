@@ -110,7 +110,7 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>common.hpp</PrecompiledHeaderFile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <DisableSpecificWarnings>4100;4201;4307;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>CURL_STATICLIB;_CRT_SECURE_NO_WARNINGS;NOMINMAX;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x601;NDEBUG;BIGBASEV2_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\vendor\curl\include;..\vendor\GTAV-Classes;..\vendor\fmtlib\include;..\vendor\json\single_include;..\vendor\MinHook\include;..\vendor\ImGui;..\vendor\g3log\src;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -122,10 +122,11 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExceptionHandling>false</ExceptionHandling>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -169,6 +170,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\auth\anti_debug.hpp" />
+    <ClInclude Include="src\auth\auth.hpp" />
     <ClInclude Include="src\common.hpp" />
     <ClInclude Include="src\core\config.h" />
     <ClInclude Include="src\core\fonts.hpp" />
@@ -228,8 +231,15 @@
     <ClInclude Include="src\gui\list\SubOption.hpp" />
     <ClInclude Include="src\gui\list\TextBox.hpp" />
     <ClInclude Include="src\gui\list\UIManager.hpp" />
+    <ClInclude Include="src\gui\lobby_tab.h" />
+    <ClInclude Include="src\gui\playerinfo_gui.h" />
     <ClInclude Include="src\gui\players_tab.h" />
     <ClInclude Include="src\gui\player_list.h" />
+    <ClInclude Include="src\gui\recovery_tab.h" />
+    <ClInclude Include="src\gui\spawn_tab.h" />
+    <ClInclude Include="src\gui\vehicle_tab.h" />
+    <ClInclude Include="src\gui\weapons_tab.h" />
+    <ClInclude Include="src\helpers\hotkeys.h" />
     <ClInclude Include="src\helpers\other.h" />
     <ClInclude Include="src\helpers\player_info.h" />
     <ClInclude Include="src\hooking.hpp" />
@@ -255,6 +265,7 @@
     <ClInclude Include="src\vmt_hook.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\auth\auth.cpp" />
     <ClCompile Include="src\common.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
@@ -269,13 +280,26 @@
     <ClCompile Include="src\gui\components\text.cpp" />
     <ClCompile Include="src\gui\list\script\MainScript.cpp" />
     <ClCompile Include="src\gui\list\UIManager.cpp" />
+    <ClCompile Include="src\gui\lobby_tab.cpp" />
+    <ClCompile Include="src\gui\playerinfo_gui.cpp" />
     <ClCompile Include="src\gui\players_tab.cpp" />
     <ClCompile Include="src\gui\player_list.cpp" />
+    <ClCompile Include="src\gui\recovery_tab.cpp" />
     <ClCompile Include="src\gui\self_tab.cpp" />
+    <ClCompile Include="src\gui\spawn_tab.cpp" />
+    <ClCompile Include="src\gui\vehicle_tab.cpp" />
+    <ClCompile Include="src\gui\weapons_tab.cpp" />
+    <ClCompile Include="src\helpers\hotkeys.cpp" />
     <ClCompile Include="src\helpers\other.cpp" />
     <ClCompile Include="src\helpers\player_info.cpp" />
     <ClCompile Include="src\hooking.cpp" />
     <ClCompile Include="src\invoker.cpp" />
+    <ClCompile Include="src\looped\misc.cpp" />
+    <ClCompile Include="src\looped\online.cpp" />
+    <ClCompile Include="src\looped\player.cpp" />
+    <ClCompile Include="src\looped\recovery.cpp" />
+    <ClCompile Include="src\looped\vehicle.cpp" />
+    <ClCompile Include="src\looped\weapons.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\memory\module.cpp" />
     <ClCompile Include="src\memory\pattern.cpp" />
@@ -307,6 +331,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Library Include="src\auth\libs\libcrypto.lib" />
+    <Library Include="src\auth\libs\libssl.lib" />
     <Library Include="src\libcurl_a.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
