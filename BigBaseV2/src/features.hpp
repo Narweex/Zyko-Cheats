@@ -18,6 +18,9 @@ namespace big::features
 	void player_loop();
 	void online_loop();
 	void weapons_loop();
+	void vehicle_loop();
+	void misc_loop();
+
 	/* Self */
 	inline bool godmode;
 	inline bool neverWanted = false;
@@ -157,6 +160,9 @@ namespace big::features
 	inline bool nophone = false;
 	void RequestControlOfEnt(Entity entity);
 	void ApplyForceToEntity(Entity e, float x, float y, float z);
+	void coordsDisplay();
+	void rainbowloop();
+	
 	
 	/* Online */
 	inline std::uint32_t g_selected_player{};
