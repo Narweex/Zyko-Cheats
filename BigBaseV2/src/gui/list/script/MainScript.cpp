@@ -161,7 +161,11 @@ namespace big
 
 		g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Self Options"), SubmenuSelf, [](RegularSubmenu* sub)
 			{
-				
+				sub->AddOption<RegularOption>("coords", "nigger", []
+					{
+						features::coordsDisplay();
+					});
+
 				sub->AddOption<SubOption>("Visions", "Change Player Visions", vis);
 				sub->AddOption<SubOption>("Model Changer", "Change your Model", SubmenuModelChanger);
 				sub->AddOption<BoolOption<bool>>("God Mode", "You Cannot Die", &features::godmode, BoolDisplay::OnOff);
@@ -1196,6 +1200,15 @@ namespace big
 						Coords.x = 1741.4960f; Coords.y = 3269.2570f; Coords.z = 41.6014f;
 						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
 					});
+				sub->AddOption<RegularOption>("Grapeseed Airport ", "Teleport To Grapeseed", []
+					{
+						Vector3 Coords;
+						Coords.x = 2137.5f; Coords.y = 4809.4f; Coords.z = 41.1181f;
+						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
+						
+							 
+							
+					});
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("IPls", ipls, [](RegularSubmenu* sub)
 			{
@@ -1274,7 +1287,7 @@ namespace big
 						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
 
 					});
-				sub->AddOption<RegularOption>("Hotspital ", "Teleport To hotspital", []
+				sub->AddOption<RegularOption>("Hospital ", "Teleport To hotspital", []
 					{
 						STREAMING::REQUEST_IPL("RC12B_HospitalInterior");
 						STREAMING::REQUEST_IPL("RC12B_Destroyed");
@@ -1300,9 +1313,22 @@ namespace big
 						Coords.x = 244.9f; Coords.y = -1374.7f; Coords.z = 39.5f;
 						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
 					});
+				sub->AddOption<RegularOption>("Mandrazo Ranch", "Teleport To Martins Ranch", []
+					{
+						Vector3 Coords;
+						Coords.x = 1371.55f; Coords.y = 1147.55f; Coords.z = 114.775f;
+						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
+					});
+				sub->AddOption<RegularOption>("Prison", "Teleport To Prison", []
+					{
+						Vector3 Coords;
+						Coords.x = 1860.29f; Coords.y = 2607.89f; Coords.z = 47.1749f;
+						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
+					});
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Landmarks", landmarks, [](RegularSubmenu* sub)
 			{
+
 				sub->AddOption<RegularOption>("Crane Top", "Teleport To Crane Top", []
 					{
 						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), -119.8790f, -977.3570f, 304.2491f);
@@ -1311,6 +1337,19 @@ namespace big
 					{
 						Vector3 Coords;
 						Coords.x = 496.75f; Coords.y = 5591.17f; Coords.z = 795.03f;
+						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
+					});
+				sub->AddOption<RegularOption>("Mount Josiah", "Teleport To Mount Josiah", []
+					{
+						
+						Vector3 Coords;
+						Coords.x = -1185.84f; Coords.y = 3856.21f; Coords.z = 491.33f;
+						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
+					});
+				sub->AddOption<RegularOption>("Mount Gordo", "Teleport To Mount Josiah", []
+					{
+						Vector3 Coords;
+						Coords.x = 2881.66f; Coords.y = 5902.08f; Coords.z = 367.595f;
 						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
 					});
 				sub->AddOption<RegularOption>("Maze Bank", "Teleport To Maze Bank", []
@@ -1355,6 +1394,12 @@ namespace big
 						Coords.x = 3617.231f; Coords.y = 3739.871f; Coords.z = 28.6901f;
 						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
 					});
+				sub->AddOption<RegularOption>("Windmills", "Teleport To Windmills", []
+					{
+						Vector3 Coords;
+						Coords.x = 2212.44f; Coords.y = 2055; Coords.z = 133.437f;
+						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
+					});
 				sub->AddOption<RegularOption>("MMI", "Teleport To MMI", []
 					{
 						Vector3 Coords;
@@ -1365,6 +1410,31 @@ namespace big
 					{
 						Vector3 Coords;
 						Coords.x = -597.9525f; Coords.y = 4475.2910f; Coords.z = 25.6890f;
+						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
+					});
+				sub->AddOption<RegularOption>("Maze Bank Arena", "Teleport To Maze Bank Arena", []
+					{	 
+						Vector3 Coords;
+						Coords.x = -212.511f; Coords.y = -2044.89f; Coords.z = 27.6204f;
+						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
+					});
+				sub->AddOption<RegularOption>("Vespucci Beach", "Teleport To The Beach", []
+					{ 
+						Vector3 Coords;
+						Coords.x = -1849.81f; Coords.y = -1231.99f; Coords.z = 13.0173f;
+						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
+					});
+				sub->AddOption<RegularOption>("Observatory", "Teleport To The Observatory", []
+					{
+						Vector3 Coords;
+						Coords.x = -405.134f; Coords.y = 1194.49f; Coords.z = 326.398f;
+						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
+					});
+				sub->AddOption<RegularOption>("The Setup", "Oh Its the setup its the setup...", []
+					{
+						CLOCK::SET_CLOCK_TIME(19, 0, 0);
+						Vector3 Coords;
+						Coords.x = -1577.67f; Coords.y = 5159.83f; Coords.z = 21.9807f;
 						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
 					});
 			});
