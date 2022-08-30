@@ -1940,3 +1940,12 @@ enum eScriptGlobals : std::uint32_t
 	SessionUNK4 = 1574979,
 	SessionSCTV = 2726482
 };
+enum Noidlekick
+{
+	Tunables = 262145,
+	IdleTimer = 1648034,
+	IdleTimerUNK1 = 1575072,
+	IdleTimerUNK2 = 2727891,
+	IdleTimer_Offset_1 = 1172,
+	IdleTimer_Offset_2 = 1156,
+};
