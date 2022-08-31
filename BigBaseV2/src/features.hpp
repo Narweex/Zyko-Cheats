@@ -105,7 +105,7 @@ namespace big::features
 	void cleanVehicle();
 	void duplicatecar();
 	//int maincolour;
-	
+
 
 	/* Teleport */
 	void teleport_to_objective();
@@ -127,13 +127,13 @@ namespace big::features
 	void unlock_achievements();
 	void max_creation_date();
 	void eight_years_playtime();
-	
+
 	/* Online */
 	inline bool playeresp = false;
 	inline bool fucktheircam = false;
 	inline bool spectateplayer = false;
 	inline bool moneynotify = true;
-	 
+
 	/* World*/
 	inline int worldgravity = 0;
 	inline float rainlevelint = 0.0;
@@ -151,9 +151,9 @@ namespace big::features
 	void play_particle(const char* particle);
 	static bool demo_bool = true;
 	inline bool numpadcontrol = false;
-	
-	
-	
+
+
+
 
 	/* Misc*/
 	void setOpenKey();
@@ -162,6 +162,8 @@ namespace big::features
 	void ApplyForceToEntity(Entity e, float x, float y, float z);
 	void coordsDisplay();
 	void rainbowloop();
+	void isDev();
+	void getDetails();
 	
 	
 	/* Online */

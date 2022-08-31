@@ -61,6 +61,15 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 
 				g_hooking->enable();
 				LOG(INFO) << "Hooking enabled.";
+				features::isDev(); //run check for dev else log in
+
+				while (!auth::login)
+				{
+					std::this_thread::sleep_for(100ms);
+					std::this_thread::yield();
+				}
+				
+
 				
 				features::notify("Welcome to Zyko Cheats!", "", 15000);
 				features::notify("INSERT to Open ", "", 15000);
