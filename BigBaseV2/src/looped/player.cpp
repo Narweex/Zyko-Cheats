@@ -23,6 +23,8 @@ namespace big
 	{
 		if (neverWanted)
 		{
+			if (NETWORK::NETWORK_IS_IN_TRANSITION())
+				return;
 			PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
 			PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, false);
 		}
@@ -66,25 +68,24 @@ namespace big
 			}
 		}
 		if (offradar) {
-
-			/**script_global(2689224).at(PLAYER::GET_PLAYER_INDEX(), 451).at(207).as<int*>() = 1;
-			*script_global(2703660).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;*/
 			*script_global(2689235).at(PLAYER::GET_PLAYER_INDEX(), 453).at(208).as<int*>() = 1;
 			*script_global(2703735).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;
 		}
+
 		if (modifytimecycle)
 		{
 			MISC::SET_TIME_SCALE(features::timescale);
 		}
+
 		if (features::invisibility)
 		{
 			ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 0, false);
-
 		}
 		else
 		{
 			ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
 		}
+
 		if (features::norag)
 		{
 			PED::SET_PED_RAGDOLL_ON_COLLISION(PLAYER::PLAYER_PED_ID(), !features::norag);

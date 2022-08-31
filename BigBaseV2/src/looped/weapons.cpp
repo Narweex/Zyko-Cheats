@@ -16,7 +16,7 @@
 #include <imgui.h>
 #include <helpers/imgui_notify.h>
 #include "gui/list/Lists.hpp"
-#include "auth/auth.hpp"
+//#include "auth/auth.hpp"
 namespace big
 {
 	void features::weapons_loop()
