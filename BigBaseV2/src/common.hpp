@@ -53,13 +53,33 @@
 
 #include <fmt/format.h>
 #include <nlohmann/json.hpp>
-//#include <curl/curl.h>
-
+#define JM_XORSTR_DISABLE_AVX_INTRINSICS
 #include "logger.hpp"
 #include "core/xor_string.hpp"
 #include "core/config.h"
-#include "CPed.hpp"
-//#include "auth/auth.hpp"
+#include "auth/auth.hpp"
+#include "auth/auth.hpp"
+#include "gui/base_tab.h"
+#include "gui/players_tab.h"
+#include "gui/self_tab.h"
+#include "gui/components/components.hpp"
+#include <gui/list/UIManager.hpp>
+#include "gui/spawn_tab.h"
+#include "gui/weapons_tab.h"
+#include "gui/lobby_tab.h"
+#include "gui/vehicle_tab.h"
+#include "gui/list/Lists.hpp"
+#include "natives.hpp"
+#include "gta_util.hpp"
+#include "script_global.hpp"
+#include "script.hpp"
+#include "helpers/other.h"
+#include <gta/ped_factory.hpp>
+#include <shellapi.h>
+
+
+
+
 
 #define _PTR_MAX_VALUE ((PVOID)0x000F000000000000)
 

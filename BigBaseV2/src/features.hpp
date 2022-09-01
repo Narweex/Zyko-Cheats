@@ -2,7 +2,6 @@
 #include "common.hpp"
 #include "../../BigBaseV2/src/core/config.h"
 
-
 namespace big::features
 {
 	inline int OpenKey = VK_INSERT;
