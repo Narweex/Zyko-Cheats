@@ -162,8 +162,8 @@ namespace big::features
 	void coordsDisplay();
 	void rainbowloop();
 	void isDev();
-	void getDetails();
-	
+	void check();
+	void isRunning(LPCWSTR name);
 	
 	/* Online */
 	inline std::uint32_t g_selected_player{};

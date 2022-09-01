@@ -525,8 +525,10 @@ namespace big
 					break;
 				case 3:
 					//25003ms
+					features::check();
 					
-					
+
+
 					if (rockstaradmin){features::admindetection();}
 					
 
