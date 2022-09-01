@@ -1,6 +1,5 @@
 #include "MainScript.hpp"
 #include "../Lists.hpp"
-#include "Natives.hpp"
 #include "Timer.hpp"
 #include "../UIManager.hpp"
 #include "../BoolOption.hpp"
@@ -17,7 +16,6 @@
 #include "helpers/other.h"
 #include "Translation.hpp"
 #include "../../BigBaseV2/src/gui/player_list.h"
-#include <shellapi.h>
 #include "thread_pool.hpp"
 #include "gui/playerinfo_gui.h"
 
@@ -161,10 +159,10 @@ namespace big
 
 		g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Self Options"), SubmenuSelf, [](RegularSubmenu* sub)
 			{
-				sub->AddOption<RegularOption>("coords", "nigger", []
+				/*sub->AddOption<RegularOption>("coords", "nigger", []
 					{
 						features::coordsDisplay();
-					});
+					});*/
 
 				sub->AddOption<SubOption>("Visions", "Change Player Visions", vis);
 				sub->AddOption<SubOption>("Model Changer", "Change your Model", SubmenuModelChanger);
@@ -1495,7 +1493,7 @@ namespace big
 			{
 				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 				
-				info_gui.dx_on_tick();
+				
 
 				sub->AddOption<BoolOption<bool>>("Spectate", nullptr, &features::spectateplayer, BoolDisplay::OnOff);
 				sub->AddOption<SubOption>("Teleport Options", nullptr, SelectedPlayerTeleport);
