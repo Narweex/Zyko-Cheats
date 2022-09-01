@@ -1,22 +1,5 @@
 #include "../common.hpp"
 #include "features.hpp"
-#include "logger.hpp"
-#include "natives.hpp"
-#include "script.hpp"
-#include "gta_util.hpp"
-#include "helpers/player_info.h"
-#include "script_global.hpp"
-#include "gta_util.hpp"
-#include "math.hpp"
-#include <control.h>
-#include <script_local.hpp>
-#include <sstream>
-#include "../../BigBaseV2/src/memory/all.hpp"
-#include "gui/player_list.h"
-#include <imgui.h>
-#include <helpers/imgui_notify.h>
-#include "gui/list/Lists.hpp"
-#include "auth/auth.hpp"
 namespace big
 {
 	int r = 255, g = 0, b = 0;
@@ -25,7 +8,8 @@ namespace big
 		if (features::vehgodmode)
 		{
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
-			//if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+				return;
 			
 			ENTITY::SET_ENTITY_INVINCIBLE(veh, true);
 			ENTITY::SET_ENTITY_PROOFS(veh, true, true, true, true, true, true, true, true);
@@ -40,12 +24,16 @@ namespace big
 		}
 		if (speedbypass)
 		{
+			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+				return;
 			Entity entity = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false));
 			ENTITY::SET_ENTITY_MAX_SPEED(entity, 5000);
 			ENTITY::SET_ENTITY_MAX_SPEED(PLAYER::PLAYER_PED_ID(), 5000);
 		}
 		if (hornboost)
 		{
+			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+				return;
 			if (PLAYER::IS_PLAYER_PRESSING_HORN(PLAYER::PLAYER_ID()))
 			{
 				Vehicle Veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID()), false);
@@ -63,6 +51,8 @@ namespace big
 		}
 		if (smoothhornboost)
 		{
+			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+				return;
 			if (PLAYER::IS_PLAYER_PRESSING_HORN(PLAYER::PLAYER_ID()))
 			{
 				Vehicle Veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID()), false);
@@ -82,19 +72,27 @@ namespace big
 		}
 		if (seatbelt)
 		{
+			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+				return;
 			PED::SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(PLAYER::PLAYER_PED_ID(), 1);
 		}
 		if (fixloop)
 		{
+			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+				return;
 			VEHICLE::SET_VEHICLE_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
 			VEHICLE::SET_VEHICLE_DEFORMATION_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
 		}
 		if (cleanloop)
 		{
+			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+				return;
 			VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())), 0);
 		}
 		if (features::rainbowcar)
 		{
+			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+				return;
 			features::rainbowloop();
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
 			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), true))

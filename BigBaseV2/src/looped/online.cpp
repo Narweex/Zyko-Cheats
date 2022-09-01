@@ -1,16 +1,6 @@
 #include "../common.hpp"
 #include "features.hpp"
-#include "logger.hpp"
-#include "natives.hpp"
-#include "script.hpp"
-#include "gta_util.hpp"
-#include "helpers/player_info.h"
-#include "script_global.hpp"
-#include "gta_util.hpp"
-#include <script_local.hpp>
-#include <helpers/imgui_notify.h>
-#include "gui/list/Lists.hpp"
-#include "auth/auth.hpp"
+
 namespace big
 {
 	void features::online_loop()
