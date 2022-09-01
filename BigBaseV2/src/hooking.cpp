@@ -17,6 +17,7 @@
 #include "fiber_pool.hpp"
 #include "CNetGamePlayer.hpp"
 
+
 namespace big
 {
 	static GtaThread* find_script_thread(rage::joaat_t hash)
@@ -228,6 +229,22 @@ namespace big
 						break;
 					}	
 					}
+					case (int)RockstarEvent::NETWORK_INCREMENT_STAT_EVENT:
+					{
+						if (features::no_freeze_event)
+						{
+							if (!g_player_info.is_cutscene_playing() && !g_player_info.network_is_activity_session())
+							{
+								//4000
+								//persist_modder::save(4000, 2, event_name);
+								g_fiber_pool->queue_job([=] { features::notify_protections("Received Scripted Game Event", event_name, 4000); });
+								g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
+								return false;
+							}
+
+							break;
+						}
+					}
 					
 					case (int)RockstarEvent::REPORT_CASH_SPAWN_EVENT:
 					{
@@ -242,6 +259,11 @@ namespace big
 					}
 					}
 					case (int)RockstarEvent::NETWORK_CHECK_CODE_CRCS_EVENT:
+					{
+						const char* name = source_player->get_name();
+						g_fiber_pool->queue_job([=] { features::notify_protections((*name + "Is possible modder"+ *name), event_name, 4000); });
+						break;
+					}
 					
 					case (int)RockstarEvent::REPORT_MYSELF_EVENT:
 					{
@@ -254,11 +276,14 @@ namespace big
 						if(features::no_freeze_event)
 						/*if (g_player_info.is_in_vehicle())*/
 						{
+							g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Someone tried to freeze you"), event_name, 4000); });
+
 							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 							return false;
 						}
 						break;
 					}
+					
 					case (int)RockstarEvent::GAME_CLOCK_EVENT:
 					{
 					if (features::no_weather_event)
@@ -287,6 +312,15 @@ namespace big
 						LOG(RAW_GREEN_TO_CONSOLE) << source_player->get_name() << xorstr_(" voted to kick the: ") << target_player->get_name();
 						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 						return false;
+						}
+					}
+					case (int)RockstarEvent::NETWORK_UPDATE_SYNCED_SCENE_EVENT:
+					{
+						if (features::g_scripted_game_event)
+						{
+							g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
+							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
+							return false;
 						}
 					}
 					case (int)RockstarEvent::REMOVE_WEAPON_EVENT:

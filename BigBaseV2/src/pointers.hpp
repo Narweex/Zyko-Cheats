@@ -18,7 +18,8 @@ namespace big
 		using TriggerScriptEvent = int(int unk0, uint64_t* args, int argCount, int bitFlags);
 		TriggerScriptEvent* m_TriggerScriptEvent;
 
-		eGameState* m_game_state{};
+		using eGameState = bool(std::int32_t state);
+		eGameState *m_game_state{};
 		bool* m_is_session_started{};
 
 		using FindScriptEvent = bool(std::int32_t eventGroup, std::int32_t eventIndex, std::int64_t* args, std::uint32_t argCount);

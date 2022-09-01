@@ -5,6 +5,7 @@
 #include "script_hook.hpp"
 #include "vmt_hook.hpp"
 #include "gta/net_game_event.hpp"
+#include "../../vendor/GTAV-Classes/netPlayerData.hpp"
 
 namespace big
 {

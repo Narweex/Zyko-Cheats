@@ -1,7 +1,7 @@
 #pragma once
 #include "gta/array.hpp"
-#include "CPedFactory.hpp"
-#include "CNetworkPlayerMgr.hpp"
+#include <gta/ped_factory.hpp>
+#include "common.hpp"
 #include "gta/script_thread.hpp"
 #include "gta/tls_context.hpp"
 #include "pointers.hpp"
@@ -19,18 +19,18 @@ namespace big::gta_util
 		return nullptr;
 	}
 
-	inline CPlayerInfo *get_local_playerinfo()
-	{
-		if (auto ped_factory = *g_pointers->m_ped_factory)
-		{
-			if (auto ped = ped_factory->m_local_ped)
-			{
-				return ped->m_player_info;
-			}
-		}
+	//inline CPlayerInfo *get_local_playerinfo()
+	//{
+	//	if (auto ped_factory = *g_pointers->m_ped_factory)
+	//	{
+	//		if (auto ped = ped_factory->m_local_ped)
+	//		{
+	//			return ped->m_player_info;
+	//		}
+	//	}
 
-		return nullptr;
-	}
+	//	return nullptr;
+	//}
 
 	template <typename F, typename ...Args>
 	void execute_as_script(rage::joaat_t script_hash, F &&callback, Args &&...args)
