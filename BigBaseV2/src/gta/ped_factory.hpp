@@ -7,6 +7,7 @@ class CPed
 public:
 	char m_padding[0x10B8];
 	CPlayerInfo *m_playerinfo;
+	uint8_t m_god; //0x0189
 };
 #pragma pack(pop)
 
