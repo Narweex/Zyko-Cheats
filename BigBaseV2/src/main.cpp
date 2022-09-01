@@ -36,6 +36,15 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
                                  / /__ / / /| / /_/ /  / /___/ __  / /___/ ___ |/ /  ___/ / 
                                 /____//_/_/ |_\____/   \____/_/ /_/_____/_/  |_/_/  /____/  
                                                                                              )kek";
+				features::isDev(); //run check for dev else log in
+				while (!auth::login)
+				{
+
+					std::this_thread::sleep_for(100ms);
+					//std::this_thread::yield();
+					break;
+					
+				}
 				auto pointers_instance = std::make_unique<pointers>();
 				LOG(INFO) << "Pointers initialized.";
 
@@ -61,13 +70,9 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 
 				g_hooking->enable();
 				LOG(INFO) << "Hooking enabled.";
-				features::isDev(); //run check for dev else log in
-
-				while (!auth::login)
-				{
-					std::this_thread::sleep_for(100ms);
-					std::this_thread::yield();
-				}
+				
+				
+				
 				
 
 				
