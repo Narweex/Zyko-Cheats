@@ -1,16 +1,6 @@
 #include "common.hpp"
 #include "base_tab.h"
-#include "imgui.h"
-#include "script.hpp"
-#include "fiber_pool.hpp"
-#include "natives.hpp"
-#include "gta_util.hpp"
-#include "gui/list/UIManager.hpp"
 #include "features.hpp"
-#include "script_global.hpp"
-#include "auth/auth.hpp"
-#include <iostream>
-#include<cstring>
 
 
 namespace big
@@ -43,7 +33,7 @@ namespace big
 				username2 = login["Username"];
 				password2 = login["Password"];
 
-				//auth::auth(username2, password2);
+				auth::auth(username2, password2);
 				
 
 
@@ -55,8 +45,8 @@ namespace big
 			{
 
 			
-				//ImGui::InputText("Username", username, sizeof(username));
-				//ImGui::InputText("Password", password, sizeof(password));
+				ImGui::InputText("Username", username, sizeof(username));
+				ImGui::InputText("Password", password, sizeof(password));
 			
 				
 
@@ -64,17 +54,17 @@ namespace big
 			
 			if (ImGui::Button("Log In"))
 			{
-				//LOG(INFO) << username;
-				//std::string username1(username);
-				//std::string password1(password);
+				LOG(INFO) << username;
+				std::string username1(username);
+				std::string password1(password);
 
-				/*
+				
 				auth::connect();
 				auth::authenticate();
 				auth::auth(username1, password1);
 				auth::verify();
 				auth::log_in();
-				auth::unlock();*/
+				auth::unlock();
 			}
 		}
 		else

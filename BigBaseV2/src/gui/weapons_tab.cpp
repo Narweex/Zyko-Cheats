@@ -32,7 +32,7 @@ namespace big
 		ImGui::Checkbox(xorstr_("Drive It Gun"), &features::driveitgun);
 		ImGui::EndChild();
 		ImGui::SameLine();
-		ImGui::BeginChild("##options1", ImVec2(300, 280), true);
+		ImGui::BeginChild("##options2", ImVec2(300, 280), true);
 
 		if (ImGui::Button(xorstr_("Give All Weapons"), ImVec2(200, 25))) { features::GiveAllWeapons(); }
 		if (ImGui::Button(xorstr_("Remove All Weapons"), ImVec2(200, 25))) { features::RemoveAllWeapons(); }
@@ -47,7 +47,7 @@ namespace big
 		ImGui::EndChild();
 
 
-		ImGui::BeginChild("##options2", ImVec2(300, 280), true);
+		ImGui::BeginChild("##options3", ImVec2(300, 280), true);
 		ImGui::SliderInt(xorstr_("Field Of View"), &features::fieldofview, 0, 360);
 		ImGui::EndChild();
 	}
