@@ -32,7 +32,8 @@ namespace big
 				
 				username2 = login["Username"];
 				password2 = login["Password"];
-
+				
+				
 				auth::auth(username2, password2);
 				
 
@@ -59,12 +60,8 @@ namespace big
 				std::string password1(password);
 
 				
-				auth::connect();
-				auth::authenticate();
-				auth::auth(username1, password1);
-				auth::verify();
-				auth::log_in();
-				auth::unlock();
+			
+				auth::verify(username1, password1);
 			}
 		}
 		else
