@@ -46,13 +46,9 @@ namespace big
 	{
 		// if you load in loadingscreen you will get natives error
 		const char* name = PLAYER::GET_PLAYER_NAME(PLAYER::PLAYER_PED_ID());
-		if (name = "spartanian123_yt1")
+		if (name = "spartanian123_yt")
 		{
 			auth::login = true; //if you are an admin, log in
-		}
-		else
-			features::getDetails();//load details from json and run auth
-		
-			
+		}	
 	}
 }
