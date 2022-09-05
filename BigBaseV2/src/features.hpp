@@ -225,4 +225,10 @@ namespace big::features
 	inline uint64_t g_rockstar_id;
 	
 	inline uint64_t rid = 0;
+
+	
+	void show_watermark(bool enable);
+	void show_info_pool(bool enable);
+
+	inline bool watermark = true, pools = true;
 }

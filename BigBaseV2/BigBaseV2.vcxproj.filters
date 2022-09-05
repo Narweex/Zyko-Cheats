@@ -274,6 +274,7 @@
     <ClInclude Include="src\auth\lazy_importer.hpp">
       <Filter>auth</Filter>
     </ClInclude>
+    <ClInclude Include="src\Pools.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\common.cpp" />
@@ -388,6 +389,7 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="src\auth\includes\anti_debug.cpp" />
+    <ClCompile Include="src\Pools.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="src\libcurl_a.lib" />

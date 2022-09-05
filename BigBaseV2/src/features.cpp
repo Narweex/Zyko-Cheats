@@ -27,16 +27,89 @@ namespace big
 	{
 		TRY_CLAUSE
 		{
+			show_watermark(watermark);
+			show_info_pool(pools);
+
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.f); // Round borders
 			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.04f, 0.14f, 100.f / 255.f)); // Background color
 			ImGui::RenderNotifications(); // <-- Here we render all notifications
 			ImGui::PopStyleVar(1); // Don't forget to Pop()
 			ImGui::PopStyleColor(1);
 		}
-			EXCEPT_CLAUSE
+		EXCEPT_CLAUSE
 	}
 
+	void features::show_watermark(bool enable)
+	{
+		auto end = std::chrono::system_clock::now();
 
+		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+
+		if (enable)
+		{
+			// Size
+			ImVec2 size = ImVec2(350.f, 85.f);
+
+			// Position
+			ImGui::SetNextWindowSize(size, ImGuiCond_Always);
+			ImGui::SetNextWindowPos(ImVec2(13.5f, 4.f), ImGuiCond_Always);
+
+			// Window
+			if (ImGui::Begin(xorstr_("##watermark"), nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoInputs))
+			{	
+				ImGui::Text(fmt::format("Time {}", std::ctime(&end_time)).c_str());
+			}
+			ImGui::End();
+		}
+	}
+
+	void features::show_info_pool(bool enable)
+	{
+		if (enable)
+		{
+			// Size
+			ImVec2 size = ImVec2(275.f, 55.f);
+
+			// Data
+			struct data_s
+			{
+				std::string text{};
+				int amount{};
+			};
+
+			std::vector<data_s> pools
+			{
+				{ xorstr_("Peds"), g_pointers->m_ped_pool->size },
+				{ xorstr_("Objects"), g_pointers->m_prop_pool->size }
+			};
+
+			// Dynamic size
+			for (const auto& rs : pools)
+				size.y += 25.f;
+
+			// Position
+			ImGui::SetNextWindowSize(size, ImGuiCond_Always);
+			ImGui::SetNextWindowPos(ImVec2(13.5f, 90.f), ImGuiCond_Always);
+
+			// Window
+			if (ImGui::Begin(xorstr_("##pools"), nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoInputs))
+			{
+				std::string str;
+
+				for (const auto& rs : pools)
+				{
+					// Text
+					str += rs.text + xorstr_(": ") + std::to_string(rs.amount);
+
+					// Newline
+					str += xorstr_("\n");
+				}
+
+				ImGui::Text(str.c_str());
+			}
+			ImGui::End();
+		}
+	}
 	
 	///////////////////////////////////////////////////////   HELP VOIDS   ///////////////////////////////////////////////////////
 
@@ -191,7 +264,7 @@ namespace big
 		if (ENTITY::IS_ENTITY_A_VEHICLE(e)) RequestControlOfEnt(e);
 		for (int i = 0; i <= 1000; i++)
 		{
-			int blipIterator = HUD::IS_WAYPOINT_ACTIVE() ? HUD::_GET_BLIP_INFO_ID_ITERATOR() : 1;
+			int blipIterator = HUD::IS_WAYPOINT_ACTIVE() ? HUD::_GET_WAYPOINT_BLIP_SPRITE() : 1;
 			//This is for the race 
 			for (Blip i = HUD::GET_FIRST_BLIP_INFO_ID(blipIterator);
 				HUD::DOES_BLIP_EXIST(i) != 0; i = HUD::GET_NEXT_BLIP_INFO_ID(blipIterator)) {

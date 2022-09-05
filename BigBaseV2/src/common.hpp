@@ -69,7 +69,7 @@
 #include "gui/lobby_tab.h"
 #include "gui/vehicle_tab.h"
 #include "gui/list/Lists.hpp"
-#include "gui/spoof_tab.h"
+//#include "gui/spoof_tab.h"
 #include "natives.hpp"
 #include "gta_util.hpp"
 #include "script_global.hpp"

@@ -136,6 +136,31 @@ namespace big
 				m_get_event_data = ptr.as<decltype(m_get_event_data)>();
 		});
 
+		main_batch.add("Ped Pool", "48 8B 05 ? ? ? ? 41 0F BF C8", [this](memory::handle ptr)
+			{
+				m_ped_pool = ptr.add(3).as<rage::GenericPool*>();
+			});
+
+		main_batch.add("Vehicle Pool", "48 8B 05 ? ? ? ? F3 0F 59 F6 48 8B 08", [this](memory::handle ptr)
+			{
+				m_vehicle_pool = *(rage::VehiclePool**)(*(uintptr_t*)ptr.add(3).rip().as<uintptr_t>());
+			});
+
+		main_batch.add("Prop Pool", "48 8B 05 ? ? ? ? 8B 78 10 85 FF", [this](memory::handle ptr)
+			{
+				m_prop_pool = ptr.add(3).rip().as<rage::GenericPool*>();
+			});
+
+		main_batch.add("Pickup Pool", "4C 8B 05 ? ? ? ? 40 8A F2 8B E9", [this](memory::handle ptr)
+			{
+				m_pickup_pool = ptr.add(3).rip().as<rage::GenericPool*>();
+			});
+
+		main_batch.add("Camera Pool", "48 8B C8 EB 02 33 C9 48 85 C9 74 26", [this](memory::handle ptr)
+			{
+				m_camera_pool = ptr.add(-9).rip().as<rage::GenericPool*>();
+			});
+
 		main_batch.run(memory::module(nullptr));
 
 		m_hwnd = FindWindowW(L"grcWindow", nullptr);
