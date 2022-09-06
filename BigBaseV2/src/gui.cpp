@@ -234,7 +234,7 @@ namespace big
 						}
 						else
 						{
-							spawn_tab::render_spawn_tab();
+							//spawn_tab::render_spawn_tab();
 						}
 						break;
 					case 12:

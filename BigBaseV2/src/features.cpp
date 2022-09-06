@@ -598,7 +598,7 @@ namespace big
 					break;
 				case 3:
 					//25003ms
-					features::check();
+					//features::check();
 					
 
 
