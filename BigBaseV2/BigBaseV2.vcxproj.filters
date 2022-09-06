@@ -256,9 +256,6 @@
     <ClInclude Include="src\gui\playerinfo_gui.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="src\helpers\hotkeys.h">
-      <Filter>helpers</Filter>
-    </ClInclude>
     <ClInclude Include="src\gui\lobby_tab.h">
       <Filter>gui</Filter>
     </ClInclude>
@@ -267,9 +264,6 @@
     </ClInclude>
     <ClInclude Include="src\auth\auth.hpp">
       <Filter>auth</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gui\spoof_tab.h">
-      <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="src\auth\lazy_importer.hpp">
       <Filter>auth</Filter>
@@ -346,9 +340,6 @@
     <ClCompile Include="src\gui\recovery_tab.cpp">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="src\gui\spawn_tab.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="src\gui\weapons_tab.cpp">
       <Filter>gui</Filter>
     </ClCompile>
@@ -367,9 +358,6 @@
     <ClCompile Include="src\looped\weapons.cpp">
       <Filter>looped</Filter>
     </ClCompile>
-    <ClCompile Include="src\helpers\hotkeys.cpp">
-      <Filter>helpers</Filter>
-    </ClCompile>
     <ClCompile Include="src\gui\lobby_tab.cpp">
       <Filter>gui</Filter>
     </ClCompile>
@@ -385,15 +373,12 @@
     <ClCompile Include="src\auth\auth.cpp">
       <Filter>auth</Filter>
     </ClCompile>
-    <ClCompile Include="src\gui\spoof_tab.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="src\auth\includes\anti_debug.cpp" />
     <ClCompile Include="src\Pools.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="src\libcurl_a.lib" />
-    <Library Include="src\libcrypto.lib" />
-    <Library Include="src\libssl.lib" />
+    <Library Include="src\auth\libs\libcrypto.lib" />
+    <Library Include="src\auth\libs\libssl.lib" />
   </ItemGroup>
 </Project>

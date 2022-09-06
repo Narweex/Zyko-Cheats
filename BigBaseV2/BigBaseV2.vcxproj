@@ -237,10 +237,8 @@
     <ClInclude Include="src\gui\player_list.h" />
     <ClInclude Include="src\gui\recovery_tab.h" />
     <ClInclude Include="src\gui\spawn_tab.h" />
-    <ClInclude Include="src\gui\spoof_tab.h" />
     <ClInclude Include="src\gui\vehicle_tab.h" />
     <ClInclude Include="src\gui\weapons_tab.h" />
-    <ClInclude Include="src\helpers\hotkeys.h" />
     <ClInclude Include="src\helpers\other.h" />
     <ClInclude Include="src\helpers\player_info.h" />
     <ClInclude Include="src\hooking.hpp" />
@@ -289,11 +287,8 @@
     <ClCompile Include="src\gui\player_list.cpp" />
     <ClCompile Include="src\gui\recovery_tab.cpp" />
     <ClCompile Include="src\gui\self_tab.cpp" />
-    <ClCompile Include="src\gui\spawn_tab.cpp" />
-    <ClCompile Include="src\gui\spoof_tab.cpp" />
     <ClCompile Include="src\gui\vehicle_tab.cpp" />
     <ClCompile Include="src\gui\weapons_tab.cpp" />
-    <ClCompile Include="src\helpers\hotkeys.cpp" />
     <ClCompile Include="src\helpers\other.cpp" />
     <ClCompile Include="src\helpers\player_info.cpp" />
     <ClCompile Include="src\hooking.cpp" />
@@ -336,9 +331,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="src\libcrypto.lib" />
+    <Library Include="src\auth\libs\libcrypto.lib" />
+    <Library Include="src\auth\libs\libssl.lib" />
     <Library Include="src\libcurl_a.lib" />
-    <Library Include="src\libssl.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
