@@ -14,7 +14,7 @@ namespace big
 
 
 
-		if (!auth::login)
+		/*if (!auth::login)
 		{
 			
 			std::string login_file = getenv("APPDATA");
@@ -65,7 +65,7 @@ namespace big
 			}
 		}
 		else
-		{
+		{*/
 
 
 
@@ -148,6 +148,6 @@ namespace big
 					g_running = false;
 				}*/
 			}
-		}
+		//}
 	
 }
