@@ -69,7 +69,6 @@
 #include "gui/lobby_tab.h"
 #include "gui/vehicle_tab.h"
 #include "gui/list/Lists.hpp"
-//#include "gui/spoof_tab.h"
 #include "natives.hpp"
 #include "gta_util.hpp"
 #include "script_global.hpp"
@@ -78,6 +77,7 @@
 #include <gta/ped_factory.hpp>
 #include <shellapi.h>
 #include "auth/lazy_importer.hpp"
+
 
 
 

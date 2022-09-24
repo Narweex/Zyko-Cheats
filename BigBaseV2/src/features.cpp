@@ -7,8 +7,6 @@
 #include "helpers/player_info.h"
 #include "script_global.hpp"
 #include "gta_util.hpp"
-#include "math.hpp"
-#include <control.h>
 #include <script_local.hpp>
 #include <sstream>
 #include "../../BigBaseV2/src/memory/all.hpp"
@@ -20,6 +18,7 @@
 #include "fiber_pool.hpp"
 
 
+
 namespace big
 {
 
@@ -27,9 +26,12 @@ namespace big
 	{
 		TRY_CLAUSE
 		{
+			//show_fps(fps);
 			show_watermark(watermark);
-			show_info_pool(pools);
-
+		   // coordsDisplay(coords_display);
+			//show_info_pool(pools);
+			//playerinfo(features::playerinfo_toggle);
+		
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.f); // Round borders
 			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.04f, 0.14f, 100.f / 255.f)); // Background color
 			ImGui::RenderNotifications(); // <-- Here we render all notifications
@@ -39,25 +41,43 @@ namespace big
 		EXCEPT_CLAUSE
 	}
 
+
+	void features::show_fps(bool toggle)
+	{
+		if (toggle)
+		{
+			ImVec2 size = ImVec2(150.f, 120.f);
+			ImGui::SetNextWindowSize(size, ImGuiCond_Always);
+			ImGui::SetNextWindowPos(ImVec2(13.5f, 250.f), ImGuiCond_Always);
+			ImGui::Begin(xorstr_("##fps"), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus);
+			ImGui::Text("FPS: ");
+		}
+
+	}
+
 	void features::show_watermark(bool enable)
 	{
 		auto end = std::chrono::system_clock::now();
 
 		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+		
 
 		if (enable)
 		{
 			// Size
-			ImVec2 size = ImVec2(350.f, 85.f);
+			ImVec2 size = ImVec2(360.f, 160.f);
 
 			// Position
 			ImGui::SetNextWindowSize(size, ImGuiCond_Always);
-			ImGui::SetNextWindowPos(ImVec2(13.5f, 4.f), ImGuiCond_Always);
+			ImGui::SetNextWindowPos(ImVec2(14.f, 5.f), ImGuiCond_Always);
 
 			// Window
-			if (ImGui::Begin(xorstr_("##watermark"), nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoInputs))
+			if (ImGui::Begin(xorstr_("##watermark"), nullptr))
 			{	
-				ImGui::Text(fmt::format("Time {}", std::ctime(&end_time)).c_str());
+				ImGui::Text("zykocheats.org |");
+				ImGui::SameLine();
+				ImGui::Text(fmt::format("Time: {}", std::ctime(&end_time)).c_str()); ImGui::NewLine();
+				
 			}
 			ImGui::End();
 		}
@@ -191,7 +211,7 @@ namespace big
 	void features::RequestControlOfEnt(Entity entity)
 	{
 		int tick = 0;
-		while (!NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(entity) && tick <= 25)
+		if (!NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(entity) && tick <= 25)
 		{
 			NETWORK::NETWORK_REQUEST_CONTROL_OF_ENTITY(entity);
 			tick++;
@@ -227,14 +247,14 @@ namespace big
 
 	void features::ApplyForceToEntity(Entity e, float x, float y, float z)
 	{
-		if (e != PLAYER::PLAYER_PED_ID() && NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(e) == FALSE)
+		if (e != PLAYER::PLAYER_PED_ID() && NETWORK::NETWORK_HAS_CONTROL_OF_ENTITY(e))
 		{
 			features::RequestControlOfEnt(e);
 		}
 
 		ENTITY::APPLY_FORCE_TO_ENTITY(e, 1, x, y, z, 0, 0, 0, 0, 1, 1, 1, 0, 1);
 
-	}//APPLIES FORCE TO ENTITY
+	}
 	void features::teleport(int x, int y, int z)
 	{
 		PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), x, y, z);
@@ -247,8 +267,9 @@ namespace big
 	{
 		Vehicle handle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true);
 		const char* vehicle = HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(handle));
-
-		features::spawn_veh(rage::joaat(vehicle));
+		features::notify(vehicle, "Nigger", 7000);
+/*
+		features::spawn_veh(rage::joaat(vehicle));*/
 	}
 	
 	
@@ -325,49 +346,28 @@ namespace big
 		Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
 		OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY(obj), pos.x, pos.y, pos.z, 1, 1, 1);
 	}
-	void features::play_particle(const char* particle)
-	{
-		//GRAPHICS::_USE_PARTICLE_FX_ASSET_NEXT_CALL(particle);
-		//GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY(particle, PLAYER::PLAYER_PED_ID(), 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 1.0, false, false, false);
 
-	}
 	
 
-	///////////////////////////////////////////////////////   RECOVERY VOIDS   ///////////////////////////////////////////////////////
-	void features::basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items)
-	{
-		if (NETSHOPPING::NET_GAMESERVER_BASKET_END())
-			NETSHOPPING::_NET_GAMESERVER_BASKET_DELETE();
-
-		int transaction = -1;
-
-		if (g_pointers->m_construct_basket(*g_pointers->m_transact_queue, &transaction, cat, action, flag))
-		{
-			for (auto& item : items)
-			{
-				g_pointers->m_add_item_to_basket(*g_pointers->m_transact_queue, item.data());
-			}
-			g_pointers->m_process_transaction(*g_pointers->m_transact_queue, transaction, 69420);
-		}
-	}
 	
 
-	int delayedPlanned = 400;
-	int timerPlaned = 3;
 
 
 	
 	void features::changemodel(const char* model)
 	{
-		DWORD model1 = MISC::GET_HASH_KEY(model);
+		Hash model1 = MISC::GET_HASH_KEY(model);
 		STREAMING::REQUEST_MODEL(model1);
-		//while (!STREAMING::HAS_MODEL_LOADED(rage::joaat(model)) /*MISC::WAIT(0);*/
+		if (STREAMING::HAS_MODEL_LOADED(model1))
+		{
+		SYSTEM::WAIT(0);
 		PLAYER::SET_PLAYER_MODEL(PLAYER::PLAYER_ID(), (model1));
-		/*PED::SET_PED_DEFAULT_COMPONENT_VARIATION(PLAYER::PLAYER_PED_ID());*/
-		/*WAIT(10);*/
-		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(model1);
+		ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), true);
+		
+		}
+			
+		
 	}
-	int moddervalue;
 	bool features::is_modder(Player player)
 	{
 		if (auto plyr = g_pointers->m_get_net_player(player))
@@ -462,13 +462,41 @@ namespace big
 		*script_global(SessionUNK2).as<int*>() = 0;
 		*script_global(SessionUNK3).as<int*>() = -1;
 	}
-	void features::coordsDisplay()
+	void features::coordsDisplay(bool toggle)
 	{
+		//Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_PED_ID()), true);
+		/*char coordsX[28];
+		sprintf(coordsX, "%f", coords.x);
+		char coordsY[28];
+		sprintf(coordsY, "%f", coords.y);
+		char coordsZ[28];
+		sprintf(coordsZ, "%f", coords.z);*/
+		// Size
+		ImVec2 size = ImVec2(360.f, 100.f);
 
-		Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-		LOG(INFO) << coords.x;
+		// Position
+		ImGui::SetNextWindowSize(size, ImGuiCond_Always);
+		ImGui::SetNextWindowPos(ImVec2(103.5f, 10.f), ImGuiCond_Always);
+
+		// Window
+		if (ImGui::Begin(xorstr_("##coords"), nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoInputs))
+		{
+			
+			/*ImGui::Text(coordsX);
+			ImGui::Text(coordsY);
+			ImGui::Text(coordsZ);*/
+			
+			
+			
+		
+			
+			
+		}
+		ImGui::End();
+		
+		/*LOG(INFO) << coords.x;
 		LOG(INFO) << coords.y;
-		LOG(INFO) << coords.z;
+		LOG(INFO) << coords.z;*/
 	}
 	
 	void features::teleport_to_waypoint()
@@ -564,18 +592,26 @@ namespace big
 				{
 				case 0:
 					//50 MS				
-					run_playerlist();
-					features::player_loop();
-					features::online_loop();
-					features::weapons_loop();
-					features::vehicle_loop();
+					
+					
 	
-					CAM::SET_CAM_FOV(1, features::fieldofview);
 					break;
 				case 1:
 					////////////////////////////////////////   250ms   ////////////////////////////////////////
+					run_playerlist();
+					features::player_loop();
+					if (NETWORK::NETWORK_IS_SESSION_ACTIVE())
+					{
+						features::online_loop();
+					}
 					
+					features::weapons_loop();
+					if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), true))
+					{
+						features::vehicle_loop();
+					}
 					
+					features::misc_loop();
 
 					
 
@@ -592,31 +628,28 @@ namespace big
 
 					break;
 				case 2:
-					
+					features::kick_from_mk2();
 
 
 					break;
 				case 3:
 					//25003ms
-					//features::check();
+					
 					
 
-
-					if (rockstaradmin){features::admindetection();}
+					rockstaradmin ? features::admindetection() : NULL;
+			
 					
 
+					stoptime ? CLOCK::PAUSE_CLOCK(true) : CLOCK::PAUSE_CLOCK(false);
 					
-					if (stoptime)
-					{
-						CLOCK::PAUSE_CLOCK(stoptime);
-					}
 					if (mobileradio)
 					{
 						AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(mobileradio);
 					}
 					else
 					{
-						AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(0);
+						AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(false);
 					}
 					
 
