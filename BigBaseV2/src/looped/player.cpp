@@ -13,7 +13,7 @@ namespace big
 		}
 		else
 		{
-			PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
+			//PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
 		}
 
 		if (godmode)
@@ -66,7 +66,7 @@ namespace big
 		}
 		else
 		{
-			ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
+			//ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
 		}
 
 		if (features::norag)
@@ -192,7 +192,7 @@ namespace big
 			Player playerPed = PLAYER::PLAYER_PED_ID();
 			PED::SET_PED_CAN_RAGDOLL(playerPed, false);
 			Vector3 pCoords = ENTITY::GET_ENTITY_COORDS(playerPed, 0);
-			FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z, 7, 5.00f, 0, 1, 0, 1);
+			FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z, 7, features::forcefield_force, 0, 1, 0, 1);
 
 		}
 		if (ultrarunbool)
@@ -261,13 +261,13 @@ namespace big
 		if (offradar){
 			*script_global(2426865).at((PLAYER::PLAYER_PED_ID(), 451)).at(207).as<int*>() = 1;
 			*script_global(2703660).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;}
-
+ 
 		if (bullshark){*script_global(2703660).at(3576).as<int*>() = 1;}
-		if (features::nightvision) {	GRAPHICS::SET_NIGHTVISION(true);}
-		else {GRAPHICS::SET_NIGHTVISION(false);}
-
-		if (features::thermalvision) {GRAPHICS::SET_SEETHROUGH(true);}
-		else {GRAPHICS::SET_SEETHROUGH(false);}
+	
+		nightvision ? GRAPHICS::SET_NIGHTVISION(true) : GRAPHICS::SET_NIGHTVISION(false);
+		thermalvision ? GRAPHICS::SET_SEETHROUGH(true) : GRAPHICS::SET_SEETHROUGH(false);
+		hide_hud ? HUD::HIDE_HUD_AND_RADAR_THIS_FRAME() : NULL;
+		
 
 	}
 

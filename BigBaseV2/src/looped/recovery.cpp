@@ -4,7 +4,6 @@
 #include "helpers/player_info.h"
 #include "script_global.hpp"
 #include "gta_util.hpp"
-#include "math.hpp"
 #include <control.h>
 #include <script_local.hpp>
 #include <sstream>
@@ -18,6 +17,22 @@
 #include "fiber_pool.hpp"
 namespace big
 {
+	void features::basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items)
+	{
+		if (NETSHOPPING::NET_GAMESERVER_BASKET_END())
+			NETSHOPPING::_NET_GAMESERVER_BASKET_DELETE();
+
+		int transaction = -1;
+
+		if (g_pointers->m_construct_basket(*g_pointers->m_transact_queue, &transaction, cat, action, flag))
+		{
+			for (auto& item : items)
+			{
+				g_pointers->m_add_item_to_basket(*g_pointers->m_transact_queue, item.data());
+			}
+			g_pointers->m_process_transaction(*g_pointers->m_transact_queue, transaction, 69420);
+		}
+	}
 	void features::set_rank(int rpvalue)
 	{
 		if (rpvalue > 0) {

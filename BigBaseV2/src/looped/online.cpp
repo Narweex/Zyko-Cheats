@@ -17,7 +17,7 @@ namespace big
 			if (OBJECT::_IS_PICKUP_WITHIN_RADIUS(*drophashes, coords.x, coords.y, coords.z, 9999.0f))
 			{
 				notify_protections("Detected Money Drop !", "Someone Is Dropping Money In Session", 4000);
-
+				
 			}
 			
 		}
@@ -43,7 +43,14 @@ namespace big
 			Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), false);
 			FIRE::ADD_EXPLOSION(pos.x, pos.y, pos.z, 4, 0.f, false, true, 10000.f, true);
 		}
+
 		
+		if (features::freeze_player)
+		{
+			features::RequestControlOfEnt(features::g_selected_player);
+			ENTITY::FREEZE_ENTITY_POSITION(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
+		}
+
 	}
 
 	void features::admindetection()
@@ -72,6 +79,33 @@ namespace big
 			}
 		}
 
+	}
 
+	void features::ragdoll_player()
+	{
+		PED::SET_PED_CAN_RAGDOLL(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
+		PED::SET_PED_TO_RAGDOLL(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 1, 1, 0, 1, 1, 0);
+	}
+	void features::kick_from_mk2()
+	{
+		if (features::kick_from_oppressor)
+		{
+			for (int i = 0; i < 32; i++)
+			{
+				if (ENTITY::DOES_ENTITY_EXIST(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i)) && PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i) != PLAYER::PLAYER_PED_ID()) //if player exists and is not user
+				{
+				Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i)); //get their vehicle
+				if (VEHICLE::IS_VEHICLE_MODEL(veh, MISC::GET_HASH_KEY("oppressor2"))) // check for oppressors
+				{
+					const char* name = PLAYER::GET_PLAYER_NAME(i);
+					features::notify(name, "Oppressor mk II user", 7000); 
+					Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i), false);
+					FIRE::ADD_EXPLOSION(pos.x, pos.y, pos.z, 4, 50.f, false, true, 1000.f, false);
+				}
+				}
+
+
+			}
+		}
 	}
 }

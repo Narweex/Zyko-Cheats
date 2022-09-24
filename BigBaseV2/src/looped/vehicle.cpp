@@ -8,8 +8,6 @@ namespace big
 		if (features::vehgodmode)
 		{
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
-			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
-				return;
 			
 			ENTITY::SET_ENTITY_INVINCIBLE(veh, true);
 			ENTITY::SET_ENTITY_PROOFS(veh, true, true, true, true, true, true, true, true);
@@ -24,8 +22,7 @@ namespace big
 		}
 		if (speedbypass)
 		{
-			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
-				return;
+			
 			Entity entity = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false));
 			ENTITY::SET_ENTITY_MAX_SPEED(entity, 5000);
 			ENTITY::SET_ENTITY_MAX_SPEED(PLAYER::PLAYER_PED_ID(), 5000);
@@ -101,6 +98,12 @@ namespace big
 				VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, r, g, b);
 			}
 		}
+		
+		if (features::invis_car)
+		{
+			Vehicle vehicle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
+			ENTITY::SET_ENTITY_ALPHA(vehicle, 0, true);
+		}
 
 	}
 
@@ -156,7 +159,7 @@ namespace big
 	void features::spawn_veh(Hash vehicle)
 	{
 		Hash hash = vehicle;
-		while (!STREAMING::HAS_MODEL_LOADED(hash))
+		if (!STREAMING::HAS_MODEL_LOADED(hash))
 		{
 			STREAMING::REQUEST_MODEL(hash);
 			script::get_current()->yield();
