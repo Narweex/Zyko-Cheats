@@ -17,7 +17,9 @@
 #include "Translation.hpp"
 #include "../../BigBaseV2/src/gui/player_list.h"
 #include "thread_pool.hpp"
-#include "gui/playerinfo_gui.h"
+
+#include <looped/teleports.hpp>
+
 
 
 
@@ -117,7 +119,8 @@ namespace big
 		MoneySubmenu,
 		LevelSubmenu,
 		HeistSubmenu,
-		scripthook
+		scripthook,
+		AnimationsSubmenu
 
 	};
 
@@ -159,13 +162,12 @@ namespace big
 
 		g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Self Options"), SubmenuSelf, [](RegularSubmenu* sub)
 			{
-				/*sub->AddOption<RegularOption>("coords", "nigger", []
-					{
-						features::coordsDisplay();
-					});*/
+				
 
 				sub->AddOption<SubOption>("Visions", "Change Player Visions", vis);
 				sub->AddOption<SubOption>("Model Changer", "Change your Model", SubmenuModelChanger);
+				sub->AddOption<SubOption>("Animations", nullptr, AnimationsSubmenu);
+
 				sub->AddOption<BoolOption<bool>>("God Mode", "You Cannot Die", &features::godmode, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Semi God Mode", "Cant Be Detected But Doesnt Work Against Explosions", &features::semigod, BoolDisplay::OnOff);
 
@@ -191,6 +193,8 @@ namespace big
 				sub->AddOption<BoolOption<bool>>("Super Jump", "Ever wanted to jump higher?", &features::superjumpbool, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Ultra Jump", "Jump Really High", &features::ultrajumpbool, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Forcefield", "Push everyone", &features::forcefield, BoolDisplay::OnOff);
+				if(features::forcefield){ sub->AddOption<NumberOption<float>>("Force", nullptr, &features::forcefield_force, 0, 20, 1, 1, true, "< ", " >", [] {}); }
+
 				sub->AddOption<BoolOption<bool>>("Super Man", "Just Fly", &features::superman, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Off Radar", "Players wont see you on minimap", &features::offradar, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Bullshark Testosterone", "Players wont see you on minimap", &features::bullshark, BoolDisplay::OnOff);
@@ -259,7 +263,7 @@ namespace big
 				{
 					for(auto& model:Lists::models1)
 					{ 
-						sub->AddOption<RegularOption>(model, "Clears Vision", [model]
+						sub->AddOption<RegularOption>(model, "Set this model", [model]
 							{
 								features::changemodel(model);
 							});
@@ -388,6 +392,16 @@ namespace big
 						GRAPHICS::SET_TIMECYCLE_MODIFIER("pulse");
 					});
 			});
+
+			g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Animations"), AnimationsSubmenu, [](RegularSubmenu* sub)
+				{
+					sub->AddOption<RegularOption>("test", "", []
+						{
+											//TASK::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), "amb@code_human_wander_drinking@male@base", "	static", 1.f, 1.f, 1500, 1, 1, 1, 1, 1);
+							features::changemodel("A_C_Boar");
+						});
+
+				});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Vehicle Movement", SubmenuVehicleMovement, [&](RegularSubmenu* sub)
 			{
 				sub->AddOption<BoolOption<bool>>("Bypass Max Speed", "Cleans Vehicle Automatically When Dirty", &features::speedbypass, BoolDisplay::OnOff);
@@ -463,6 +477,7 @@ namespace big
 				sub->AddOption<RegularOption>("Repair Vehicle", "Repair Damages To Currnet Vehicle", []{features::repairVehicle();});
 				sub->AddOption<BoolOption<bool>>("Repair Vehicle Loop", "Repair Vehicle Automatically When Demaged", &features::fixloop, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Seatbelt", "You Cant Fall Of Vehicle", &features::seatbelt, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Invisible Vehicle", "You cant see your car", &features::invis_car, BoolDisplay::OnOff);
 				sub->AddOption<RegularOption>("Duplicate Current Vehicle", "Spawn Another One", []
 					{
 						features::duplicatecar();
@@ -719,22 +734,22 @@ namespace big
 				
 				
 					
-				
-				sub->AddOption<RegularOption>("RID test", nullptr, []
-					{
-						static bool done = false;
+				//
+				//sub->AddOption<RegularOption>("RID test", nullptr, []
+				//	{
+				//		static bool done = false;
 
-						g_thread_pool->push([&] //thread pool for not making fps lag
-							{
-								features::rid = get_rid_from_name("Yodo2222");
-								done = true;
-							});
+				//		g_thread_pool->push([&] //thread pool for not making fps lag
+				//			{
+				//				features::rid = get_rid_from_name("Yodo2222");
+				//				done = true;
+				//			});
 
-						if (done)
-							LOG(INFO) << features::rid;
+				//		if (done)
+				//			LOG(INFO) << features::rid;
 
-						// You can use keyboard get input func for getting target name and then display it on option text
-					});
+				//		// You can use keyboard get input func for getting target name and then display it on option text
+				//	});
 			});
 			g_UiManager->AddSubmenu<RegularSubmenu>("Online", SessionJoinerSubmenu, [&](RegularSubmenu* sub)
 				{
@@ -838,6 +853,7 @@ namespace big
 				g_UiManager->AddSubmenu<RegularSubmenu>("Players Vehicle Options", AllPlayerVehicle, [](RegularSubmenu* sub)
 					{
 						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
+						sub->AddOption<BoolOption<bool>>("Explode Oppressors", "This will explode anyone who is on oppressor mk2", &features::kick_from_oppressor, BoolDisplay::OnOff);
 
 
 					});
@@ -846,6 +862,7 @@ namespace big
 					{
 						GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 
+						
 						sub->AddOption<RegularOption>("Clone Player", "Clones Player", []
 							{
 								PED::CLONE_PED(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 1, 1, 1);
@@ -1116,14 +1133,7 @@ namespace big
 						
 					});
 				sub->AddOption<RegularOption>("Teleport To Objective ", "Teleport to Objective", [] { {features::teleport_to_objective(); }});
-				sub->AddOption<RegularOption>("show coords ", "ok", []
-					{
-						Vector3 neger = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
-						float iks = neger.x;
-						float yps = neger.y;
-						float zet = neger.z;
-						features::notify("idk", "idk", 20000);
-					});
+			
 				sub->AddOption<SubOption>("Airport's", nullptr, air);
 				sub->AddOption<SubOption>("IPL's", nullptr, ipls);
 				sub->AddOption<SubOption>("Landmarks", nullptr, landmarks);
@@ -1186,6 +1196,14 @@ namespace big
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Airports", air, [](RegularSubmenu* sub)
 			{
+				for (auto& teleport : teleportsAirports)
+				{
+					sub->AddOption<RegularOption>(teleport.name, "Teleport To ", [=]
+						{
+							features::teleport(teleport.x, teleport.y, teleport.z);
+						});
+				}
+
 				sub->AddOption<RegularOption>("Airport LSIA ", "Teleport To airpot LSIA", []
 					{
 						Vector3 Coords;
@@ -1491,6 +1509,7 @@ namespace big
 
 		g_UiManager->AddSubmenu<PlayerSubmenu>(&features::g_selected_player, SubmenuSelectedPlayer, [](PlayerSubmenu* sub)
 			{
+				//features::playerinfo_toggle = true;
 				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 				
 				
@@ -1572,6 +1591,10 @@ namespace big
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Trolling", SelectedPlayerTrolling, [](RegularSubmenu* sub)
 			{
+				sub->AddOption<RegularOption>("Ragdoll Player", "Knock him off", []
+					{
+						features::ragdoll_player();
+					});
 				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 
 				sub->AddOption<RegularOption>("Clone Player", "Clones Player", []
@@ -1604,6 +1627,8 @@ namespace big
 						PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
 					});
 				sub->AddOption<BoolOption<bool>>("Fuck Their Camera", "Just a Little Trolling", &features::fucktheircam, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Freeze Player", "They wont be able to move", &features::freeze_player, BoolDisplay::OnOff);
+
 				sub->AddOption<RegularOption>("Airstrike Player", "Blow Up Player With Airstrike", []
 					{
 						Ped selectedplayer = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(NULL);
@@ -1684,7 +1709,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Money", MoneySubmenu, [](RegularSubmenu* sub)
 			{
 				sub->AddOption<RegularOption>("500k  Startup", "Only use to get enough on bunker", [] {features::startupmoney(); });
-				sub->AddOption<NumberOption<int>>("Amount", nullptr, &features::level, 0, 25000000, 100000, 1);
+				sub->AddOption<NumberOption<int>>("Amount", nullptr, &features::bunker_money, 0, 2500000, 100000, 1);
 				sub->AddOption<RegularOption>("Add Money", "Adds selected amount", [] {features::addMoney(); });
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Heist Helpers", HeistSubmenu, [](RegularSubmenu* sub)
@@ -1699,7 +1724,9 @@ namespace big
 				//sub->AddOption<SubOption>("Particles", nullptr, SubmenuSettingsParticles);
 				//sub->AddOption<BoolOption<bool>>("Money Drop On Self [~r~RISKY]", "Vibe to the music everywhere!", &features::selfdrop, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Mobile Radio", "Vibe to the music everywhere!", &features::mobileradio, BoolDisplay::OnOff);
-				//sub->AddOption<BoolOption<bool>>("Free Camera", "Vibe to the music everywhere!", &features::, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Hide HUD", "Vibe to the music everywhere!", &features::hide_hud, BoolDisplay::OnOff);
+				//sub->AddOption<BoolOption<bool>>("Show Coords", "Know Where you are", &features::coords_display, BoolDisplay::OnOff);
+
 				sub->AddOption<BoolOption<bool>>("Disable Phone", "English Dave wont bother you", &features::nophone, BoolDisplay::OnOff);
 
 
@@ -1880,15 +1907,7 @@ namespace big
 						g_UiManager->m_HeaderType = Lists::HeaderTypesBackend[Lists::HeaderTypesPosition];
 					});
 
-				switch (g_UiManager->m_HeaderType)
-				{
-				case HeaderType::Static:
-					sub->AddOption<SubOption>("Background", nullptr, SubmenuSettingsHeaderStaticBackground);
-					break;
-				case HeaderType::Gradient:
-					sub->AddOption<SubOption>("Gradient", nullptr, SubmenuSettingsHeaderGradientBackground);
-					break;
-				}
+				
 
 				sub->AddOption<SubOption>("Text", nullptr, SubmenuSettingsHeaderText);
 				sub->AddOption<NumberOption<float>>("Height", nullptr, &g_UiManager->m_HeaderHeight, 0.01f, 0.2f, 0.001f, 3);
