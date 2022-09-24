@@ -27,18 +27,14 @@ namespace big
 		ImGui::Checkbox(xorstr_("Repair Loop"), &features::fixloop);
 		ImGui::Checkbox(xorstr_("Clean Loop"), &features::cleanloop);
 		ImGui::Checkbox(xorstr_("Vehicle Fly"), &features::noclip);
+		ImGui::Checkbox(xorstr_("Rainbow Colour"), &features::rainbowcar);
+		ImGui::Checkbox(xorstr_("Invisible Vehicle"), &features::invis_car);
 		ImGui::EndChild();
 		ImGui::SameLine();
 		ImGui::BeginChild("##options2", ImVec2(300, 280), true);
 
-		if (ImGui::Button(xorstr_("Random Colour"), ImVec2(200, 25))) { }
-
-		if (ImGui::Button(xorstr_("Repair Vehicle"), ImVec2(200, 25))) { features::repairVehicle(); }
-		if (ImGui::Button(xorstr_("Clean Vehicle"), ImVec2(200, 25))) { features::cleanVehicle(); }
-		ImGui::Checkbox(xorstr_("Vehicle Godmode"), &features::vehgodmode);
-		ImGui::Checkbox(xorstr_("Repair Loop"), &features::fixloop);
-		ImGui::Checkbox(xorstr_("Clean Loop"), &features::cleanloop);
-		ImGui::Checkbox(xorstr_("Vehicle Fly"), &features::noclip);
+	
+		
 		ImGui::EndChild();
 	}
 

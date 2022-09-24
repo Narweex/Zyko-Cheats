@@ -16,7 +16,6 @@ namespace big
 	
 	void players_tab::render_players_tab()
 	{
-		ImGui::Columns(2, xorstr_("##player_tab"), false);
 		//components::child("sex", ImVec2(300, 400));
 		/*for (int i = 0; i < 5; i++)
 		{
@@ -54,9 +53,9 @@ namespace big
 			}
 
 
-			ImGui::SameLine(215.f);
+			ImGui::SameLine(200.f);
 
-			ImGui::BeginChild(xorstr_("##playerfeatures"), ImVec2(925.f, -1));
+			ImGui::BeginChild(xorstr_("##playerfeatures"), ImVec2(425.f, 520.f));
 			{
 				if (ImGui::CollapsingHeader(xorstr_("Player Info")))
 				{
@@ -66,18 +65,13 @@ namespace big
 					ImGui::Text(xorstr_("Name: %lld"), g_player_list.name);
 					ImGui::Text(xorstr_("Player ID: %lld"), features::g_selected_player);
 					ImGui::Text(xorstr_("Is Modder: ")); ImGui::SameLine();
-					if (g_player_list.is_modder)
+					ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(180, 0, 0, 255)), g_player_list.is_modder ? "Yes": "No");
+					/*if (g_player_list.is_modder)
 						ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(180, 0, 0, 255)), xorstr_("Yes"));
 					else
-						ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(0, 180, 0, 255)), xorstr_("No"));
-
-					//ImGui::Text(xorstr_("Wanted Level: %i / 5"), g_player_list.wanted);
+						ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(0, 180, 0, 255)), xorstr_("No"));*/
 					ImGui::Text(xorstr_("In Vehicle: %s"), g_player_list.is_vehicle ? "Yes" : "No");
-					//	ImGui::Text(xorstr_("Player Alpha: %i"), g_player_list.alpha);
 					ImGui::Text(xorstr_("Player Speed: %i MPH"), g_player_list.speed);
-					//ImGui::Text(xorstr_("Player Location: %"), HUD::GET_STREET_NAME_FROM_HASH_KEY(g_player_list.zone));
-
-
 					ImGui::Text(xorstr_("IP: %d.%d.%d.%d:%d"), g_player_list.online_ip.m_field1, g_player_list.online_ip.m_field2, g_player_list.online_ip.m_field3, g_player_list.online_ip.m_field4, g_player_list.online_port);
 
 					ImGui::EndGroup();

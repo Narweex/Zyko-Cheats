@@ -36,17 +36,7 @@ namespace big
 
 
 
-			if (ImGui::Button("List Mode"))
-			{
-				g_list = true;
-				g_UiManager->m_Opened = true;
-			}
-			ImGui::Separator();
-
-			if (ImGui::Button("Unload"))
-			{
-				g_running = false;
-			}
+			
 
 			ImGui::EndTabItem();
 		}

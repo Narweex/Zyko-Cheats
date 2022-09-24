@@ -1,6 +1,8 @@
 #pragma once
-#include "CNetGamePlayer.hpp"
-#include "netPlayerData.hpp"
+#include "common.hpp"
+#include "../../../vendor/GTAV-Classes/netPlayerData.hpp"
+#include "../../../vendor/GTAV-Classes/CNetGamePlayer.hpp"
+
 
 namespace big
 {

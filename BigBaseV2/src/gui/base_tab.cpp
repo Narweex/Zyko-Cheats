@@ -14,7 +14,7 @@ namespace big
 
 
 
-		/*if (!auth::login)
+		if (!auth::login)
 		{
 			
 			std::string login_file = getenv("APPDATA");
@@ -34,7 +34,7 @@ namespace big
 				password2 = login["Password"];
 				
 				
-				auth::auth(username2, password2);
+				auth::verify(username2, password2);
 				
 
 
@@ -46,14 +46,14 @@ namespace big
 			{
 
 			
-				ImGui::InputText("Username", username, sizeof(username));
-				ImGui::InputText("Password", password, sizeof(password));
+				ImGui::InputText(xorstr_("Username"), username, sizeof(username));
+				ImGui::InputText(xorstr_("Password"), password, sizeof(password));
 			
 				
 
 			}
 			
-			if (ImGui::Button("Log In"))
+			if (ImGui::Button(xorstr_("Log In")))
 			{
 				LOG(INFO) << username;
 				std::string username1(username);
@@ -65,7 +65,7 @@ namespace big
 			}
 		}
 		else
-		{*/
+		{
 
 
 
@@ -102,7 +102,7 @@ namespace big
 
 
 			ImGui::NewLine();
-			ImGui::BeginChild("##optionsglobals", ImVec2(300, 270), true);
+			ImGui::BeginChild("##optionsglobals", ImVec2(300, 280), true);
 			ImGui::Text(xorstr_(" Globals"));
 			ImGui::Checkbox(xorstr_("Off Radar"), &features::offradar);
 			ImGui::Checkbox(xorstr_("Bullshark testosterone"), &features::bullshark);
@@ -127,13 +127,6 @@ namespace big
 
 				ImGui::EndChild();
 
-
-
-
-
-
-
-
 				/*ImGui::Spacing();
 
 				if (ImGui::Button("List Mode"))
@@ -148,6 +141,6 @@ namespace big
 					g_running = false;
 				}*/
 			}
-		//}
+		}
 	
 }

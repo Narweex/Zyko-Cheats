@@ -24,26 +24,55 @@ namespace big
 
 		ImGui::Text(xorstr_("Money"));
 
-		/*if (!auth::login)
-		{
-			ImGui::InputText("Username", username, sizeof(username));
-			ImGui::InputText("Password", password, sizeof(password));
-			if (ImGui::Button("Log In"))
-			{
-				LOG(INFO) << username;
-
-				auth::auth(username, password);
-			}
-		}
-		else
-		{
-		 */
-
 
 
 		
 
-		if (ImGui::Button(xorstr_("Add: Bunker Money"))) {features::addMoney();}
+		if (ImGui::Button(xorstr_("Add: Bunker Money"))) {
+			features::addMoney();
+			
+			
+			/*features::notify_success("Recovery", "Money Added", 3000);
+			QUEUE_JOB_BEGIN_CLAUSE() {
+				features::basket_transaction(-1799524201, -1018905335, 4,
+					{
+						{-1026265157, -1601574614, 0, 1, 1},
+					});
+
+				script::get_current()->yield(500ms);
+
+				features::basket_transaction(-1799524201, 2108234284, 4,
+					{
+						{-1026265157, -1601574614, 0, 1, 1},
+						{-1121615002, -1, 0, 0, 40},
+						{297710065, -1121615002, 0, 40, 1},
+					});
+
+				script::get_current()->yield(500ms);
+
+				features::basket_transaction(69656641, -886368739, 4,
+					{
+						{-1121615002, -1, 0, 1, -40},
+						{-1573825732, -1, 0, 1, 1},
+					});
+
+				script::get_current()->yield(500ms);
+
+				features::basket_transaction(-1799524201, -1018905335, 4,
+					{
+						{-1026265157, -1826424790, 0, 1, 1},
+					});
+
+				script::get_current()->yield(500ms);
+
+				features::basket_transaction(-1799524201, -788753717, 4,
+					{
+						{-1026265157, -1826424790, 0, 1, 1},
+						{-1573825732, -1, 0, 1, 1},
+						{-1818214114, -1573825732, 2500000, 0, 1},
+					});
+			} QUEUE_JOB_END_CLAUSE*/
+		}
 
 		ImGui::SameLine();
 
