@@ -108,7 +108,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>common.hpp</PrecompiledHeaderFile>
       <WarningLevel>Level4</WarningLevel>
       <DisableSpecificWarnings>4100;4201;4307;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -170,6 +170,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\auth\anti_debug\ADebug\crc32.hpp" />
+    <ClInclude Include="src\auth\anti_debug\ADebug\Hash.hpp" />
+    <ClInclude Include="src\auth\anti_debug\ADebug\Helpers.hpp" />
+    <ClInclude Include="src\auth\anti_debug\ADebug\LengthDisasm.hpp" />
+    <ClInclude Include="src\auth\anti_debug\ADebug\Lycosidae.hpp" />
+    <ClInclude Include="src\auth\anti_debug\ADebug\Native.hpp" />
+    <ClInclude Include="src\auth\anti_debug\ADebug\ScyllaHideDetector.hpp" />
+    <ClInclude Include="src\auth\anti_debug\helper.h" />
+    <ClInclude Include="src\auth\anti_debug\hidestr\hide_str.hpp" />
+    <ClInclude Include="src\auth\anti_debug\hidestr\murmurhash.hpp" />
+    <ClInclude Include="src\auth\anti_debug\hidestr\trash.hpp" />
+    <ClInclude Include="src\auth\anti_debug\hidestr\xtea3.hpp" />
+    <ClInclude Include="src\auth\anti_debug\t1ha.h" />
+    <ClInclude Include="src\auth\anti_debug\winapi_hash\export_work.hpp" />
+    <ClInclude Include="src\auth\anti_debug\winapi_hash\hash_work.hpp" />
+    <ClInclude Include="src\auth\anti_debug\winapi_hash\PointerHashFunc.hpp" />
     <ClInclude Include="src\auth\auth.hpp" />
     <ClInclude Include="src\auth\lazy_importer.hpp" />
     <ClInclude Include="src\common.hpp" />
@@ -200,7 +216,6 @@
     <ClInclude Include="src\gta\net_object_mgr.hpp" />
     <ClInclude Include="src\gta\node_list.hpp" />
     <ClInclude Include="src\gta\ped_factory.hpp" />
-    <ClInclude Include="src\gta\player.hpp" />
     <ClInclude Include="src\gta\ref_aware.hpp" />
     <ClInclude Include="src\gta\replay.hpp" />
     <ClInclude Include="src\gta\script_handler.hpp" />
@@ -232,11 +247,13 @@
     <ClInclude Include="src\gui\list\TextBox.hpp" />
     <ClInclude Include="src\gui\list\UIManager.hpp" />
     <ClInclude Include="src\gui\lobby_tab.h" />
-    <ClInclude Include="src\gui\playerinfo_gui.h" />
+    <ClInclude Include="src\gui\misc_tab.h" />
     <ClInclude Include="src\gui\players_tab.h" />
     <ClInclude Include="src\gui\player_list.h" />
+    <ClInclude Include="src\gui\protections_tab.h" />
     <ClInclude Include="src\gui\recovery_tab.h" />
     <ClInclude Include="src\gui\spawn_tab.h" />
+    <ClInclude Include="src\gui\teleport_tab.h" />
     <ClInclude Include="src\gui\vehicle_tab.h" />
     <ClInclude Include="src\gui\weapons_tab.h" />
     <ClInclude Include="src\helpers\other.h" />
@@ -244,6 +261,7 @@
     <ClInclude Include="src\hooking.hpp" />
     <ClInclude Include="src\invoker.hpp" />
     <ClInclude Include="src\logger.hpp" />
+    <ClInclude Include="src\looped\teleports.hpp" />
     <ClInclude Include="src\memory\all.hpp" />
     <ClInclude Include="src\memory\fwddec.hpp" />
     <ClInclude Include="src\memory\handle.hpp" />
@@ -265,11 +283,8 @@
     <ClInclude Include="src\vmt_hook.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\auth\anti_debug\winapi_hash\hash_work.cpp" />
     <ClCompile Include="src\auth\auth.cpp" />
-    <ClCompile Include="src\auth\includes\anti_debug.cpp" />
-    <ClCompile Include="src\common.cpp">
-      <PrecompiledHeader>Create</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="src\core\fonts.cpp" />
     <ClCompile Include="src\detour_hook.cpp" />
     <ClCompile Include="src\features.cpp" />
@@ -282,11 +297,13 @@
     <ClCompile Include="src\gui\list\script\MainScript.cpp" />
     <ClCompile Include="src\gui\list\UIManager.cpp" />
     <ClCompile Include="src\gui\lobby_tab.cpp" />
-    <ClCompile Include="src\gui\playerinfo_gui.cpp" />
+    <ClCompile Include="src\gui\misc_tab.cpp" />
     <ClCompile Include="src\gui\players_tab.cpp" />
     <ClCompile Include="src\gui\player_list.cpp" />
+    <ClCompile Include="src\gui\protections_tab.cpp" />
     <ClCompile Include="src\gui\recovery_tab.cpp" />
     <ClCompile Include="src\gui\self_tab.cpp" />
+    <ClCompile Include="src\gui\teleport_tab.cpp" />
     <ClCompile Include="src\gui\vehicle_tab.cpp" />
     <ClCompile Include="src\gui\weapons_tab.cpp" />
     <ClCompile Include="src\helpers\other.cpp" />
@@ -331,6 +348,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Library Include="src\auth\anti_debug\t1ha-static.lib" />
     <Library Include="src\auth\libs\libcrypto.lib" />
     <Library Include="src\auth\libs\libssl.lib" />
     <Library Include="src\libcurl_a.lib" />

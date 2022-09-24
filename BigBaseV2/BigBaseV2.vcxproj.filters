@@ -34,6 +34,18 @@
     <Filter Include="looped">
       <UniqueIdentifier>{a9a87494-e2be-41f4-918b-70723f88273d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="auth\anti_debug">
+      <UniqueIdentifier>{9c5e5924-169b-4969-b2ba-1ab099be574c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="auth\anti_debug\hidestr">
+      <UniqueIdentifier>{949c579c-3f0c-4e4f-b625-30953f9ef486}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="auth\anti_debug\winapi_hash">
+      <UniqueIdentifier>{c7f16d44-fddb-4e7a-9c4e-2e2263800940}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="auth\anti_debug\ADebug">
+      <UniqueIdentifier>{100742bf-74ca-4454-9684-82980fc91448}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.hpp" />
@@ -97,9 +109,6 @@
       <Filter>gta</Filter>
     </ClInclude>
     <ClInclude Include="src\gta\ped_factory.hpp">
-      <Filter>gta</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gta\player.hpp">
       <Filter>gta</Filter>
     </ClInclude>
     <ClInclude Include="src\gta\ref_aware.hpp">
@@ -253,9 +262,6 @@
     <ClInclude Include="src\gui\weapons_tab.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="src\gui\playerinfo_gui.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="src\gui\lobby_tab.h">
       <Filter>gui</Filter>
     </ClInclude>
@@ -269,9 +275,68 @@
       <Filter>auth</Filter>
     </ClInclude>
     <ClInclude Include="src\Pools.h" />
+    <ClInclude Include="src\auth\anti_debug\helper.h">
+      <Filter>auth\anti_debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\anti_debug\t1ha.h">
+      <Filter>auth\anti_debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\anti_debug\hidestr\hide_str.hpp">
+      <Filter>auth\anti_debug\hidestr</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\anti_debug\hidestr\murmurhash.hpp">
+      <Filter>auth\anti_debug\hidestr</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\anti_debug\hidestr\trash.hpp">
+      <Filter>auth\anti_debug\hidestr</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\anti_debug\hidestr\xtea3.hpp">
+      <Filter>auth\anti_debug\hidestr</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\anti_debug\winapi_hash\export_work.hpp">
+      <Filter>auth\anti_debug\winapi_hash</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\anti_debug\winapi_hash\hash_work.hpp">
+      <Filter>auth\anti_debug\winapi_hash</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\anti_debug\winapi_hash\PointerHashFunc.hpp">
+      <Filter>auth\anti_debug\winapi_hash</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\anti_debug\ADebug\crc32.hpp">
+      <Filter>auth\anti_debug\ADebug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\anti_debug\ADebug\Hash.hpp">
+      <Filter>auth\anti_debug\ADebug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\anti_debug\ADebug\Helpers.hpp">
+      <Filter>auth\anti_debug\ADebug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\anti_debug\ADebug\LengthDisasm.hpp">
+      <Filter>auth\anti_debug\ADebug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\anti_debug\ADebug\Lycosidae.hpp">
+      <Filter>auth\anti_debug\ADebug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\anti_debug\ADebug\Native.hpp">
+      <Filter>auth\anti_debug\ADebug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\anti_debug\ADebug\ScyllaHideDetector.hpp">
+      <Filter>auth\anti_debug\ADebug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\protections_tab.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\teleport_tab.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\misc_tab.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\looped\teleports.hpp">
+      <Filter>looped</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\common.cpp" />
     <ClCompile Include="src\detour_hook.cpp" />
     <ClCompile Include="src\features.cpp" />
     <ClCompile Include="src\fiber_pool.cpp" />
@@ -343,9 +408,6 @@
     <ClCompile Include="src\gui\weapons_tab.cpp">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="src\gui\playerinfo_gui.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="src\looped\player.cpp">
       <Filter>looped</Filter>
     </ClCompile>
@@ -373,12 +435,26 @@
     <ClCompile Include="src\auth\auth.cpp">
       <Filter>auth</Filter>
     </ClCompile>
-    <ClCompile Include="src\auth\includes\anti_debug.cpp" />
     <ClCompile Include="src\Pools.cpp" />
+    <ClCompile Include="src\auth\anti_debug\winapi_hash\hash_work.cpp">
+      <Filter>auth\anti_debug\winapi_hash</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\protections_tab.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\teleport_tab.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\misc_tab.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="src\libcurl_a.lib" />
     <Library Include="src\auth\libs\libcrypto.lib" />
     <Library Include="src\auth\libs\libssl.lib" />
+    <Library Include="src\auth\anti_debug\t1ha-static.lib">
+      <Filter>auth\anti_debug</Filter>
+    </Library>
   </ItemGroup>
 </Project>
