@@ -10,7 +10,7 @@ namespace big::features
 	void on_present();
 
 	inline ULONGLONG ticks[] = { 0, 0, 0, 0 };
-	inline ULONGLONG tick_conf[] = { 50, 250, 2000, 25003 };
+	inline ULONGLONG tick_conf[] = { 50, 250, 5000, 25003 };
 	inline int g_current_tick_job{};
 
 
@@ -40,9 +40,11 @@ namespace big::features
 	inline float runspeed = 3.0;
 	inline float runspeed1 = 3.0;
 	inline bool forcefield = false;
+	inline float forcefield_force = 5.0;
 	inline bool unlimitedstamina = false;
 	inline bool flashrun = false;
 	inline bool mobileradio = false;
+	inline bool hide_hud = false;
 	void clearwanted();
 	void resetped();
 	void suicide();
@@ -83,7 +85,7 @@ namespace big::features
 	inline bool in_vehicle = true;
 	inline bool full_stats = true;
 	inline bool cleanloop = false;
-	inline bool speedbypass = true;
+	inline bool speedbypass = false;
 	inline bool novehkick = false;
 	inline bool fixloop = false;
 	inline int red = 0;
@@ -100,6 +102,7 @@ namespace big::features
 	inline int vehiclespeed = 100;
 	inline bool smoothhornboost = false;
 	inline bool rainbowcar = false;
+	inline bool invis_car = false;
 	void repairVehicle();
 	void cleanVehicle();
 	void duplicatecar();
@@ -118,7 +121,7 @@ namespace big::features
 	void basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items);
 	void startupmoney();
 	inline int crew_level{};
-	static int bunker_money;
+	inline int bunker_money;
 	void addMoney();
 	void cayoSkipPreps();
 	void cayoHardMode();
@@ -131,7 +134,11 @@ namespace big::features
 	inline bool playeresp = false;
 	inline bool fucktheircam = false;
 	inline bool spectateplayer = false;
-	inline bool moneynotify = true;
+	inline bool moneynotify = false;
+	void kick_from_mk2();
+	inline bool kick_from_oppressor = false;
+	inline bool freeze_player = false;
+	void ragdoll_player();
 
 	/* World*/
 	inline int worldgravity = 0;
@@ -148,7 +155,6 @@ namespace big::features
 	void notify_protections(const char* title, const char* text, int duration);
 	void spawn_obj(const char* object);
 	void play_particle(const char* particle);
-	static bool demo_bool = true;
 	inline bool numpadcontrol = false;
 
 
@@ -159,12 +165,14 @@ namespace big::features
 	inline bool nophone = false;
 	void RequestControlOfEnt(Entity entity);
 	void ApplyForceToEntity(Entity e, float x, float y, float z);
-	void coordsDisplay();
+	void coordsDisplay(bool toggle);
+	//inline bool coords_display = false;
 	void rainbowloop();
 	void isDev();
 	void check();
 	void isRunning(LPCWSTR name);
-	
+	inline bool traffic_folow = false;
+
 	/* Online */
 	inline std::uint32_t g_selected_player{};
 	bool is_modder(Player player);
@@ -220,15 +228,19 @@ namespace big::features
 	inline bool notifyadmin;
 	void admindetection();
 	inline bool detectionnotify = true;
-	inline std::string g_username = "Narweex";
+	inline std::string g_username = "";
 	inline int g_ip_address[4] = { 109, 237, 104, 255 };
 	inline uint64_t g_rockstar_id;
-	
+	inline char g_username_set[28];
 	inline uint64_t rid = 0;
 
-	
+
 	void show_watermark(bool enable);
 	void show_info_pool(bool enable);
+	void show_playerinfo();
+	void show_fps(bool enable);
+	
 
-	inline bool watermark = true, pools = true;
+	inline bool watermark = true, pools = false, fps = true, playerinfo_toggle = false; 
+	
 }

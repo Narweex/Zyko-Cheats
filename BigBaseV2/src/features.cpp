@@ -26,12 +26,9 @@ namespace big
 	{
 		TRY_CLAUSE
 		{
-			//show_fps(fps);
+			show_fps(fps);
 			show_watermark(watermark);
-		   // coordsDisplay(coords_display);
-			//show_info_pool(pools);
-			//playerinfo(features::playerinfo_toggle);
-		
+		   
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.f); // Round borders
 			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.04f, 0.14f, 100.f / 255.f)); // Background color
 			ImGui::RenderNotifications(); // <-- Here we render all notifications
@@ -46,11 +43,13 @@ namespace big
 	{
 		if (toggle)
 		{
-			ImVec2 size = ImVec2(150.f, 120.f);
-			ImGui::SetNextWindowSize(size, ImGuiCond_Always);
+		
+			ImGui::SetNextWindowSize(ImVec2(100.f, 40.f), ImGuiCond_Always);
 			ImGui::SetNextWindowPos(ImVec2(13.5f, 250.f), ImGuiCond_Always);
-			ImGui::Begin(xorstr_("##fps"), nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus);
-			ImGui::Text("FPS: ");
+			ImGui::Begin(xorstr_("##fps"), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBringToFrontOnFocus);
+			int fps = ImGui::GetIO().Framerate/2;
+			std::string tostring = (std::to_string(fps));
+			ImGui::Text(xorstr_("FPS: %s"), tostring.c_str());
 		}
 
 	}
@@ -65,24 +64,24 @@ namespace big
 		if (enable)
 		{
 			// Size
-			ImVec2 size = ImVec2(360.f, 160.f);
+			ImVec2 size = ImVec2(300.f, 70.f);
 
 			// Position
 			ImGui::SetNextWindowSize(size, ImGuiCond_Always);
 			ImGui::SetNextWindowPos(ImVec2(14.f, 5.f), ImGuiCond_Always);
 
 			// Window
-			if (ImGui::Begin(xorstr_("##watermark"), nullptr))
+			if (ImGui::Begin(xorstr_("##watermark"), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus))
 			{	
-				ImGui::Text("zykocheats.org |");
-				ImGui::SameLine();
-				ImGui::Text(fmt::format("Time: {}", std::ctime(&end_time)).c_str()); ImGui::NewLine();
+				ImGui::Text(xorstr_("zykocheats.org"));
+				ImGui::Text(fmt::format(xorstr_("Time: {}"), std::ctime(&end_time)).c_str()); 
 				
 			}
 			ImGui::End();
 		}
 	}
 
+	
 	void features::show_info_pool(bool enable)
 	{
 		if (enable)
@@ -390,21 +389,18 @@ namespace big
 	{
 		//unsigned int player = (1 << features::g_selected_player);
 
-		uint64_t kick1[] = { -371781708, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
-		uint64_t kick2[] = { 1514515570, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
-		uint64_t kick3[] = { 911179316, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
-		uint64_t kick4[] = { 846342319, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
-		uint64_t kick5[] = { 2085853000, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
-		uint64_t kick6[] = { 1514515570, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
-		uint64_t kick7[] = { -1970125962, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), -1, -1, -1 };
-		uint64_t kick8[] = { -1013679841, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
-		uint64_t kick9[] = { -1767058336, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), -1, -1, -1 };
-		uint64_t kick10[] = { -1892343528, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
-		uint64_t kick11[] = { 1494472464, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
-		uint64_t kick12[] = { 296518236, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
-		uint64_t kick13[] = { 998716537, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0, 0 };
-		uint64_t superkick[] = { *kick1, *kick2, *kick3, *kick4, *kick5, *kick6, *kick7, *kick8, *kick9, *kick10, *kick11, *kick12, *kick13 };
-		g_pointers->m_TriggerScriptEvent(1, superkick, 4, player);
+		NETWORK::NETWORK_SET_IN_SPECTATOR_MODE(true, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
+		RequestControlOfEnt(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
+		TASK::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
+		TASK::CLEAR_PED_TASKS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
+		TASK::CLEAR_PED_SECONDARY_TASK(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
+		STREAMING::REQUEST_MODEL(MISC::GET_HASH_KEY("vw_prop_vw_colle_alien"));
+		if (STREAMING::HAS_MODEL_LOADED(MISC::GET_HASH_KEY("vw_prop_vw_colle_alien")))
+		{
+			OBJECT::CREATE_AMBIENT_PICKUP(0x2C014CA6, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 0, 0, 2600, MISC::GET_HASH_KEY("vw_prop_vw_colle_alien"), 1, 1);
+			STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(MISC::GET_HASH_KEY("vw_prop_vw_colle_alien"));
+		}
+		NETWORK::NETWORK_SET_IN_SPECTATOR_MODE(false, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
 
 	}
 	void features::vehkick(int player)
@@ -421,12 +417,17 @@ namespace big
 	void features::crash(int player)
 	{
 		//unsigned int player = (1 << features::g_selected_player);
+		for (int i; i < 5; i++)
+		{
+
+		
 		int nigger = rand() % -2147483647 + 2147483647;
 		uint64_t crash1[] = { -393294520, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
 		uint64_t crash2[] = { -1386010354, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
 		uint64_t crash3[] = { 962740265, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
 		uint64_t crash[] = { *crash1, *crash2, *crash3 };
 		g_pointers->m_TriggerScriptEvent(1, crash, 4, player);
+		}
 	}
 	void features::kill(int player)
 	{
@@ -462,42 +463,7 @@ namespace big
 		*script_global(SessionUNK2).as<int*>() = 0;
 		*script_global(SessionUNK3).as<int*>() = -1;
 	}
-	void features::coordsDisplay(bool toggle)
-	{
-		//Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_PED_ID()), true);
-		/*char coordsX[28];
-		sprintf(coordsX, "%f", coords.x);
-		char coordsY[28];
-		sprintf(coordsY, "%f", coords.y);
-		char coordsZ[28];
-		sprintf(coordsZ, "%f", coords.z);*/
-		// Size
-		ImVec2 size = ImVec2(360.f, 100.f);
-
-		// Position
-		ImGui::SetNextWindowSize(size, ImGuiCond_Always);
-		ImGui::SetNextWindowPos(ImVec2(103.5f, 10.f), ImGuiCond_Always);
-
-		// Window
-		if (ImGui::Begin(xorstr_("##coords"), nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoInputs))
-		{
-			
-			/*ImGui::Text(coordsX);
-			ImGui::Text(coordsY);
-			ImGui::Text(coordsZ);*/
-			
-			
-			
-		
-			
-			
-		}
-		ImGui::End();
-		
-		/*LOG(INFO) << coords.x;
-		LOG(INFO) << coords.y;
-		LOG(INFO) << coords.z;*/
-	}
+	
 	
 	void features::teleport_to_waypoint()
 	{
@@ -591,14 +557,22 @@ namespace big
 				switch (g_current_tick_job)
 				{
 				case 0:
-					//50 MS				
-					
+					//50 MS		
+					run_playerlist();		
+					if (traffic_folow)
+					{
+						for (int i; i < 50; i++)
+						{
+							TASK::TASK_FOLLOW_TO_OFFSET_OF_ENTITY(i, PLAYER::PLAYER_PED_ID(), 0.0f, 0.0f, 0.0f, 10, -1, 10.0f, 1);
+
+						}
+					}
 					
 	
 					break;
 				case 1:
 					////////////////////////////////////////   250ms   ////////////////////////////////////////
-					run_playerlist();
+					
 					features::player_loop();
 					if (NETWORK::NETWORK_IS_SESSION_ACTIVE())
 					{
@@ -612,7 +586,7 @@ namespace big
 					}
 					
 					features::misc_loop();
-
+					ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
 					
 
 
