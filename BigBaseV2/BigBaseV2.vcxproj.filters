@@ -46,6 +46,9 @@
     <Filter Include="auth\anti_debug\ADebug">
       <UniqueIdentifier>{100742bf-74ca-4454-9684-82980fc91448}</UniqueIdentifier>
     </Filter>
+    <Filter Include="playerinfo">
+      <UniqueIdentifier>{6e0f0850-67fe-4995-94ba-97701206eb9a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\common.hpp" />
@@ -335,6 +338,10 @@
     <ClInclude Include="src\looped\teleports.hpp">
       <Filter>looped</Filter>
     </ClInclude>
+    <ClInclude Include="src\httplib.h" />
+    <ClInclude Include="src\playerinfo\playerinfo_gui.h">
+      <Filter>playerinfo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\detour_hook.cpp" />
@@ -447,6 +454,9 @@
     </ClCompile>
     <ClCompile Include="src\gui\misc_tab.cpp">
       <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\playerinfo\playerinfo_gui.cpp">
+      <Filter>playerinfo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

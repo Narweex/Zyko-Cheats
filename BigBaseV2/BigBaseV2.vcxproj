@@ -259,6 +259,7 @@
     <ClInclude Include="src\helpers\other.h" />
     <ClInclude Include="src\helpers\player_info.h" />
     <ClInclude Include="src\hooking.hpp" />
+    <ClInclude Include="src\httplib.h" />
     <ClInclude Include="src\invoker.hpp" />
     <ClInclude Include="src\logger.hpp" />
     <ClInclude Include="src\looped\teleports.hpp" />
@@ -270,6 +271,7 @@
     <ClInclude Include="src\memory\pattern_batch.hpp" />
     <ClInclude Include="src\memory\range.hpp" />
     <ClInclude Include="src\natives.hpp" />
+    <ClInclude Include="src\playerinfo\playerinfo_gui.h" />
     <ClInclude Include="src\pointers.hpp" />
     <ClInclude Include="src\Pools.h" />
     <ClInclude Include="src\renderer.hpp" />
@@ -321,6 +323,7 @@
     <ClCompile Include="src\memory\pattern.cpp" />
     <ClCompile Include="src\memory\pattern_batch.cpp" />
     <ClCompile Include="src\memory\range.cpp" />
+    <ClCompile Include="src\playerinfo\playerinfo_gui.cpp" />
     <ClCompile Include="src\pointers.cpp" />
     <ClCompile Include="src\Pools.cpp" />
     <ClCompile Include="src\renderer.cpp" />
