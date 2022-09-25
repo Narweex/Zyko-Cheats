@@ -1,5 +1,8 @@
 #include "other.h"
 #include "pointers.hpp"
+#include <auth/includes/curl/curl.h>
+#include <auth/includes/curl/easy.h>
+#include <Windows.h>
 
 namespace big
 {
@@ -79,7 +82,7 @@ namespace big
         uint64_t rid = 0;
 
         // Request
-        /*CURL* curl = curl_easy_init();
+        CURL* curl = curl_easy_init();
         if (curl)
         {
             curl_easy_setopt(curl, CURLOPT_URL, site.c_str());
@@ -90,7 +93,7 @@ namespace big
 
             curl_easy_perform(curl);
             curl_easy_cleanup(curl);
-        }*/
+        }
 
         if (result.empty() || result == xorstr_("User not found."))
             return rid;
@@ -99,5 +102,19 @@ namespace big
         iss >> rid;
 
         return rid;
+    }
+
+    void CopyToClipboard(const char* text)
+    {
+        OpenClipboard(NULL); //initialize
+        
+        if (EmptyClipboard() != 0) //<-- if error stop
+            return;
+        const size_t size = strlen(text) + 1;
+        HANDLE hndl = GlobalAlloc(GMEM_MOVEABLE, size);
+      
+        SetClipboardData(CF_TEXT, hndl); //set the clipboard text
+
+        CloseClipboard(); //get out
     }
 }
