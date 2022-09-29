@@ -72,7 +72,7 @@ namespace big
 	void features::addMoney()
 	{
 		features::notify_success("Recovery", "Money Added", 3000);
-		QUEUE_JOB_BEGIN_CLAUSE() {
+		
 			features::basket_transaction(-1799524201, -1018905335, 4,
 				{
 					{-1026265157, -1601574614, 0, 1, 1},
@@ -110,7 +110,7 @@ namespace big
 					{-1573825732, -1, 0, 1, 1},
 					{-1818214114, -1573825732, features::bunker_money, 0, 1},
 				});
-		} QUEUE_JOB_END_CLAUSE
+		
 	}
 	void features::cayoSkipPreps()
 	{

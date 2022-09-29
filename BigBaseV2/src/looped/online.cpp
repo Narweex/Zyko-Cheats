@@ -17,9 +17,9 @@ namespace big
 			if (OBJECT::_IS_PICKUP_WITHIN_RADIUS(*drophashes, coords.x, coords.y, coords.z, 9999.0f))
 			{
 				notify_protections("Detected Money Drop !", "Someone Is Dropping Money In Session", 4000);
-				
+
 			}
-			
+
 		}
 		if (nophone)
 		{
@@ -44,7 +44,7 @@ namespace big
 			FIRE::ADD_EXPLOSION(pos.x, pos.y, pos.z, 4, 0.f, false, true, 10000.f, true);
 		}
 
-		
+
 		if (features::freeze_player)
 		{
 			features::RequestControlOfEnt(features::g_selected_player);
@@ -80,6 +80,18 @@ namespace big
 		}
 
 	}
+	void features::joinNotification()
+	{
+		for (int i; i < 32; i++)
+		{
+			if (!NETWORK::NETWORK_IS_PLAYER_CONNECTED(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i)) && ENTITY::DOES_ENTITY_EXIST(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i))) {
+				const char* name = PLAYER::GET_PLAYER_NAME(i);
+
+				features::notify(name, "Player Joining", 7000);
+			
+			}
+		}
+	}
 
 	void features::ragdoll_player()
 	{
@@ -94,14 +106,14 @@ namespace big
 			{
 				if (ENTITY::DOES_ENTITY_EXIST(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i)) && PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i) != PLAYER::PLAYER_PED_ID()) //if player exists and is not user
 				{
-				Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i)); //get their vehicle
-				if (VEHICLE::IS_VEHICLE_MODEL(veh, MISC::GET_HASH_KEY("oppressor2"))) // check for oppressors
-				{
-					const char* name = PLAYER::GET_PLAYER_NAME(i);
-					features::notify(name, "Oppressor mk II user", 7000); 
-					Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i), false);
-					FIRE::ADD_EXPLOSION(pos.x, pos.y, pos.z, 4, 50.f, false, true, 1000.f, false);
-				}
+					Vehicle veh = PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i)); //get their vehicle
+					if (VEHICLE::IS_VEHICLE_MODEL(veh, MISC::GET_HASH_KEY("oppressor2"))) // check for oppressors
+					{
+						const char* name = PLAYER::GET_PLAYER_NAME(i);
+						features::notify(name, "Oppressor mk II user", 7000);
+						Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i), false);
+						FIRE::ADD_EXPLOSION(pos.x, pos.y, pos.z, 4, 50.f, false, true, 1000.f, false);
+					}
 				}
 
 

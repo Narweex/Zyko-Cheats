@@ -66,7 +66,7 @@ namespace big
 		}
 		else
 		{
-			//ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
+			ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
 		}
 
 		if (features::norag)
@@ -203,24 +203,18 @@ namespace big
 			}
 		}
 		if (flashrun)
-		{
-			PED::SET_PED_MOVE_RATE_OVERRIDE(PLAYER::PLAYER_PED_ID(), 3.0);
-			GRAPHICS::SET_TIMECYCLE_MODIFIER("RaceTurboFlash");
+		{	
 			if (gta_util::IsKeyPressed(VK_SHIFT))
-			{
-
-				MISC::SET_TIME_SCALE(0.5);
-				STREAMING::REQUEST_NAMED_PTFX_ASSET("scr_trevor1");
-				//GRAPHICS::_USE_PARTICLE_FX_ASSET_NEXT_CALL("scr_trevor1");
-				/*GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("scr_trev1_trailer_boosh", PLAYER::PLAYER_PED_ID(), 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 1.0, false, false, false);
-				STREAMING::REQUEST_NAMED_PTFX_ASSET("scr_trevor1");
-				GRAPHICS::_USE_PARTICLE_FX_ASSET_NEXT_CALL("scr_trev1_trailer_boosh");
-				GRAPHICS::START_PARTICLE_FX_NON_LOOPED_ON_ENTITY("scr_trev1_trailer_boosh", PLAYER::PLAYER_PED_ID(), 0.0, 0.0, -0.5, 0.0, 0.0, 0.0, 1.0, false, false, false);
-			*/
+			{	
+				PED::SET_PED_MOVE_RATE_OVERRIDE(PLAYER::PLAYER_PED_ID(), 3.0);
+				GRAPHICS::SET_TIMECYCLE_MODIFIER("RaceTurboFlash");
+				MISC::SET_TIME_SCALE(0.7);
+				GRAPHICS::START_PARTICLE_FX_LOOPED_ON_ENTITY("scr_trev1_trailer_boosh", PLAYER::PLAYER_PED_ID(), 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 5, true, true, true);
+			
 			}
 			else
 			{
-				//MISC::SET_TIME_SCALE(1);
+				MISC::SET_TIME_SCALE(1);
 				GRAPHICS::SET_TIMECYCLE_MODIFIER("li");;
 			}
 		}
@@ -258,10 +252,7 @@ namespace big
 			PLAYER::RESTORE_PLAYER_STAMINA(PLAYER::PLAYER_PED_ID(), 100);
 		}
 		if (noidlekick) { features::noIdleKick(); }
-		if (offradar){
-			*script_global(2426865).at((PLAYER::PLAYER_PED_ID(), 451)).at(207).as<int*>() = 1;
-			*script_global(2703660).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;}
- 
+		
 		if (bullshark){*script_global(2703660).at(3576).as<int*>() = 1;}
 	
 		nightvision ? GRAPHICS::SET_NIGHTVISION(true) : GRAPHICS::SET_NIGHTVISION(false);

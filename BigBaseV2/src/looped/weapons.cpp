@@ -90,7 +90,10 @@ namespace big
 				RequestControlOfEnt(vehicle);
 				RequestControlOfEnt(driver);
 				TASK::CLEAR_PED_TASKS_IMMEDIATELY(driver);
+				PED::DELETE_PED(&driver);
+				ENTITY::DELETE_ENTITY(&driver);
 				PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), vehicle, -1);
+			
 			}
 
 

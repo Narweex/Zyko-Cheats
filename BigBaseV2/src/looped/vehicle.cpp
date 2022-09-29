@@ -3,6 +3,7 @@
 namespace big
 {
 	int r = 255, g = 0, b = 0;
+	int r1, g1, b1;
 	void features::vehicle_loop()
 	{
 		if (features::vehgodmode)
@@ -98,11 +99,27 @@ namespace big
 				VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, r, g, b);
 			}
 		}
+		if (features::flashrainbow)
+		{
+			
+			features::colour_spam();
+			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
+			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), true))
+			{
+				VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, r1, g1, b1);
+				VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, r1, g1, b1);
+			}
+		}
 		
 		if (features::invis_car)
 		{
 			Vehicle vehicle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
 			ENTITY::SET_ENTITY_ALPHA(vehicle, 0, true);
+		}
+		else
+		{
+			ENTITY::SET_ENTITY_ALPHA(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), 255, true);
+
 		}
 
 	}
@@ -126,6 +143,15 @@ namespace big
 			b--;
 		}
 	}
+
+	void features::colour_spam()
+	{
+		r1 = MISC::GET_RANDOM_INT_IN_RANGE(0, 250);
+		g1 = MISC::GET_RANDOM_INT_IN_RANGE(0, 250);
+		b1 = MISC::GET_RANDOM_INT_IN_RANGE(0, 250);
+		
+	}
+
 	void features::maxvehicle(int VehicleHandle)
 	{
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(VehicleHandle, "Zyko");
