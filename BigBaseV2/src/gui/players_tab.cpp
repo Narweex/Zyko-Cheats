@@ -6,7 +6,7 @@
 #include "gta_util.hpp"
 #include "features.hpp"
 #include "script_global.hpp"
-#include "players_tab.h"
+#include "imgui_tabs.h"
 #include "player_list.h"
 #include "gui/components/components.hpp"
 
@@ -14,8 +14,9 @@ namespace big
 {
 	
 	
-	void players_tab::render_players_tab()
+	void ImGuiTabs::render_players_tab()
 	{
+		
 		//components::child("sex", ImVec2(300, 400));
 		/*for (int i = 0; i < 5; i++)
 		{
@@ -57,6 +58,7 @@ namespace big
 
 			ImGui::BeginChild(xorstr_("##playerfeatures"), ImVec2(425.f, 520.f));
 			{
+				
 				if (ImGui::CollapsingHeader(xorstr_("Player Info")))
 				{
 					ImGui::Columns(2);

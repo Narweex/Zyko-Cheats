@@ -1,16 +1,12 @@
 #include "common.hpp"
-#include "base_tab.h"
+#include "imgui_tabs.h"
 #include "features.hpp"
 
 
 namespace big
 {
-	void base_tab::render_base_tab()
+	void ImGuiTabs::render_base_tab()
 	{
-
-
-
-		ImGui::Spacing();
 
 
 
@@ -75,6 +71,7 @@ namespace big
 			ImGui::BeginChild("##options1", ImVec2(300, 280), true);
 
 			ImGui::Text(xorstr_(" Self"));
+			ImGui::Separator();
 			ImGui::Checkbox(xorstr_("Godmode"), &features::godmode);
 			ImGui::Checkbox(xorstr_("Semi Godmode"), &features::semigod);
 			ImGui::Checkbox(xorstr_("No Ragdoll"), &features::norag);

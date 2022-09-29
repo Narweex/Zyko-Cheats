@@ -1,15 +1,12 @@
 #include "common.hpp"
-#include "weapons_tab.h"
+#include "imgui_tabs.h"
 #include "imgui.h"
 #include "script.hpp"
 #include "fiber_pool.hpp"
 #include "natives.hpp"
 #include "gta_util.hpp"
-#include "gui/list/UIManager.hpp"
 #include "features.hpp"
-#include "script_global.hpp"
 #include "auth/auth.hpp"
-#include <iostream>
 #include<cstring>
 #include <helpers/other.h>
 #include "gta/Weapons.h"
@@ -17,7 +14,7 @@
 
 namespace big
 {
-	void weapons_tab::render_weapons_tab()
+	void ImGuiTabs::render_weapons_tab()
 	{
 		ImGui::BeginChild("##options1", ImVec2(300, 280), true);
 

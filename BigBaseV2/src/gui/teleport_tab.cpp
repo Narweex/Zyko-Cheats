@@ -1,5 +1,5 @@
 #include "common.hpp"
-#include "teleport_tab.h"
+#include "imgui_tabs.h"
 #include "imgui.h"
 #include "script.hpp"
 #include "fiber_pool.hpp"
@@ -10,9 +10,10 @@
 #include "script_global.hpp"
 #include "looped/teleports.hpp"
 
+
 namespace big
 {
-	void teleport_tab::render_teleport_tab()
+	void ImGuiTabs::render_teleport_tab()
 	{
 		ImGui::Columns(3);
 		if (ImGui::CollapsingHeader("Airports"))

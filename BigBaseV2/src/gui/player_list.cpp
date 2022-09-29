@@ -22,7 +22,7 @@ namespace big
 					auto cstr_name = net_player->get_name();
 					std::string name = cstr_name;
 					transform(name.begin(), name.end(), name.begin(), ::tolower);
-					//playerlist[name] = { cstr_name, i };
+					playerlist[name] = { cstr_name, i };
 				}
 			}
 		}

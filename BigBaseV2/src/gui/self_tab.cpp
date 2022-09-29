@@ -1,5 +1,5 @@
 #include "common.hpp"
-#include "self_tab.h"
+#include "imgui_tabs.h"
 #include "imgui.h"
 #include "script.hpp"
 #include "fiber_pool.hpp"
@@ -11,7 +11,7 @@
 
 namespace big
 {
-	void self_tab::render_self_tab()
+	void ImGuiTabs::render_self_tab()
 	{
 
 		if (ImGui::BeginTabItem("Self"))

@@ -1,5 +1,5 @@
 #include "common.hpp"
-#include "recovery_tab.h"
+#include "imgui_tabs.h"
 #include "imgui.h"
 #include "script.hpp"
 #include "fiber_pool.hpp"
@@ -15,7 +15,7 @@
 
 namespace big
 {
-	void recovery_tab::render_recovery_tab()
+	void ImGuiTabs::render_recovery_tab()
 	{
 
 
@@ -29,7 +29,9 @@ namespace big
 		
 
 		if (ImGui::Button(xorstr_("Add: Bunker Money"))) {
-			features::addMoney();
+			g_fiber_pool->queue_job([=] {
+					features::addMoney();
+				});	
 			
 			
 			/*features::notify_success("Recovery", "Money Added", 3000);

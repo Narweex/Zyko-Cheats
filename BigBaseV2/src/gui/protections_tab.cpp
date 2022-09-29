@@ -1,10 +1,10 @@
-#include "protections_tab.h"
+#include "imgui_tabs.h"
 #include "features.hpp"
 
 
 namespace big
 {
-	void protections_tab::render_protections_tab()
+	void ImGuiTabs::render_protections_tab()
 	{
 		ImGui::Checkbox("Notify for Blocks", &features::g_received_event);
 		ImGui::Checkbox("Block Explosions", &features::g_explosion_event);
