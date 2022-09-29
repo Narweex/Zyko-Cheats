@@ -103,6 +103,7 @@ enum WeaponHashes : Hash
 	WEAPON_WRENCH = RAGE_JOAAT("WEAPON_WRENCH"),
 };
 
+
 constexpr uint32_t weapon_list[]
 {
 	WEAPON_ADVANCEDRIFLE,
@@ -203,11 +204,117 @@ constexpr uint32_t weapon_list[]
 	WEAPON_WRENCH,
 };
 
+struct weaponsData
+{
+	std::string label, hash;
+};
+
+inline std::vector<weaponsData> weaponlist
+{
+	{ xorstr_("Advanced Rifle"), xorstr_("WEAPON_ADVANCEDRIFLE")},
+	{ xorstr_("AP Pistol"), xorstr_("WEAPON_APPISTOL")},
+	{ xorstr_("Assault Rifle"), xorstr_("WEAPON_ASSAULTRIFLE")},
+	{ xorstr_("Assault Rifle mk2"), xorstr_("WEAPON_ASSAULTRIFLE_MK2")},
+	{ xorstr_("Asault Shotgun"), xorstr_("WEAPON_ASSAULTSHOTGUN")},
+	{ xorstr_("Assault SMG"), xorstr_("WEAPON_ASSAULTSMG")},
+	{ xorstr_("Ball"), xorstr_("WEAPON_BALL")},
+	{ xorstr_("Bat"), xorstr_("WEAPON_BAT")},
+	{ xorstr_("Battle Axe"), xorstr_("WEAPON_BATTLEAXE")},
+	{ xorstr_("Bottle"), xorstr_("WEAPON_BOTTLE")},
+	{ xorstr_("Bullpup Rifle"), xorstr_("WEAPON_BULLPUPRIFLE")},
+	{ xorstr_("Bullpup Rifle mk2"), xorstr_("WEAPON_BULLPUPRIFLE_MK2")},
+	{ xorstr_("Bullpup Shotgun"), xorstr_("WEAPON_BULLPUPSHOTGUN")},
+	{ xorstr_("BZ Gas"), xorstr_("WEAPON_BZGAS")},
+	{ xorstr_("Carbine Rifle"), xorstr_("WEAPON_CARBINERIFLE")},
+	{ xorstr_("Carbine Rifle mk2"), xorstr_("WEAPON_CARBINERIFLE_MK2")},
+	{ xorstr_("Combat MG"), xorstr_("WEAPON_COMBATMG")},
+	{ xorstr_("Combat MG mk2"), xorstr_("WEAPON_COMBATMG_MK2")},
+	{ xorstr_("Combat PDW"), xorstr_("WEAPON_COMBATPDW")},
+	{ xorstr_("Combat Pistol"), xorstr_("WEAPON_COMBATPISTOL")},
+	{ xorstr_("Compact Launcher"), xorstr_("WEAPON_COMPACTLAUNCHER")},
+	{ xorstr_("Compact Rifle"), xorstr_("WEAPON_COMPACTRIFLE")},
+	{ xorstr_("Crowbar"), xorstr_("WEAPON_CROWBAR")},
+	{ xorstr_("Dagger"), xorstr_("WEAPON_DAGGER")},
+	{ xorstr_("Double Action Revolver"), xorstr_("WEAPON_DOUBLEACTION")},
+	{ xorstr_("EMP Launcher"), xorstr_("WEAPON_EMPLAUNCHER")},
+	{ xorstr_("Fertilizer Can"), xorstr_("WEAPON_FERTILIZERCAN")},
+	{ xorstr_("Fire Extinguisher"), xorstr_("WEAPON_FIREEXTINGUISHER")},
+	{ xorstr_("Firework"), xorstr_("WEAPON_FIREWORK")},
+	{ xorstr_("Flare"), xorstr_("WEAPON_FLARE")},
+	{ xorstr_("Flaregun"), xorstr_("WEAPON_FLAREGUN")},
+	{ xorstr_("Flashlight"), xorstr_("WEAPON_FLASHLIGHT")},
+	{ xorstr_("Golfclub"), xorstr_("WEAPON_GOLFCLUB")},
+	{ xorstr_("Grenade"), xorstr_("WEAPON_GRENADE")},
+	{ xorstr_("Grenadelauncher"), xorstr_("WEAPON_GRENADELAUNCHER")},
+	{ xorstr_("Smoke Grenade launcher"), xorstr_("WEAPON_GRENADELAUNCHER_SMOKE")},
+	{ xorstr_("Gusenberg"), xorstr_("WEAPON_GUSENBERG")},
+	{ xorstr_("Hammer"), xorstr_("WEAPON_HAMMER")},
+	{ xorstr_("Hatchet"), xorstr_("WEAPON_HATCHET")},
+	{ xorstr_("Hazardcan"), xorstr_("WEAPON_HAZARDCAN")},
+	{ xorstr_("Heavypistol"), xorstr_("WEAPON_HEAVYPISTOL")},
+	{ xorstr_("Heavy Rifle"), xorstr_("WEAPON_HEAVYRIFLE")},
+	{ xorstr_("Heavy Shotgun"), xorstr_("WEAPON_HEAVYSHOTGUN")},
+	{ xorstr_("Heavy Sniper"), xorstr_("WEAPON_HEAVYSNIPER")},
+	{ xorstr_("Heavy Sniper mk2"), xorstr_("WEAPON_HEAVYSNIPER_MK2")},
+	{ xorstr_("Homing Launcher"), xorstr_("WEAPON_HOMINGLAUNCHER")},
+	{ xorstr_("Knife"), xorstr_("WEAPON_KNIFE")},
+	{ xorstr_("Knuckle"), xorstr_("WEAPON_KNUCKLE")},
+	{ xorstr_("Machete"), xorstr_("WEAPON_MACHETE")},
+	{ xorstr_("Machine Pistol"), xorstr_("WEAPON_MACHINEPISTOL")},
+	{ xorstr_("Marksman Pistol"), xorstr_("WEAPON_MARKSMANPISTOL")},
+	{ xorstr_("Marksman Rifle"), xorstr_("WEAPON_MARKSMANRIFLE")},
+	{ xorstr_("Marksman Rifle mk2"), xorstr_("WEAPON_MARKSMANRIFLE_MK2")},
+	{ xorstr_("Machine Gun"), xorstr_("WEAPON_MG")},
+	{ xorstr_("Micro SMG"), xorstr_("WEAPON_MICROSMG")},
+	{ xorstr_("Military Rifle"), xorstr_("WEAPON_MILITARYRIFLE")},
+	{ xorstr_("Minigun"), xorstr_("WEAPON_MINIGUN")},
+	{ xorstr_("Mini SMG"), xorstr_("WEAPON_MINISMG")},
+	{ xorstr_("Molotov"), xorstr_("WEAPON_MOLOTOV")},
+	{ xorstr_("Musket"), xorstr_("WEAPON_MUSKET")},
+	{ xorstr_("Nightstick"), xorstr_("WEAPON_NIGHTSTICK")},
+	{ xorstr_("Petrol Can"), xorstr_("WEAPON_PETROLCAN")},
+	{ xorstr_("Pipe Bomb"), xorstr_("WEAPON_PIPEBOMB")},
+	{ xorstr_("Pistol"), xorstr_("WEAPON_PISTOL")},
+	{ xorstr_("Pistol 50"), xorstr_("WEAPON_PISTOL50")},
+	{ xorstr_("Pistol mk2"), xorstr_("WEAPON_PISTOL_MK2")},
+	{ xorstr_("Pool Cue"), xorstr_("WEAPON_POOLCUE")},
+	{ xorstr_("Proximine"), xorstr_("WEAPON_PROXMINE")},
+	{ xorstr_("Pumpshotgun"), xorstr_("WEAPON_PUMPSHOTGUN")},
+	{ xorstr_("Pumpshotgun mk2"), xorstr_("WEAPON_PUMPSHOTGUN_MK2")},
+	{ xorstr_("Railgun"), xorstr_("WEAPON_RAILGUN")},
+	{ xorstr_("Raycarbine"), xorstr_("WEAPON_RAYCARBINE")},
+	{ xorstr_("Ray Minigun"), xorstr_("WEAPON_RAYMINIGUN")},
+	{ xorstr_("Raypistol"), xorstr_("WEAPON_RAYPISTOL")},
+	{ xorstr_("Revolver"), xorstr_("WEAPON_REVOLVER")},
+	{ xorstr_("Revolver mk2"), xorstr_("WEAPON_REVOLVER_MK2")},
+	{ xorstr_("RPG"), xorstr_("WEAPON_RPG")},
+	{ xorstr_("Sawn Off"), xorstr_("WEAPON_SAWNOFFSHOTGUN")},
+	{ xorstr_("SMG"), xorstr_("WEAPON_SMG")},
+	{ xorstr_("SMG mk2"), xorstr_("WEAPON_SMG_MK2")},
+	{ xorstr_("Smoke Grenade"), xorstr_("WEAPON_SMOKEGRENADE")},
+	{ xorstr_("Sniper Rifle"), xorstr_("WEAPON_SNIPERRIFLE")},
+	{ xorstr_("Snowball"), xorstr_("WEAPON_SNOWBALL")},
+	{ xorstr_("SNS Pistol"), xorstr_("WEAPON_SNSPISTOL")},
+	{ xorstr_("SNS Pistol mk2"), xorstr_("WEAPON_SNSPISTOL_MK2")},
+	{ xorstr_("Special Carbine"), xorstr_("WEAPON_SPECIALCARBINE")},
+	{ xorstr_("Special Carbine mk2"), xorstr_("WEAPON_SPECIALCARBINE_MK2")},
+	{ xorstr_("Sticky Bomb"), xorstr_("WEAPON_STICKYBOMB")},
+	{ xorstr_("Stinger"), xorstr_("WEAPON_STINGER")},
+	{ xorstr_("Stone Hatchet"), xorstr_("WEAPON_STONE_HATCHET")},
+	{ xorstr_("Stungun "), xorstr_("WEAPON_STUNGUN")},
+	{ xorstr_("Stungun mp"), xorstr_("WEAPON_STUNGUN_MP")},
+	{ xorstr_("Switchblade"), xorstr_("WEAPON_SWITCHBLADE")},
+	{ xorstr_("Vintage Pistol"), xorstr_("WEAPON_VINTAGEPISTOL")},
+	{ xorstr_("Wrench"), xorstr_("WEAPON_WRENCH")}
+};
+
 enum Gadgets : Hash
 {
 	GADGET_OBJECT = RAGE_JOAAT("OBJECT"),
 	GADGET_PARACHUTE = RAGE_JOAAT("GADGET_PARACHUTE")
 };
+
+
 
 enum WeaponComponents : Hash
 {
