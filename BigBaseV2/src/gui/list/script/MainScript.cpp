@@ -15,10 +15,12 @@
 #include "script_global.hpp"
 #include "helpers/other.h"
 #include "Translation.hpp"
-#include "../../BigBaseV2/src/gui/player_list.h"
 #include "thread_pool.hpp"
-
+#include "helpers/other.h"
 #include <looped/teleports.hpp>
+
+#include <gui/player_list.h>
+#pragma comment(lib, "Winmm.lib")
 
 
 
@@ -120,7 +122,8 @@ namespace big
 		LevelSubmenu,
 		HeistSubmenu,
 		scripthook,
-		AnimationsSubmenu
+		AnimationsSubmenu,
+		SettingsInfoWindows
 
 	};
 
@@ -155,7 +158,7 @@ namespace big
 				sub->AddOption<SubOption>("Recovery", "Recovery Options", recovery);
 				sub->AddOption<SubOption>("Misc Options", "Other Options", misc);
 				sub->AddOption<SubOption>("Protections", "Protection Options", Protections);
-				sub->AddOption<SubOption>("Scripthook V", "SHV Mods", scripthook);
+				//sub->AddOption<SubOption>("Scripthook V", "SHV Mods", scripthook);
 				sub->AddOption<SubOption>("Settings", "Menu settings", SubmenuSettings);
 
 			});
@@ -163,7 +166,19 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Self Options"), SubmenuSelf, [](RegularSubmenu* sub)
 			{
 				
+				sub->AddOption<RegularOption>("Coords", "Nigger", []
+					{
+					
+						Vector3 nigger = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+						float x = nigger.x;
+						float y = nigger.y;
+						float z = nigger.z;
+						LOG(INFO) << x;
+						LOG(INFO) << y;
+						LOG(INFO) << z;
 
+
+					});
 				sub->AddOption<SubOption>("Visions", "Change Player Visions", vis);
 				sub->AddOption<SubOption>("Model Changer", "Change your Model", SubmenuModelChanger);
 				sub->AddOption<SubOption>("Animations", nullptr, AnimationsSubmenu);
@@ -437,6 +452,7 @@ namespace big
 		g_UiManager->AddSubmenu<RegularSubmenu>("Vehicle Colors", SubmenuVehicleColors, [&](RegularSubmenu* sub)
 			{
 				sub->AddOption<BoolOption<bool>>("Rainbow colour", "Makes a pog loop rgb fade", &features::rainbowcar, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Colour spam", "Wait i hope you dont have epilepsy...", &features::flashrainbow, BoolDisplay::OnOff);
 
 				sub->AddOption<NumberOption<std::int32_t>>("Color Primary [~r~R~s~]", nullptr, &features::red, 0, 255, 10, 3, true, "< ", " >", [] {});
 				sub->AddOption<NumberOption<std::int32_t>>("Color Primary [~g~G~s~]", nullptr, &features::green, 0, 255, 10, 3, true, "< ", " >", [] {});
@@ -1152,28 +1168,21 @@ namespace big
 					});
 				sub->AddOption<RegularOption>("Bennys Garage", "Teleport to Bennys Garage", []
 					{
-						//PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), -205.3417f, -1305.824f, 31.3527f);
 						teleport(-205.3417f, -1305.824f, 31.3527f);
 					});
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Safe Houses", safehouse, [](RegularSubmenu* sub)
 			{
-				sub->AddOption<RegularOption>("Franklins House", "Teleport to Franklins House", []
-					{
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), 7.1190f, 536.6150f, 176.0280f);
-					});
-				sub->AddOption<RegularOption>("Franklins House 2", "Teleport To Franklins House 2", []
-					{
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), -14.3803f, -1483.510f, 31.1044f);
-					});
-				sub->AddOption<RegularOption>("Michaels House", "Teleport To Michaels House", []
-					{
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), -14.3803f, -1483.510f, 31.1044f);
-					});
-				sub->AddOption<RegularOption>("Trevors House", "Teleport To Trevors House", []
-					{
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), 1972.6100f, 3817.0400f, 33.4283f);
-					});
+				for (auto& location : teleportsSafehouses)
+				{
+					sub->AddOption<RegularOption>(location.name, "Teleports you in there", [=]
+						{
+							teleport(location.x, location.y, location.z);
+						});
+
+				}
+				
+			
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("Shops", shops, [](RegularSubmenu* sub)
 			{
@@ -1198,33 +1207,14 @@ namespace big
 			{
 				for (auto& teleport : teleportsAirports)
 				{
-					sub->AddOption<RegularOption>(teleport.name, "Teleport To ", [=]
+					sub->AddOption<RegularOption>(teleport.name, "Teleports you in there", [=]
 						{
 							features::teleport(teleport.x, teleport.y, teleport.z);
 						});
 				}
-
-				sub->AddOption<RegularOption>("Airport LSIA ", "Teleport To airpot LSIA", []
-					{
-						Vector3 Coords;
-						Coords.x = -1102.2910f; Coords.y = -2894.5160f; Coords.z = 13.9467f;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("Airport Sandy Shores ", "Teleport To Sandy Shores", []
-					{
-						Vector3 Coords;
-						Coords.x = 1741.4960f; Coords.y = 3269.2570f; Coords.z = 41.6014f;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("Grapeseed Airport ", "Teleport To Grapeseed", []
-					{
-						Vector3 Coords;
-						Coords.x = 2137.5f; Coords.y = 4809.4f; Coords.z = 41.1181f;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
 						
 							 
 							
-					});
 			});
 		g_UiManager->AddSubmenu<RegularSubmenu>("IPls", ipls, [](RegularSubmenu* sub)
 			{
@@ -1342,112 +1332,23 @@ namespace big
 						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
 					});
 			});
+
+
 		g_UiManager->AddSubmenu<RegularSubmenu>("Landmarks", landmarks, [](RegularSubmenu* sub)
 			{
 
-				sub->AddOption<RegularOption>("Crane Top", "Teleport To Crane Top", []
-					{
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), -119.8790f, -977.3570f, 304.2491f);
-					});
-				sub->AddOption<RegularOption>("Mount Chiliad", "Teleport To Mount Chilliad", []
-					{
-						Vector3 Coords;
-						Coords.x = 496.75f; Coords.y = 5591.17f; Coords.z = 795.03f;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("Mount Josiah", "Teleport To Mount Josiah", []
-					{
-						
-						Vector3 Coords;
-						Coords.x = -1185.84f; Coords.y = 3856.21f; Coords.z = 491.33f;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("Mount Gordo", "Teleport To Mount Josiah", []
-					{
-						Vector3 Coords;
-						Coords.x = 2881.66f; Coords.y = 5902.08f; Coords.z = 367.595f;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("Maze Bank", "Teleport To Maze Bank", []
-					{
-						Vector3 Coords;
-						Coords.x = -74.94243f; Coords.y = -818.63446f; Coords.z = 326.174347f;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("Military Base", "Teleport To Military Base", []
-					{
-						Vector3 Coords;
-						Coords.x = -2012.8470f; Coords.y = 2956.5270f; Coords.z = 32.8101f;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("Zancudo Tower", "Teleport To Zancudo Tower", []
-					{
-						Vector3 Coords;
-						Coords.x = -2356.0940; Coords.y = 3248.645; Coords.z = 101.4505;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("Mask Shop", "Teleport To Mask Shop", []
-					{
-						Vector3 Coords;
-						Coords.x = -1338.16; Coords.y = -1278.11; Coords.z = 4.87;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("LSC", "Teleport To LSC", []
-					{
-						Vector3 Coords;
-						Coords.x = -373.01; Coords.y = -124.91; Coords.z = 38.31;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("FBI", "Teleport To FBI", []
-					{
-						Vector3 Coords;
-						Coords.x = 135.5220f; Coords.y = -749.0003f; Coords.z = 260.0000f;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("Human Labs", "Teleport To Human Labs", []
-					{
-						Vector3 Coords;
-						Coords.x = 3617.231f; Coords.y = 3739.871f; Coords.z = 28.6901f;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("Windmills", "Teleport To Windmills", []
-					{
-						Vector3 Coords;
-						Coords.x = 2212.44f; Coords.y = 2055; Coords.z = 133.437f;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("MMI", "Teleport To MMI", []
-					{
-						Vector3 Coords;
-						Coords.x = -222.1977; Coords.y = -1185.8500; Coords.z = 23.0294;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("Waterfall", "Teleport To Waterfall", []
-					{
-						Vector3 Coords;
-						Coords.x = -597.9525f; Coords.y = 4475.2910f; Coords.z = 25.6890f;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("Maze Bank Arena", "Teleport To Maze Bank Arena", []
-					{	 
-						Vector3 Coords;
-						Coords.x = -212.511f; Coords.y = -2044.89f; Coords.z = 27.6204f;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("Vespucci Beach", "Teleport To The Beach", []
-					{ 
-						Vector3 Coords;
-						Coords.x = -1849.81f; Coords.y = -1231.99f; Coords.z = 13.0173f;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
-				sub->AddOption<RegularOption>("Observatory", "Teleport To The Observatory", []
-					{
-						Vector3 Coords;
-						Coords.x = -405.134f; Coords.y = 1194.49f; Coords.z = 326.398f;
-						PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), Coords.x, Coords.y, Coords.z);
-					});
+				for (auto& landmark : teleportsLandmarks)
+				{
+					sub->AddOption<RegularOption>(landmark.name, "Teleports you in there", [=]
+						{
+							features::teleport(landmark.x, landmark.y, landmark.z);
+						});
+				}
+			
+				
 				sub->AddOption<RegularOption>("The Setup", "Oh Its the setup its the setup...", []
 					{
+					
 						CLOCK::SET_CLOCK_TIME(19, 0, 0);
 						Vector3 Coords;
 						Coords.x = -1577.67f; Coords.y = 5159.83f; Coords.z = 21.9807f;
@@ -1509,7 +1410,6 @@ namespace big
 
 		g_UiManager->AddSubmenu<PlayerSubmenu>(&features::g_selected_player, SubmenuSelectedPlayer, [](PlayerSubmenu* sub)
 			{
-				//features::playerinfo_toggle = true;
 				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 				
 				
@@ -1822,7 +1722,8 @@ namespace big
 					});
 				sub->AddOption<SubOption>("Infobar", nullptr, SubmenuSettingsSubmenuBar);
 				sub->AddOption<SubOption>("Links", nullptr, SUbmenuSettingsLinks);
-				sub->AddOption<SubOption>("Options", nullptr, SubmenuSettingsOption);
+				sub->AddOption<SubOption>("Info Windows", nullptr, SettingsInfoWindows);
+				sub->AddOption<SubOption>("Options", nullptr, SubmenuSettingsOption);//SettingsInfoWindows
 				sub->AddOption<SubOption>("Footer", nullptr, SubmenuSettingsFooter);
 				sub->AddOption<SubOption>("Description", nullptr, SubmenuSettingsDescription);
 				//sub->AddOption<SubOption>("Input", nullptr, SubmenuSettingsInput);
@@ -1906,7 +1807,7 @@ namespace big
 					{
 						g_UiManager->m_HeaderType = Lists::HeaderTypesBackend[Lists::HeaderTypesPosition];
 					});
-
+				
 				
 
 				sub->AddOption<SubOption>("Text", nullptr, SubmenuSettingsHeaderText);
@@ -1946,12 +1847,11 @@ namespace big
 			sub->AddOption<NumberOption<std::uint8_t>>("A", nullptr, &g_UiManager->m_HeaderTextColor.a, '\0', static_cast<std::uint8_t>(255));
 		});
 		*/
-		g_UiManager->AddSubmenu<RegularSubmenu>("Description", SubmenuSettingsDescription, [](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>("Info Windows", SettingsInfoWindows, [](RegularSubmenu* sub)
 			{
-				sub->AddOption<NumberOption<float>>("Padding", "Padding before the description rect.", &g_UiManager->m_DescriptionHeightPadding, 0.01f, 1.f, 0.001f,
-					3);
-				sub->AddOption<NumberOption<float>>("Height", "Size of the description rect.", &g_UiManager->m_DescriptionHeight, 0.01f, 1.f, 0.001f, 3);
-				sub->AddOption<NumberOption<float>>("Text Size", "Size of the description text.", &g_UiManager->m_DescriptionTextSize, 0.1f, 2.f, 0.01f, 2);
+				sub->AddOption<BoolOption<bool>>("FPS Window", nullptr, &features::fps, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Menu Watermark", nullptr, &features::watermark, BoolDisplay::OnOff);
+
 			});
 
 
