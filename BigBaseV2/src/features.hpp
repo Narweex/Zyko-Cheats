@@ -106,7 +106,9 @@ namespace big::features
 	void repairVehicle();
 	void cleanVehicle();
 	void duplicatecar();
-	//int maincolour;
+	inline bool flashrainbow = false;
+	void colour_spam();
+	
 
 
 	/* Teleport */
@@ -139,6 +141,9 @@ namespace big::features
 	inline bool kick_from_oppressor = false;
 	inline bool freeze_player = false;
 	void ragdoll_player();
+	inline bool notify_on_join = true;
+	void joinNotification();
+	inline bool crosshair = true;
 
 	/* World*/
 	inline int worldgravity = 0;
@@ -168,6 +173,7 @@ namespace big::features
 	void coordsDisplay(bool toggle);
 	//inline bool coords_display = false;
 	void rainbowloop();
+
 	void isDev();
 	void check();
 	void isRunning(LPCWSTR name);

@@ -1,4 +1,4 @@
-#include "common.hpp"
+
 #include "core/fonts.hpp"
 #include "logger.hpp"
 #include "gui.hpp"

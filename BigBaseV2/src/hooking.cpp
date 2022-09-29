@@ -15,7 +15,8 @@
 #include "helpers/player_info.h"
 #include <MinHook.h>
 #include "fiber_pool.hpp"
-#include "CNetGamePlayer.hpp"
+
+#include "../GTAV-Classes/CNetGamePlayer.hpp"
 
 
 namespace big

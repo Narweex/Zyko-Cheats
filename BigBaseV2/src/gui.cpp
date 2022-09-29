@@ -10,18 +10,12 @@
 #include "pointers.hpp"
 #include "renderer.hpp"
 #include "script.hpp"
-#include "gui/recovery_tab.h"
 #include <imgui.h>
 #include "auth/auth.hpp"
-#include "gui/base_tab.h"
-#include "gui/players_tab.h"
 #include "gui/self_tab.h"
 #include "gui/components/components.hpp"
 #include <gui/list/UIManager.hpp>
-#include "gui/spawn_tab.h"
-#include "gui/weapons_tab.h"
-#include "gui/lobby_tab.h"
-#include "gui/vehicle_tab.h"
+#include "gui/imgui_tabs.h"
 
 namespace big
 {
@@ -108,7 +102,7 @@ namespace big
 					switch (g_gui.g_tab)
 					{
 					case 0:
-						base_tab::render_base_tab();
+						ImGuiTabs::render_base_tab();
 						break;
 					case 1:
 						if (!auth::login)
@@ -117,7 +111,7 @@ namespace big
 						}
 						else
 						{
-							weapons_tab::render_weapons_tab();
+							ImGuiTabs::render_weapons_tab();
 						}
 						break;
 					case 2:
@@ -127,7 +121,7 @@ namespace big
 						}
 						else
 						{
-							vehicle_tab::render_vehicle_tab();
+							ImGuiTabs::render_vehicle_tab();
 						}
 						break;
 					case 3:
@@ -137,9 +131,7 @@ namespace big
 						}
 						else
 						{
-							if (ImGui::Button("unload")) {
-								g_running = false;
-							}
+							ImGuiTabs::render_teleport_tab();
 						}
 						break;
 					case 4:
@@ -149,7 +141,7 @@ namespace big
 						}
 						else
 						{
-							lobby_tab::render_lobby_tab();
+							ImGuiTabs::render_lobby_tab();
 						}
 						break;
 					case 5:
@@ -159,7 +151,7 @@ namespace big
 						}
 						else
 						{
-							players_tab::render_players_tab();
+							ImGuiTabs::render_players_tab();
 						}
 						break;
 					case 6:
@@ -181,9 +173,7 @@ namespace big
 						}
 						else
 						{
-							if (ImGui::Button("unload")) {
-								g_running = false;
-							}
+							ImGuiTabs::render_protections_tab();
 						}
 						break;
 					case 8:
@@ -193,7 +183,7 @@ namespace big
 						}
 						else
 						{
-							recovery_tab::render_recovery_tab();
+							ImGuiTabs::render_recovery_tab();
 						}
 						break;
 					case 9:

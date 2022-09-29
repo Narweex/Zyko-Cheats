@@ -57,11 +57,11 @@ namespace big
 		PVOID m_gta_scripted_game_event{};
 		PVOID m_send_net_info_to_lobby{};
 
-		rage::GenericPool* m_ped_pool{};
+		/*rage::GenericPool* m_ped_pool{};
 		rage::VehiclePool* m_vehicle_pool{};
 		rage::GenericPool* m_prop_pool{};
 		rage::GenericPool* m_pickup_pool{};
-		rage::GenericPool* m_camera_pool{};
+		rage::GenericPool* m_camera_pool{};*/
 	};
 
 	inline pointers* g_pointers{};

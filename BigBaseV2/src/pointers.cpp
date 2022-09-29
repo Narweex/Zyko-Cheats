@@ -136,7 +136,7 @@ namespace big
 				m_get_event_data = ptr.as<decltype(m_get_event_data)>();
 		});
 
-		main_batch.add("Ped Pool", "48 8B 05 ? ? ? ? 41 0F BF C8", [this](memory::handle ptr)
+		/*main_batch.add("Ped Pool", "48 8B 05 ? ? ? ? 41 0F BF C8", [this](memory::handle ptr)
 			{
 				m_ped_pool = ptr.add(3).as<rage::GenericPool*>();
 			});
@@ -159,7 +159,7 @@ namespace big
 		main_batch.add("Camera Pool", "48 8B C8 EB 02 33 C9 48 85 C9 74 26", [this](memory::handle ptr)
 			{
 				m_camera_pool = ptr.add(-9).rip().as<rage::GenericPool*>();
-			});
+			});*/
 
 		main_batch.run(memory::module(nullptr));
 

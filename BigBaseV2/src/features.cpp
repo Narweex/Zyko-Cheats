@@ -68,10 +68,10 @@ namespace big
 
 			// Position
 			ImGui::SetNextWindowSize(size, ImGuiCond_Always);
-			ImGui::SetNextWindowPos(ImVec2(14.f, 5.f), ImGuiCond_Always);
+			ImGui::SetNextWindowPos(ImVec2(14.f, 5.f));
 
 			// Window
-			if (ImGui::Begin(xorstr_("##watermark"), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus))
+			if (ImGui::Begin(xorstr_("##watermark"), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse /*| ImGuiWindowFlags_NoNav*/ | ImGuiWindowFlags_NoResize | /*ImGuiWindowFlags_NoFocusOnAppearing |*/ ImGuiWindowFlags_NoBringToFrontOnFocus))
 			{	
 				ImGui::Text(xorstr_("zykocheats.org"));
 				ImGui::Text(fmt::format(xorstr_("Time: {}"), std::ctime(&end_time)).c_str()); 
@@ -98,8 +98,8 @@ namespace big
 
 			std::vector<data_s> pools
 			{
-				{ xorstr_("Peds"), g_pointers->m_ped_pool->size },
-				{ xorstr_("Objects"), g_pointers->m_prop_pool->size }
+				/*{ xorstr_("Peds"), g_pointers->m_ped_pool->size },
+				{ xorstr_("Objects"), g_pointers->m_prop_pool->size }*/
 			};
 
 			// Dynamic size
@@ -495,7 +495,10 @@ namespace big
 			g_player_info.player_id = PLAYER::PLAYER_ID();
 			g_player_info.player_ped = PLAYER::PLAYER_PED_ID();
 		}
-
+		if (crosshair)
+		{
+			CAM::_ENABLE_CROSSHAIR_THIS_FRAME();
+		}
 		
 		
 		if (features::novehkick)
@@ -558,15 +561,10 @@ namespace big
 				{
 				case 0:
 					//50 MS		
-					run_playerlist();		
-					if (traffic_folow)
-					{
-						for (int i; i < 50; i++)
-						{
-							TASK::TASK_FOLLOW_TO_OFFSET_OF_ENTITY(i, PLAYER::PLAYER_PED_ID(), 0.0f, 0.0f, 0.0f, 10, -1, 10.0f, 1);
+					run_playerlist();	
+					notify_on_join ? features::joinNotification : NULL;
 
-						}
-					}
+					
 					
 	
 					break;
@@ -586,7 +584,9 @@ namespace big
 					}
 					
 					features::misc_loop();
-					ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
+					if(!invisibility){
+						ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
+					}
 					
 
 

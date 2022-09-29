@@ -18,9 +18,7 @@
 #include <chrono>
 #include <ctime>
 
-#include <filesystem>
-#include <fstream>
-#include <iostream>
+
 #include <iomanip>
 
 #include <atomic>
@@ -59,15 +57,10 @@
 #include "core/config.h"
 #include "auth/auth.hpp"
 #include "auth/auth.hpp"
-#include "gui/base_tab.h"
-#include "gui/players_tab.h"
+#include "gui/imgui_tabs.h"
 #include "gui/self_tab.h"
 #include "gui/components/components.hpp"
 #include <gui/list/UIManager.hpp>
-#include "gui/spawn_tab.h"
-#include "gui/weapons_tab.h"
-#include "gui/lobby_tab.h"
-#include "gui/vehicle_tab.h"
 #include "gui/list/Lists.hpp"
 #include "natives.hpp"
 #include "gta_util.hpp"
