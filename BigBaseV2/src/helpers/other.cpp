@@ -104,17 +104,5 @@ namespace big
         return rid;
     }
 
-    void CopyToClipboard(const char* text)
-    {
-        OpenClipboard(NULL); //initialize
-        
-        if (EmptyClipboard() != 0) //<-- if error stop
-            return;
-        const size_t size = strlen(text) + 1;
-        HANDLE hndl = GlobalAlloc(GMEM_MOVEABLE, size);
-      
-        SetClipboardData(CF_TEXT, hndl); //set the clipboard text
-
-        CloseClipboard(); //get out
-    }
+   
 }
