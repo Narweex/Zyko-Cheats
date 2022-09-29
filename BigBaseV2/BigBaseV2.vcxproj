@@ -83,7 +83,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>common.hpp</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <DisableSpecificWarnings>4100;4201;4307;4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -227,8 +227,8 @@
     <ClInclude Include="src\gta\vector.hpp" />
     <ClInclude Include="src\gta_util.hpp" />
     <ClInclude Include="src\gui.hpp" />
-    <ClInclude Include="src\gui\base_tab.h" />
     <ClInclude Include="src\gui\components\components.hpp" />
+    <ClInclude Include="src\gui\imgui_tabs.h" />
     <ClInclude Include="src\gui\list\AbstractOption.hpp" />
     <ClInclude Include="src\gui\list\AbstractSubmenu.hpp" />
     <ClInclude Include="src\gui\list\BaseOption.hpp" />
@@ -246,20 +246,10 @@
     <ClInclude Include="src\gui\list\SubOption.hpp" />
     <ClInclude Include="src\gui\list\TextBox.hpp" />
     <ClInclude Include="src\gui\list\UIManager.hpp" />
-    <ClInclude Include="src\gui\lobby_tab.h" />
-    <ClInclude Include="src\gui\misc_tab.h" />
-    <ClInclude Include="src\gui\players_tab.h" />
     <ClInclude Include="src\gui\player_list.h" />
-    <ClInclude Include="src\gui\protections_tab.h" />
-    <ClInclude Include="src\gui\recovery_tab.h" />
-    <ClInclude Include="src\gui\spawn_tab.h" />
-    <ClInclude Include="src\gui\teleport_tab.h" />
-    <ClInclude Include="src\gui\vehicle_tab.h" />
-    <ClInclude Include="src\gui\weapons_tab.h" />
     <ClInclude Include="src\helpers\other.h" />
     <ClInclude Include="src\helpers\player_info.h" />
     <ClInclude Include="src\hooking.hpp" />
-    <ClInclude Include="src\httplib.h" />
     <ClInclude Include="src\invoker.hpp" />
     <ClInclude Include="src\logger.hpp" />
     <ClInclude Include="src\looped\teleports.hpp" />

@@ -143,9 +143,6 @@
     </ClInclude>
     <ClInclude Include="src\gta_util.hpp" />
     <ClInclude Include="src\gui.hpp" />
-    <ClInclude Include="src\gui\base_tab.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="src\hooking.hpp" />
     <ClInclude Include="src\invoker.hpp" />
     <ClInclude Include="src\logger.hpp" />
@@ -248,28 +245,10 @@
     <ClInclude Include="src\gui\player_list.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="src\gui\players_tab.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="src\shv_runner.h" />
     <ClInclude Include="src\thread_pool.hpp" />
     <ClInclude Include="src\gui\components\components.hpp">
       <Filter>gui\components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gui\recovery_tab.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gui\spawn_tab.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gui\weapons_tab.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gui\lobby_tab.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gui\vehicle_tab.h">
-      <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="src\auth\auth.hpp">
       <Filter>auth</Filter>
@@ -326,21 +305,14 @@
     <ClInclude Include="src\auth\anti_debug\ADebug\ScyllaHideDetector.hpp">
       <Filter>auth\anti_debug\ADebug</Filter>
     </ClInclude>
-    <ClInclude Include="src\gui\protections_tab.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gui\teleport_tab.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="src\gui\misc_tab.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="src\looped\teleports.hpp">
       <Filter>looped</Filter>
     </ClInclude>
-    <ClInclude Include="src\httplib.h" />
     <ClInclude Include="src\playerinfo\playerinfo_gui.h">
       <Filter>playerinfo</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\imgui_tabs.h">
+      <Filter>gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -461,10 +433,10 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="src\libcurl_a.lib" />
-    <Library Include="src\auth\libs\libcrypto.lib" />
-    <Library Include="src\auth\libs\libssl.lib" />
     <Library Include="src\auth\anti_debug\t1ha-static.lib">
       <Filter>auth\anti_debug</Filter>
     </Library>
+    <Library Include="src\auth\libs\libcrypto.lib" />
+    <Library Include="src\auth\libs\libssl.lib" />
   </ItemGroup>
 </Project>
