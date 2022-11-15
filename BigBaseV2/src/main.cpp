@@ -9,19 +9,18 @@
 #include "gui/list/script/MainScript.hpp"
 #include "gui/list/UIManager.hpp"
 #include "features.hpp"
-#include "../discord_rpc.h"
 
 
-void zyko::features::UpdatePresence()
-{
-	DiscordRichPresence discordPresence;
-	memset(&discordPresence, 0, sizeof(discordPresence));
-	discordPresence.state = "Zyko Cheats";
-	discordPresence.details = "Playing GTAV With Zyko";
-	discordPresence.largeImageKey = "logo";
-	discordPresence.largeImageText = "zykocheats.org";
-	Discord_UpdatePresence(&discordPresence);
-}
+//void zyko::features::UpdatePresence()
+//{
+//	DiscordRichPresence discordPresence;
+//	memset(&discordPresence, 0, sizeof(discordPresence));
+//	discordPresence.state = "Zyko Cheats";
+//	discordPresence.details = "Playing GTAV With Zyko";
+//	discordPresence.largeImageKey = "logo";
+//	discordPresence.largeImageText = "zykocheats.org";
+//	Discord_UpdatePresence(&discordPresence);
+//}
 
 BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 {
