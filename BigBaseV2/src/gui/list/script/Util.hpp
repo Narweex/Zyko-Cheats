@@ -1,7 +1,7 @@
 #pragma once
 #include "pointers.hpp"
 
-namespace big
+namespace zyko
 {
 	/**
 	 * \brief A stream buffer that uses a char[] buffer

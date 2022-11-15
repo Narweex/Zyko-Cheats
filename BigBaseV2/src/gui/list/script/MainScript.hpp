@@ -1,7 +1,7 @@
 #pragma once
 #include "script.hpp"
 
-namespace big
+namespace zyko
 {
 	class MainScript
 	{
