@@ -2,7 +2,7 @@
 #include "features.hpp"
 
 
-	struct Teleports
+	static const struct Teleports
 	{
 		const char* name;
 		float x, y, z;
@@ -47,6 +47,7 @@
 	{
 
 		{"LS Customs", -373.01f,-124.91f, 38.31f},
+		{"Bennys", -211.273f, -1305.28f, 31.3534f}
 
 	};
 

@@ -1,85 +1,78 @@
 #include "../common.hpp"
 #include "features.hpp"
-namespace big
+namespace zyko
 {
-	void features::player_loop()
+
+	bool features::godmode = false;
+	void features::Godmode(bool toggle)
 	{
-		if (neverWanted)
+		if (toggle)
 		{
-			if (NETWORK::NETWORK_IS_IN_TRANSITION())
-				return;
-			PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
-			PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, false);
+			ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), true);
 		}
 		else
 		{
-			//PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
+			ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), false);
+
 		}
 
-		if (godmode)
+	}
+
+	bool features::neverwanted = false;
+	void features::Neverwanted(bool toggle)
+	{
+		if (neverwanted)
 		{
-			ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), godmode);
+			PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
+			//PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), 0, false);
 		}
-		if (ignoreplayer)
+		else
 		{
-			PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), true);
+			PLAYER::SET_MAX_WANTED_LEVEL(5);
 		}
-		if (instartenter)
+
+
+	}
+
+
+
+
+	bool features::superman = false;
+	void features::Superman(bool toggle)
+	{
+		
+		if (toggle && gta_util::IsKeyPressed(VK_SPACE))
 		{
-			Vehicle vehicle = PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(PLAYER::PLAYER_PED_ID());
-			Ped del = VEHICLE::GET_PED_IN_VEHICLE_SEAT(vehicle, -1, 0);
-			RequestControlOfEnt(vehicle);
-			RequestControlOfEnt(del);
-			TASK::CLEAR_PED_TASKS_IMMEDIATELY(del);
-			PED::DELETE_PED(&del);
-			PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), vehicle, -1);
-			PED::SET_PED_VEHICLE_FORCED_SEAT_USAGE(PLAYER::PLAYER_PED_ID(), vehicle, 0, 0);
+			ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), 1, 0, 0, 10, 0, 0, 0, 1, true, true, true, true, true);
 		}
-		if (superjumpbool)
+		Hash hash = MISC::GET_HASH_KEY("GADGET_PARACHUTE");
+		WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), hash, 1, 1);
+
+		if (ENTITY::IS_ENTITY_IN_AIR(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_RAGDOLL(PLAYER::PLAYER_PED_ID()))
 		{
-			Player player = PLAYER::PLAYER_ID();
-			MISC::SET_SUPER_JUMP_THIS_FRAME(player);
-			Ped playerPed = PLAYER::PLAYER_PED_ID();
-		}
-		if (ultrajumpbool)
-		{
-			MISC::SET_SUPER_JUMP_THIS_FRAME(PLAYER::PLAYER_PED_ID());
-			MISC::SET_SUPER_JUMP_THIS_FRAME(PLAYER::PLAYER_ID());
-			if (PED::IS_PED_JUMPING(PLAYER::PLAYER_PED_ID()))
+			if (gta_util::IsKeyPressed(0x57)) // W key
 			{
-				ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), true, 0, 0, 150, 0, 0, true, true, true, true, false, true, false);
+				ApplyForceToEntity(PLAYER::PLAYER_PED_ID(), 3, 0, 0);
+			}
+			if (gta_util::IsKeyPressed(0x53)) // S key
+			{
+				ApplyForceToEntity(PLAYER::PLAYER_PED_ID(), 3, 6, 0);
+			}
+			if (gta_util::IsKeyPressed(VK_SHIFT))
+			{
+				ApplyForceToEntity(PLAYER::PLAYER_PED_ID(), 6, 0, 0);
 			}
 		}
-		if (offradar) {
-			*script_global(2689235).at(PLAYER::GET_PLAYER_INDEX(), 453).at(208).as<int*>() = 1;
-			*script_global(2703735).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;
-		}
-
-		if (modifytimecycle)
-		{
-			MISC::SET_TIME_SCALE(features::timescale);
-		}
-
-		if (features::invisibility)
-		{
-			ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 0, false);
-		}
 		else
 		{
-			ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
+			NULL;
 		}
+	}
 
-		if (features::norag)
-		{
-			PED::SET_PED_RAGDOLL_ON_COLLISION(PLAYER::PLAYER_PED_ID(), !features::norag);
-			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(PLAYER::PLAYER_PED_ID(), !features::norag);
-			PED::SET_PED_CAN_RAGDOLL(PLAYER::PLAYER_PED_ID(), !features::norag);
-		}
-		if (features::semigod)
-		{
-
-		}
-		if (features::noclip)
+	bool features::noclip = false;
+	void features::Noclip(bool toggle)
+	{
+		if (noclip)
 		{
 
 			static const int controls[] = { 21, 32, 33, 34, 35, 36 };
@@ -178,39 +171,23 @@ namespace big
 			ENTITY::FREEZE_ENTITY_POSITION(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true), false);
 			ENTITY::SET_ENTITY_COLLISION(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true), true, false);
 		}
+	}
 
-		if (superrunbool)
-		{
 
-			if (gta_util::IsKeyPressed(VK_SHIFT))
-			{
-				PED::SET_PED_MOVE_RATE_OVERRIDE(PLAYER::PLAYER_PED_ID(), runspeed);
-			}
-		}
-		if (forcefield) {
-			ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), forcefield);
-			Player playerPed = PLAYER::PLAYER_PED_ID();
-			PED::SET_PED_CAN_RAGDOLL(playerPed, false);
-			Vector3 pCoords = ENTITY::GET_ENTITY_COORDS(playerPed, 0);
-			FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z, 7, features::forcefield_force, 0, 1, 0, 1);
-
-		}
-		if (ultrarunbool)
+	bool features::flashrun = false;
+	void features::Flashrun(bool toggle)
+	{
+		if (toggle)
 		{
 			if (gta_util::IsKeyPressed(VK_SHIFT))
 			{
-				ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), 1, 0.0f, runspeed1, 0.0f, 0.0f, 0.0f, 0.0f, 0, 1, 1, 1, 0, 1);
-			}
-		}
-		if (flashrun)
-		{	
-			if (gta_util::IsKeyPressed(VK_SHIFT))
-			{	
 				PED::SET_PED_MOVE_RATE_OVERRIDE(PLAYER::PLAYER_PED_ID(), 3.0);
 				GRAPHICS::SET_TIMECYCLE_MODIFIER("RaceTurboFlash");
 				MISC::SET_TIME_SCALE(0.7);
-				GRAPHICS::START_PARTICLE_FX_LOOPED_ON_ENTITY("scr_trev1_trailer_boosh", PLAYER::PLAYER_PED_ID(), 1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 5, true, true, true);
-			
+				GRAPHICS::_USE_PARTICLE_FX_ASSET_NEXT_CALL("scr_trev1_trailer_boosh");
+				GRAPHICS::START_PARTICLE_FX_LOOPED_ON_ENTITY("scr_trev1_trailer_boosh", PLAYER::PLAYER_PED_ID(), 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 1, true, true, true);
+				GRAPHICS::START_NETWORKED_PARTICLE_FX_NON_LOOPED_AT_COORD("scr_trev1_trailer_boosh", PLAYER::PLAYER_PED_ID(), 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 1, true, true, true);
+
 			}
 			else
 			{
@@ -220,47 +197,200 @@ namespace big
 		}
 		else
 		{
-
 			MISC::SET_TIME_SCALE(1);
+			//GRAPHICS::SET_TIMECYCLE_MODIFIER("li");;
 		}
-		if (superman)
-		{
-			if (gta_util::IsKeyPressed(VK_SPACE))
-			{
-				ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), 1, 0, 0, 10, 0, 0, 0, 1, true, true, true, true, true);
-			}
-			Hash hash = MISC::GET_HASH_KEY("GADGET_PARACHUTE");
-			WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), hash, 1, 1);
+	}
 
-			if (ENTITY::IS_ENTITY_IN_AIR(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_RAGDOLL(PLAYER::PLAYER_PED_ID()))
+	bool features::invisibility = false;
+	void features::Invisibility(bool toggle)
+	{
+		if (toggle)
+		{
+			ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), 0, false);
+		}
+		else
+		{
+			ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
+		}
+	}
+
+	bool features::norag = false;
+	void features::Norag(bool toggle)
+	{
+		if (toggle)
+		{
+			PED::SET_PED_RAGDOLL_ON_COLLISION(PLAYER::PLAYER_PED_ID(), false);
+			PED::SET_PED_CAN_RAGDOLL_FROM_PLAYER_IMPACT(PLAYER::PLAYER_PED_ID(), false);
+			PED::SET_PED_CAN_RAGDOLL(PLAYER::PLAYER_PED_ID(), false);
+		}
+		else
+		{
+			PED::SET_PED_CAN_RAGDOLL(PLAYER::PLAYER_PED_ID(), true);
+		}
+
+	}
+
+	bool features::semigod = false;
+	void features::Semigod(bool toggle)
+	{
+		if (features::semigod)
+		{
+			PLAYER::SET_PLAYER_HEALTH_RECHARGE_MULTIPLIER(PLAYER::PLAYER_PED_ID(), 1000.f);
+		}
+	}
+
+	bool features::bullshark = false;
+	void features::Bullshark(bool toggle)
+	{
+		if (toggle)
+		{
+			*script_global(2703660).at(3576).as<int*>() = 1;
+		}
+	}
+
+	bool features::offradar = false;
+	void features::Offradar(bool toggle)
+	{
+		if (toggle) {
+			*script_global(2689235).at(PLAYER::GET_PLAYER_INDEX(), 453).at(208).as<int*>() = 1;
+			*script_global(2703735).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;
+		}
+	}
+
+	bool features::mobileradio = false;
+	void features::Mobileradio(bool toggle)
+	{
+		if (toggle)
+		{
+			AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(true);
+		}
+		else
+		{
+			AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(false);
+		}
+	}
+
+	bool features::hide_hud = false;
+	void features::Hide_hud(bool toggle)
+	{
+		if (toggle)
+		{
+			HUD::HIDE_HUD_AND_RADAR_THIS_FRAME();
+		}
+	}
+
+	bool features::superjumpbool = false;
+	void features::Superjump(bool toggle)
+	{
+		if (toggle)
+		{
+			MISC::SET_SUPER_JUMP_THIS_FRAME(PLAYER::PLAYER_ID());
+		}
+	}
+
+	bool features::ultrajumpbool = false;
+	void features::Ultrajumpbool(bool toggle)
+	{
+		if (toggle)
+		{
+			if (PED::IS_PED_JUMPING(PLAYER::PLAYER_PED_ID()))
 			{
-				if (gta_util::IsKeyPressed(0x57)) // W key
-				{
-					ApplyForceToEntity(PLAYER::PLAYER_PED_ID(), 3, 0, 0);
-				}
-				if (gta_util::IsKeyPressed(0x53)) // S key
-				{
-					ApplyForceToEntity(PLAYER::PLAYER_PED_ID(), 3, 6, 0);
-				}
-				if (gta_util::IsKeyPressed(VK_SHIFT))
-				{
-					ApplyForceToEntity(PLAYER::PLAYER_PED_ID(), 6, 0, 0);
-				}}}
-		if (unlimitedstamina)
+				ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), true, 0, 0, 150, 0, 0, true, true, true, true, false, true, false);
+			}
+		}
+	}
+
+	bool features::superrunbool = false;
+	void features::Superrun(bool toggle)
+	{
+		if (toggle)
+		{
+			if (gta_util::IsKeyPressed(VK_SHIFT))
+			{
+				PED::SET_PED_MOVE_RATE_OVERRIDE(PLAYER::PLAYER_PED_ID(), runspeed);
+			}
+		}
+	}
+
+	bool features::forcefield = false;
+	void features::Forcefield(bool toggle)
+	{
+		if (toggle) {
+			ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), true);
+			Player playerPed = PLAYER::PLAYER_PED_ID();
+			PED::SET_PED_CAN_RAGDOLL(playerPed, false);
+			Vector3 pCoords = ENTITY::GET_ENTITY_COORDS(playerPed, 0);
+			FIRE::ADD_EXPLOSION(pCoords.x, pCoords.y, pCoords.z, 7, features::forcefield_force, 0, 1, 0, 1);
+
+		}
+	}
+	
+	bool features::ignoreplayer = false;
+	void features::Ignoreplayer(bool toggle)
+	{
+		if (toggle)
+		{
+			PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), true);
+		}
+	}
+
+	bool features::ultrarunbool = false;
+	void features::Ultrarunbool(bool toggle)
+	{
+			if (toggle && gta_util::IsKeyPressed(VK_SHIFT))
+			{
+				ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), 1, 0.f, 1.5f, 0.f, 0.f, 0.f, 0.f, 1, true, true, true, false, true);
+			}
+	}
+
+	bool features::rotating = false;
+	void features::Rotating(bool toggle)
+	{
+		if (toggle && !PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+		{
+			float heading = ENTITY::_GET_ENTITY_PHYSICS_HEADING(PLAYER::PLAYER_PED_ID());
+			ENTITY::SET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID(), heading + 5);
+		}
+	}
+
+
+
+
+
+	bool features::unlimitedstamina = false;
+	void features::Unlimitedstamina(bool toggle)
+	{
+		if (toggle)
 		{
 			PLAYER::GET_PLAYER_SPRINT_STAMINA_REMAINING(PLAYER::PLAYER_PED_ID());
 			PLAYER::RESTORE_PLAYER_STAMINA(PLAYER::PLAYER_PED_ID(), 100);
 		}
-		if (noidlekick) { features::noIdleKick(); }
+	}
 		
-		if (bullshark){*script_global(2703660).at(3576).as<int*>() = 1;}
+		
 	
-		nightvision ? GRAPHICS::SET_NIGHTVISION(true) : GRAPHICS::SET_NIGHTVISION(false);
-		thermalvision ? GRAPHICS::SET_SEETHROUGH(true) : GRAPHICS::SET_SEETHROUGH(false);
-		hide_hud ? HUD::HIDE_HUD_AND_RADAR_THIS_FRAME() : NULL;
+	bool features::nightvision = false;
+	void features::Nightvision(bool toggle)
+	{
+		if(!toggle)
+			GRAPHICS::SET_NIGHTVISION(false);
+
+		GRAPHICS::SET_NIGHTVISION(toggle);
 		
+		
+		
+	}
+		
+	bool features::thermalvision = false;
+	void features::Thermalvision(bool toggle)
+	{
+		if(!toggle)
+			GRAPHICS::SET_SEETHROUGH(toggle);
+		GRAPHICS::SET_SEETHROUGH(toggle);
 
 	}
+		
 
 
 
@@ -273,19 +403,25 @@ namespace big
 		PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
 		PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
 	}
-	void features::noIdleKick(){
-		*script_global(Tunables).at(87).as<int*>() = INT_MAX;
-		*script_global(Tunables).at(88).as<int*>() = INT_MAX;
-		*script_global(Tunables).at(89).as<int*>() = INT_MAX;
-		*script_global(Tunables).at(90).as<int*>() = INT_MAX;
-		*script_global(Tunables).at(7785).as<int*>() = INT_MAX;
-		*script_global(Tunables).at(7786).as<int*>() = INT_MAX;
-		*script_global(Tunables).at(7787).as<int*>() = INT_MAX;
-		*script_global(Tunables).at(7788).as<int*>() = INT_MAX;
-		*script_global(IdleTimer).at(IdleTimer_Offset_1).as<int*>() = 0;
-		*script_global(IdleTimer).at(IdleTimer_Offset_2).as<int*>() = 0;
-		*script_global(IdleTimerUNK1).as<int*>() = 0;
-		*script_global(IdleTimerUNK2).as<int*>() = 0;
+
+	bool features::noidlekick = false;
+	void features::Noidlekick(bool toggle)
+	{
+		if (toggle)
+		{
+			*script_global(Tunables).at(87).as<int*>() = INT_MAX;
+			*script_global(Tunables).at(88).as<int*>() = INT_MAX;
+			*script_global(Tunables).at(89).as<int*>() = INT_MAX;
+			*script_global(Tunables).at(90).as<int*>() = INT_MAX;
+			*script_global(Tunables).at(7785).as<int*>() = INT_MAX;
+			*script_global(Tunables).at(7786).as<int*>() = INT_MAX;
+			*script_global(Tunables).at(7787).as<int*>() = INT_MAX;
+			*script_global(Tunables).at(7788).as<int*>() = INT_MAX;
+			*script_global(IdleTimer).at(IdleTimer_Offset_1).as<int*>() = 0;
+			*script_global(IdleTimer).at(IdleTimer_Offset_2).as<int*>() = 0;
+			*script_global(IdleTimerUNK1).as<int*>() = 0;
+			*script_global(IdleTimerUNK2).as<int*>() = 0;
+		}
 	}
 	void features::clearwanted()
 	{
@@ -301,6 +437,28 @@ namespace big
 	void features::suicide()
 	{
 		ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0, 0);
+	}
+
+	void features::PlayAnimation(const char* name, const char* id)
+	{
+		features::RequestControlOfEnt(PLAYER::PLAYER_PED_ID());
+		ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), true);
+		STREAMING::REQUEST_ANIM_DICT(name);
+		if (STREAMING::HAS_ANIM_DICT_LOADED((name)))
+		{
+			TASK::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), name, id, 8.0f, 0.0f, -1, 9, 0, 0, 0, 0);
+		}
+		
+	}
+
+	void features::StopAnimation()
+	{
+		TASK::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
+	}
+
+	void features::Set_wetness(const float& level)
+	{
+		PED::SET_PED_WETNESS_HEIGHT(PLAYER::PLAYER_PED_ID(), features::set_wetness);
 	}
 
 }

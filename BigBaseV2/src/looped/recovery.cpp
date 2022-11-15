@@ -6,23 +6,21 @@
 #include "gta_util.hpp"
 #include <control.h>
 #include <script_local.hpp>
-#include <sstream>
 #include "../../BigBaseV2/src/memory/all.hpp"
 #include "gui/player_list.h"
 #include <imgui.h>
-#include <helpers/imgui_notify.h>
 #include "gui/list/Lists.hpp"
 #include "auth/auth.hpp"
 #include "features.hpp"
 #include "fiber_pool.hpp"
-namespace big
+namespace zyko
 {
 	void features::basket_transaction(int cat, int action, int flag, std::vector<std::array<int, 5>> items)
 	{
 		if (NETSHOPPING::NET_GAMESERVER_BASKET_END())
 			NETSHOPPING::_NET_GAMESERVER_BASKET_DELETE();
 
-		int transaction = -1;
+		static int transaction = -1;
 
 		if (g_pointers->m_construct_basket(*g_pointers->m_transact_queue, &transaction, cat, action, flag))
 		{
@@ -47,8 +45,7 @@ namespace big
 	}
 	void features::startupmoney()
 	{
-
-		features::notify("Dont abuse this method, only buy bunker with this and dont use it again !!!", "Warning", 7000);
+		zyko::Notify("Dont Abuse", "It could get you banned", 7000, None);
 		*script_global(1963962).as<int*>() = 1;
 
 	}
@@ -71,7 +68,8 @@ namespace big
 	}
 	void features::addMoney()
 	{
-		features::notify_success("Recovery", "Money Added", 3000);
+		Notify("Recovery", "Money added", 7000, Success);
+		
 		
 			features::basket_transaction(-1799524201, -1018905335, 4,
 				{

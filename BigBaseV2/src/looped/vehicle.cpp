@@ -1,15 +1,35 @@
 #include "../common.hpp"
 #include "features.hpp"
-namespace big
+namespace zyko
 {
-	int r = 255, g = 0, b = 0;
-	int r1, g1, b1;
-	void features::vehicle_loop()
+	
+	
+
+	bool features::instantenter = false;
+	void features::Instantenter(bool toggle)
 	{
-		if (features::vehgodmode)
+		if (!toggle)
+			return;
+		if (PED::IS_PED_GETTING_INTO_A_VEHICLE(PLAYER::PLAYER_PED_ID()))
+		{	
+		Vehicle vehicle = PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(PLAYER::PLAYER_PED_ID());
+		Ped del = VEHICLE::GET_PED_IN_VEHICLE_SEAT(vehicle, -1, 0);
+		RequestControlOfEnt(vehicle);
+		RequestControlOfEnt(del);
+		TASK::CLEAR_PED_TASKS_IMMEDIATELY(del);
+		PED::DELETE_PED(&del);
+		PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), vehicle, -1);
+		PED::SET_PED_VEHICLE_FORCED_SEAT_USAGE(PLAYER::PLAYER_PED_ID(), vehicle, 0, 0);
+		}
+	}
+
+	bool features::vehgodmode = false;
+	void features::Vehgodmode(bool toggle)
+	{
+		if (toggle)
 		{
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
-			
+
 			ENTITY::SET_ENTITY_INVINCIBLE(veh, true);
 			ENTITY::SET_ENTITY_PROOFS(veh, true, true, true, true, true, true, true, true);
 			VEHICLE::SET_DISABLE_VEHICLE_PETROL_TANK_DAMAGE(veh, true);
@@ -21,17 +41,24 @@ namespace big
 			VEHICLE::SET_VEHICLE_TYRES_CAN_BURST(veh, false);
 			VEHICLE::SET_VEHICLE_WHEELS_CAN_BREAK(veh, false);
 		}
-		if (speedbypass)
+	}
+
+	bool features::speedbypass = false;
+	void features::Speedbypass(bool toggle)
+	{
+		Entity entity = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false));
+		ENTITY::SET_ENTITY_MAX_SPEED(entity, 5000);
+		ENTITY::SET_ENTITY_MAX_SPEED(PLAYER::PLAYER_PED_ID(), 5000);
+	}
+	
+	bool features::hornboost = false;
+	void features::Hornboost(bool toggle)
+	{
+		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+			return;
+		if (toggle)
 		{
 			
-			Entity entity = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false));
-			ENTITY::SET_ENTITY_MAX_SPEED(entity, 5000);
-			ENTITY::SET_ENTITY_MAX_SPEED(PLAYER::PLAYER_PED_ID(), 5000);
-		}
-		if (hornboost)
-		{
-			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
-				return;
 			if (PLAYER::IS_PLAYER_PRESSING_HORN(PLAYER::PLAYER_ID()))
 			{
 				Vehicle Veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID()), false);
@@ -45,12 +72,16 @@ namespace big
 					}
 				}
 			}
-
 		}
-		if (smoothhornboost)
-		{
-			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
-				return;
+	}
+
+	bool features::smoothhornboost = false;
+	void features::Smoothhornbbost(bool toggle)
+	{
+		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+			return;
+		if (toggle)
+		{	
 			if (PLAYER::IS_PLAYER_PRESSING_HORN(PLAYER::PLAYER_ID()))
 			{
 				Vehicle Veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID()), false);
@@ -68,40 +99,76 @@ namespace big
 				}
 			}
 		}
-		if (seatbelt)
+	}
+
+	bool features::seatbelt = false;
+	void features::Seatbelt(bool toggle)
+	{
+		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+			return;
+		if (toggle)
 		{
-			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
-				return;
 			PED::SET_PED_CAN_BE_KNOCKED_OFF_VEHICLE(PLAYER::PLAYER_PED_ID(), 1);
 		}
-		if (fixloop)
+	}
+
+	bool features::novehkick = false;
+	void features::Novehkick(bool toggle)
+	{
+		if (features::novehkick)
 		{
-			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
-				return;
+			*script_global(2689224).at(PLAYER::PLAYER_PED_ID()).at(317).at(10).as<int*>() = 21501;
+			*script_global(1958845).as<int*>() = 1;
+			script_global(262145).at(7478);
+
+
+		}
+	}
+
+	bool features::fixloop = false;
+	void features::Fixloop(bool toggle)
+	{
+		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+			return;
+		if (toggle)
+		{
 			VEHICLE::SET_VEHICLE_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
 			VEHICLE::SET_VEHICLE_DEFORMATION_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
 		}
+	}
+
+	bool features::cleanloop = false;
+	void features::Cleanloop(bool toggle)
+	{
+		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+			return;
 		if (cleanloop)
 		{
-			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
-				return;
 			VEHICLE::SET_VEHICLE_DIRT_LEVEL(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())), 0);
 		}
-		if (features::rainbowcar)
-		{
-			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
-				return;
+	}
+
+	bool features::rainbowcar = false;
+	void features::Rainbowcar(bool toggle)
+	{
+		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+			return;
+		if (toggle)
+		{	
 			features::rainbowloop();
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
-			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), true))
-			{
-				VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, r, g, b);
-				VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, r, g, b);
-			}
-		}
-		if (features::flashrainbow)
-		{
 			
+				VEHICLE::SET_VEHICLE_CUSTOM_PRIMARY_COLOUR(veh, features::VEHr, features::VEHg, features::VEHb);
+				VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, features::r1, features::g1, features::b1);
+			
+		}
+	}
+
+	bool features::flashrainbow = false;
+	void features::Flashrainbow(bool toggle)
+	{
+		if (toggle)
+		{
 			features::colour_spam();
 			Vehicle veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
 			if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), true))
@@ -110,10 +177,14 @@ namespace big
 				VEHICLE::SET_VEHICLE_CUSTOM_SECONDARY_COLOUR(veh, r1, g1, b1);
 			}
 		}
-		
-		if (features::invis_car)
+	}
+
+	bool features::invis_car = false;
+	void features::Invis_car(bool toggle)
+	{
+		if (toggle)
 		{
-			Vehicle vehicle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
+			const Vehicle vehicle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
 			ENTITY::SET_ENTITY_ALPHA(vehicle, 0, true);
 		}
 		else
@@ -121,26 +192,47 @@ namespace big
 			ENTITY::SET_ENTITY_ALPHA(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), 255, true);
 
 		}
-
 	}
 
-	
+	void features::AddRamp()
+	{
+		Vector3 Him = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+		Entity Ramp = OBJECT::CREATE_OBJECT(0xB157C9E4, Him.x, Him.y, Him.z, 1, 1, 0);
+		int Vehicle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true);
+		if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), false))
+		{
+			STREAMING::REQUEST_MODEL(0xB157C9E4);
+			if (STREAMING::HAS_MODEL_LOADED(0xB157C9E4))
+			{
+				if (ENTITY::DOES_ENTITY_EXIST(Ramp))
+				{
+					ENTITY::SET_ENTITY_ALPHA(Ramp, 200, false);
+					ENTITY::SET_ENTITY_COLLISION(Ramp, true, true);
+					ENTITY::ATTACH_ENTITY_TO_ENTITY(Ramp, Vehicle, 0, 0, 6.3, -0.5, 13.5, 0, 177.5, 0, 0, true, 0, 2, 1);
+				}
+			}
+		}
+	}
+
+
+
+
 	void features::rainbowloop()
 	{
-		if (r > 0 && b == 0)
+		if (features::VEHr > 0 && features::VEHb == 0)
 		{
-			r--;
-			g++;
+			features::VEHr--;
+			features::VEHg++;
 		}
-		if (g > 0 && r == 0)
+		if (features::VEHg > 0 && features::VEHr == 0)
 		{
-			g--;
-			b++;
+			features::VEHg--;
+			features::VEHb++;
 		}
-		if (b > 0 && g == 0)
+		if (features::VEHb > 0 && features::VEHg == 0)
 		{
-			r++;
-			b--;
+			features::VEHr++;
+			features::VEHb--;
 		}
 	}
 
@@ -149,10 +241,10 @@ namespace big
 		r1 = MISC::GET_RANDOM_INT_IN_RANGE(0, 250);
 		g1 = MISC::GET_RANDOM_INT_IN_RANGE(0, 250);
 		b1 = MISC::GET_RANDOM_INT_IN_RANGE(0, 250);
-		
+
 	}
 
-	void features::maxvehicle(int VehicleHandle)
+	void features::maxvehicle(const int& VehicleHandle)
 	{
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(VehicleHandle, "Zyko");
 		VEHICLE::SET_VEHICLE_DIRT_LEVEL(VehicleHandle, 0.0f);
@@ -182,24 +274,24 @@ namespace big
 		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 9, 1, 0);
 		VEHICLE::SET_VEHICLE_MOD(VehicleHandle, 10, 1, 0);
 	}
-	void features::spawn_veh(Hash vehicle)
+	void features::spawn_veh(const Hash& vehicle)
 	{
-		Hash hash = vehicle;
-		if (!STREAMING::HAS_MODEL_LOADED(hash))
+		
+		if (!STREAMING::HAS_MODEL_LOADED(vehicle))
 		{
-			STREAMING::REQUEST_MODEL(hash);
+			STREAMING::REQUEST_MODEL(vehicle);
 			script::get_current()->yield();
 		}
 
 		auto pos = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
 		*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x9090;
-		auto veh = VEHICLE::CREATE_VEHICLE(hash, pos.x + 5, pos.y + 5, pos.z, 0.f, TRUE, FALSE, FALSE);
+		auto veh = VEHICLE::CREATE_VEHICLE(vehicle, pos.x + 5, pos.y + 5, pos.z, 0.f, TRUE, FALSE, FALSE);
 		*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x0574;
 
 
 
 		script::get_current()->yield();
-		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(hash);
+		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(vehicle);
 		if (*g_pointers->m_is_session_started)
 		{
 			DECORATOR::DECOR_SET_INT(veh, xorstr_("MPBitset"), 0);
@@ -208,15 +300,15 @@ namespace big
 			if (NETWORK::NETWORK_GET_ENTITY_IS_NETWORKED(veh))
 				NETWORK::SET_NETWORK_ID_EXISTS_ON_ALL_MACHINES(networkId, true);
 			VEHICLE::SET_VEHICLE_IS_STOLEN(veh, FALSE);
-			VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, "Zyko");
+			//VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, "Zyko");
 		}
 
 		if (features::in_vehicle) {
-			if (VEHICLE::IS_THIS_MODEL_A_HELI(hash) || VEHICLE::IS_THIS_MODEL_A_PLANE(hash))
+			if (VEHICLE::IS_THIS_MODEL_A_HELI(vehicle) || VEHICLE::IS_THIS_MODEL_A_PLANE(vehicle))
 				VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, true, true);
 			VEHICLE::SET_HELI_BLADES_FULL_SPEED(veh);
 
-			if (VEHICLE::IS_THIS_MODEL_A_PLANE(hash))
+			if (VEHICLE::IS_THIS_MODEL_A_PLANE(vehicle))
 			{
 				VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, true, true);
 				VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(veh, true);
@@ -295,5 +387,38 @@ namespace big
 	{
 		VEHICLE::SET_VEHICLE_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
 		VEHICLE::SET_VEHICLE_DEFORMATION_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
+	}
+	void features::acrobatics(int i)
+	{
+		const int veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
+		if (i == 1) {
+			// forward flip
+			ENTITY::APPLY_FORCE_TO_ENTITY(veh, true, 0, 0, 10.f, 0, 0, 0, true, true, true, true, false, true);
+		}
+		else if (i == 2) {
+			// Back flip
+			ENTITY::APPLY_FORCE_TO_ENTITY(veh, true, 0, 0, 5.0f, 0, 15.0f, 0, true, true, true, true, false, true);
+		}
+		else if (i == 3) {
+			// left flip
+			ENTITY::APPLY_FORCE_TO_ENTITY(veh, true, 0, 0, 10.0f, 0, 0, 0, true, true, true, true, false, true);
+		}
+		else if (i == 4) {
+			// right flip
+			ENTITY::APPLY_FORCE_TO_ENTITY(veh, true, 0, 0, 10.0f, 0, 0, 0, true, true, true, true, false, true);
+		}
+		else if (i == 5) {
+			// jump up
+			ENTITY::APPLY_FORCE_TO_ENTITY(veh, true, 0, 2, 10.0f, 0, 0, 0, true, true, true, true, false, true);
+		}
+		else if (i == 6) {
+			// launch up
+			ENTITY::APPLY_FORCE_TO_ENTITY(veh, true, 0, 0, 1000.0f, 0, 0, 0, true, true, true, true, false, true);
+		}
+	}
+
+	void features::SetNumberplate(const char* text)
+	{
+		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), text);
 	}
 }

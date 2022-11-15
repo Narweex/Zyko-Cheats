@@ -1,16 +1,46 @@
-#include "../common.hpp"
 #include "features.hpp"
-//#include "auth/anti_debug.hpp"
 #include <auth/anti_debug/ADebug/ScyllaHideDetector.hpp>
 #include <auth/anti_debug/ADebug/Lycosidae.hpp>
 #include <auth/anti_debug/helper.h>
-namespace big
+namespace zyko
 {
-    void features::misc_loop()
+    void features::Clearall()
     {
+        MISC::_CLEAR_AREA_OF_EVERYTHING(ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID()), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID()), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID()), true).z, features::clearradius, true, true, true, true);
+    }
       
+    void features::Clearcars()
+    {
+        MISC::CLEAR_AREA_OF_VEHICLES(ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID()), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID()), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID()), true).z, features::clearradius, true, true, true, true, true, NULL);
+    }
+
+    void features::Clearpeds()
+    {
+        MISC::CLEAR_AREA_OF_PEDS(ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID()), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID()), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID()), true).z, features::clearradius, 1);
+    }
+
+    void features::Clearcops()
+    {
+        MISC::CLEAR_AREA_OF_COPS(ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID()), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID()), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID()), true).z, features::clearradius, 1);
+    }
+
+    void features::Spawn_companion()
+    {
+        Vector3 playerCoords = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+        STREAMING::REQUEST_MODEL(rage::joaat("a_c_cat_01"));
+        Entity ped = PED::CREATE_PED(1, rage::joaat("a_c_cat_01"), playerCoords.x, playerCoords.y, playerCoords.z, ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID()), 1, 0);
+       
+        while (STREAMING::HAS_MODEL_LOADED(rage::joaat("a_c_cat_01")))
+        { 
+            Vector3 offset = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 0, 0, 0);
+            PED::SET_PED_ALERTNESS(ped, 0);
+            TASK::TASK_FOLLOW_TO_OFFSET_OF_ENTITY(ped, PLAYER::PLAYER_PED_ID(), offset.x, offset.y, offset.z, 5, 0, 0, true);
+        } 
+    }
        
 
+    void features::nigger()
+    {
         const auto enable_scyllahide_detector = 1;
         const auto enable_debug_checks = 0;
 
@@ -147,7 +177,10 @@ namespace big
             return;
         }
     }
+        
+    void features::SetModifier(const char* modifier)
+    {
+        GRAPHICS::SET_TIMECYCLE_MODIFIER(modifier);
+    }
 
-
-	
 }
