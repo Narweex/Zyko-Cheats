@@ -1,7 +1,7 @@
 #include "other.h"
 #include "pointers.hpp"
-#include <auth/includes/curl/curl.h>
-#include <auth/includes/curl/easy.h>
+//#include <auth/includes/curl/curl.h>
+//#include <auth/includes/curl/easy.h>
 #include <Windows.h>
 
 namespace zyko
@@ -72,37 +72,37 @@ namespace zyko
         return totalBytes;
     }
 
-    std::uint64_t get_rid_from_name(std::string name)
-    {
-        // RID API, may get outdated though
-        std::string site = xorstr_("https://eintim.one/rid/?username=") + name;
-        std::string result;
+    //std::uint64_t get_rid_from_name(std::string name)
+    //{
+    //    // RID API, may get outdated though
+    //    std::string site = xorstr_("https://eintim.one/rid/?username=") + name;
+    //    std::string result;
 
-        // RID
-        uint64_t rid = 0;
+    //    // RID
+    //    uint64_t rid = 0;
 
-        // Request
-        CURL* curl = curl_easy_init();
-        if (curl)
-        {
-            curl_easy_setopt(curl, CURLOPT_URL, site.c_str());
-            curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, xorstr_("GET"));
-            curl_easy_setopt(curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_3);
-            curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback);
-            curl_easy_setopt(curl, CURLOPT_WRITEDATA, &result);
+    //    // Request
+    //    CURL* curl = curl_easy_init();
+    //    if (curl)
+    //    {
+    //        curl_easy_setopt(curl, CURLOPT_URL, site.c_str());
+    //        curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, xorstr_("GET"));
+    //        curl_easy_setopt(curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_3);
+    //        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback);
+    //        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &result);
 
-            curl_easy_perform(curl);
-            curl_easy_cleanup(curl);
-        }
+    //        curl_easy_perform(curl);
+    //        curl_easy_cleanup(curl);
+    //    }
 
-        if (result.empty() || result == xorstr_("User not found."))
-            return rid;
+    //    if (result.empty() || result == xorstr_("User not found."))
+    //        return rid;
 
-        std::istringstream iss(result);
-        iss >> rid;
+    //    std::istringstream iss(result);
+    //    iss >> rid;
 
-        return rid;
-    }
+    //    return rid;
+    //}
 
     static std::string Get_Autologin()
     {
