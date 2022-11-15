@@ -10,7 +10,7 @@
 #include "player_list.h"
 #include "gui/components/components.hpp"
 
-namespace big
+namespace zyko
 {
 	
 	
@@ -68,13 +68,12 @@ namespace big
 					ImGui::Text(xorstr_("Player ID: %lld"), features::g_selected_player);
 					ImGui::Text(xorstr_("Is Modder: ")); ImGui::SameLine();
 					ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(180, 0, 0, 255)), g_player_list.is_modder ? "Yes": "No");
-					/*if (g_player_list.is_modder)
-						ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(180, 0, 0, 255)), xorstr_("Yes"));
-					else
-						ImGui::TextColored(ImGui::ColorConvertU32ToFloat4(ImColor(0, 180, 0, 255)), xorstr_("No"));*/
+					ImGui::Text("Coords X: %d.%d.%d", g_player_list.coordsx, g_player_list.coordsy, g_player_list.coordsz);
+
 					ImGui::Text(xorstr_("In Vehicle: %s"), g_player_list.is_vehicle ? "Yes" : "No");
 					ImGui::Text(xorstr_("Player Speed: %i MPH"), g_player_list.speed);
-					ImGui::Text(xorstr_("IP: %d.%d.%d.%d:%d"), g_player_list.online_ip.m_field1, g_player_list.online_ip.m_field2, g_player_list.online_ip.m_field3, g_player_list.online_ip.m_field4, g_player_list.online_port);
+					!features::streamer_mode ? ImGui::Text(xorstr_("IP: %d.%d.%d.%d:%d"), g_player_list.online_ip.m_field1, g_player_list.online_ip.m_field2, g_player_list.online_ip.m_field3, g_player_list.online_ip.m_field4, g_player_list.online_port): ImGui::Text(xorstr_("IP: hidden"));
+
 
 					ImGui::EndGroup();
 
@@ -98,7 +97,7 @@ namespace big
 
 					ImGui::EndGroup();
 
-					ImGui::Columns(1);
+					//ImGui::Columns(1);
 					ImGui::Separator();
 				}
 			}

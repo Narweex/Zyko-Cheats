@@ -1,26 +1,23 @@
-#include "common.hpp"
 #include "imgui_tabs.h"
 #include "imgui.h"
-#include "script.hpp"
 #include "fiber_pool.hpp"
 #include "natives.hpp"
 #include "gta_util.hpp"
 #include "features.hpp"
 #include "auth/auth.hpp"
-#include<cstring>
 #include <helpers/other.h>
 #include "gta/Weapons.h"
 
 
-namespace big
+namespace zyko
 {
 	void ImGuiTabs::render_weapons_tab()
 	{
-		ImGui::BeginChild("##options1", ImVec2(300, 280), true);
+		ImGui::BeginChild(xorstr_("##options1"), ImVec2(300, 280), true);
 
-		if (ImGui::Button(xorstr_("Give All Weapons"), ImVec2(200, 25))) { features::GiveAllWeapons(); }
-		if (ImGui::Button(xorstr_("Remove All Weapons"), ImVec2(200, 25))) { features::RemoveAllWeapons(); }
-		if (ImGui::Button(xorstr_("Give Max Ammo"), ImVec2(200, 25))) { features::MaxAmmo(); }
+		if (ImGui::Button(xorstr_("Give All Weapons"), ImVec2(200, 25))) { g_fiber_pool->queue_job([=] {	features::GiveAllWeapons();  }); }
+		if (ImGui::Button(xorstr_("Remove All Weapons"), ImVec2(200, 25))) { g_fiber_pool->queue_job([=] {	features::RemoveAllWeapons();  }); }
+		if (ImGui::Button(xorstr_("Give Max Ammo"), ImVec2(200, 25))) { g_fiber_pool->queue_job([=] { features::MaxAmmo(); }); }
 		ImGui::Checkbox(xorstr_("Infinite Ammo"), &features::infiniteammo);
 		ImGui::Checkbox(xorstr_("Delete Gun"), &features::deletegun);
 		ImGui::Checkbox(xorstr_("Aimbot"), &features::aimbot);
@@ -31,17 +28,13 @@ namespace big
 		ImGui::EndChild();
 		ImGui::SameLine();
 		
-
-
-		ImGui::BeginChild("##options3", ImVec2(300, 280), true);
-		ImGui::Text("Give Weapon");
+		ImGui::BeginChild(xorstr_("##options3"), ImVec2(300, 280), true);
+		ImGui::Text(xorstr_("Give Weapon"));
 		ImGui::Separator();
 		for (auto& weapon : weaponlist)
 		{
-
 			if (ImGui::Selectable(weapon.label.c_str()))
 			{
-				
 					g_fiber_pool->queue_job([=] { WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), rage::joaat(weapon.hash), 50, 1); });
 				
 			}

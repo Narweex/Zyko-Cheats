@@ -1,4 +1,3 @@
-#include "common.hpp"
 #include "player_list.h"
 #include "pointers.hpp"
 #include "gta_util.hpp"
@@ -7,7 +6,7 @@
 #include "imgui.h"
 #include "fiber_pool.hpp"
 
-namespace big
+namespace zyko
 {
 	void run_playerlist()
 	{
@@ -35,10 +34,13 @@ namespace big
 		if (CNetGamePlayer* net_player = g_pointers->m_get_net_player(g_selected_player))
 		{
 			
-				
+			
 			g_player_list.is_modder = is_modder(g_selected_player);
 			g_player_list.player_id = net_player->m_player_id;
 			
+			g_player_list.coordsx = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true).x;
+			g_player_list.coordsy = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true).y;
+			g_player_list.coordsz = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true).z;
 			g_player_list.ped_id = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(g_player_list.player_id);
 			g_player_list.is_vehicle = PED::IS_PED_IN_ANY_VEHICLE(g_player_list.ped_id, false);
 			g_player_list.health = ENTITY::GET_ENTITY_HEALTH(g_player_list.ped_id);

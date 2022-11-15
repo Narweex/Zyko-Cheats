@@ -1,37 +1,24 @@
 #include "common.hpp"
 #include "imgui_tabs.h"
 #include "imgui.h"
-#include "script.hpp"
 #include "fiber_pool.hpp"
 #include "natives.hpp"
-#include "gta_util.hpp"
-#include "gui/list/UIManager.hpp"
 #include "features.hpp"
-#include "script_global.hpp"
 
-#include <iostream>
-#include<cstring>
-#
 
-namespace big
+
+
+
+namespace zyko
 {
 	void ImGuiTabs::render_recovery_tab()
 	{
-
-
-
 		ImGui::Spacing();
 
-		ImGui::Text(xorstr_("Money"));
-
-
+		ImGui::Text(xorstr_("Money"));		
 
 		
 
-		if (ImGui::Button(xorstr_("Add: Bunker Money"))) {
-			g_fiber_pool->queue_job([=] {
-					features::addMoney();
-				});	
 			
 			
 			/*features::notify_success("Recovery", "Money Added", 3000);
@@ -74,7 +61,17 @@ namespace big
 						{-1818214114, -1573825732, 2500000, 0, 1},
 					});
 			} QUEUE_JOB_END_CLAUSE*/
-		}
+		
+	/*	ImGui::Text("How to use recovery?");
+		ImGui::Text("-> Dont go over 10 million in 24h");
+		ImGui::Text("-> Have a bunker");
+		ImGui::Text("-> Use only in public sessions");
+		ImGui::Text("-> Do not overuse if you dont want to get banned");
+		if (ImGui::Button(xorstr_("Add: Bunker Money"))) {
+			g_fiber_pool->queue_job([=] {
+				features::addMoney();
+			});
+		}*/
 
 		ImGui::SameLine();
 

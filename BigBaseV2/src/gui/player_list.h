@@ -4,7 +4,7 @@
 #include "../../../vendor/GTAV-Classes/CNetGamePlayer.hpp"
 
 
-namespace big
+namespace zyko
 {
 	struct player_info
 	{
@@ -27,7 +27,7 @@ namespace big
 		rage::netAddress online_ip{};
 		uint16_t online_port{};
 	};
-    void run_playerlist();
+	void run_playerlist();
 	void update_playerlist();
 	inline std::map<std::string, player_info> playerlist;
 	inline struct player_info g_player_list;
