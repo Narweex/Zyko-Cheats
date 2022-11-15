@@ -1,7 +1,4 @@
 #include "common.hpp"
-#include "fiber_pool.hpp"
-#include "gta/player.hpp"
-#include "gta_util.hpp"
 #include "gui.hpp"
 #include "logger.hpp"
 #include "memory/module.hpp"
@@ -12,12 +9,12 @@
 #include "script.hpp"
 #include <imgui.h>
 #include "auth/auth.hpp"
-#include "gui/self_tab.h"
 #include "gui/components/components.hpp"
 #include <gui/list/UIManager.hpp>
 #include "gui/imgui_tabs.h"
+#include "style.hpp"
 
-namespace big
+namespace zyko
 {
 	void gui::dx_init()
 	{
@@ -49,7 +46,7 @@ namespace big
 		ImVec4* colors = ImGui::GetStyle().Colors;
 		colors[ImGuiCol_Text] = ImColor(255, 255, 255);
 		colors[ImGuiCol_TextDisabled] = ImColor(255, 255, 255);
-		colors[ImGuiCol_WindowBg] = ImColor(19, 14, 24, 240);
+		colors[ImGuiCol_WindowBg] = ImColor(19, 14, 24, customization.background_colour);
 		colors[ImGuiCol_ChildBg] = ImColor(70, 70, 70, 100);
 		colors[ImGuiCol_PopupBg] = ImColor(19, 14, 24, 240);
 		colors[ImGuiCol_Border] = ImColor(120, 0, 255);
@@ -193,9 +190,7 @@ namespace big
 						}
 						else
 						{
-							if (ImGui::Button("unload")) {
-								g_running = false;
-							}
+							ImGuiTabs::render_misc_tab();
 						}
 						break;
 					case 10:
@@ -205,16 +200,7 @@ namespace big
 						}
 						else
 						{
-							if (ImGui::Button("unload")) {
-								g_running = false;
-							}
-							ImGui::Spacing();
-
-			if (ImGui::Button("List Mode"))
-			{
-				g_list = true;
-				g_UiManager->m_Opened = true;
-			}
+							ImGuiTabs::render_settings_tab();
 						}
 						break;
 					case 11:
@@ -224,7 +210,7 @@ namespace big
 						}
 						else
 						{
-							//spawn_tab::render_spawn_tab();
+							ImGuiTabs::render_spawn_tab();
 						}
 						break;
 					case 12:
@@ -234,9 +220,7 @@ namespace big
 						}
 						else
 						{
-							if (ImGui::Button("unload")) {
-								g_running = false;
-							}
+							ImGuiTabs::render_world_tab();
 						}
 							break;
 
@@ -276,7 +260,7 @@ namespace big
 					
 					{ ICON_FK_SITEMAP" Lobby", 4 },
 					{ ICON_FK_USERS" Players", 5 },
-					{ ICON_FK_GLOBE" Online", 6 },
+					{ ICON_FA_ETHERNET" Online", 6 },
 					{ ICON_FA_SHIELD_ALT" Protections", 7 },
 					{ ICON_FA_MONEY_BILL" Recovery", 8 },
 					
@@ -287,8 +271,8 @@ namespace big
 					{ ICON_FA_ELLIPSIS_H" Misc", 9 },
 					{ ICON_FK_COG" Settings", 10 },
 					
-					{ ICON_FA_FROG" Spawn", 11 },
-					{ ICON_FA_FROG" Something3", 12 },
+					{ ICON_FK_PLUS_CIRCLE" Spawn", 11 },
+					{ ICON_FA_GLOBE" World", 12 },
 				};
 
 				
@@ -316,7 +300,7 @@ namespace big
 					}	
 				}
 
-				components::small_text(xorstr_("Recovery"));
+				components::small_text(xorstr_("Other"));
 
 				for (const auto& rs : tabs_b)
 				{
@@ -326,6 +310,7 @@ namespace big
 						g_gui.g_tab = rs.num;
 					}
 				}
+				components::small_text(xorstr_(ZykoVersion));
 
 				/*components::small_text(xorstr_("poggo text"));
 

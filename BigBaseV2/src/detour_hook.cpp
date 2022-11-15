@@ -4,7 +4,7 @@
 #include "memory/handle.hpp"
 #include <..\MinHook\include\MinHook.h>
 
-namespace big
+namespace zyko
 {
 	detour_hook::detour_hook(std::string name, void* target, void* detour) :
 		m_name(std::move(name)),

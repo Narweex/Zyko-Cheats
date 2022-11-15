@@ -3,7 +3,7 @@
 #include "script.hpp"
 #include "script_mgr.hpp"
 
-namespace big
+namespace zyko
 {
 	fiber_pool::fiber_pool(std::size_t num_fibers)
 	{

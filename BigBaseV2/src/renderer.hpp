@@ -3,7 +3,7 @@
 #include <imgui.h>
 #include "../../BigBaseV2/src/core/icons.h"
 
-namespace big
+namespace zyko
 {
 	class renderer
 	{

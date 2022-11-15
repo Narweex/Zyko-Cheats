@@ -7,7 +7,7 @@
 #include "gta/net_game_event.hpp"
 #include "../../vendor/GTAV-Classes/netPlayerData.hpp"
 
-namespace big
+namespace zyko
 {
 	struct hooks
 	{

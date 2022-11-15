@@ -7,7 +7,7 @@
 #include "pointers.hpp"
 #include "natives.hpp"
 
-namespace big::gta_util
+namespace zyko::gta_util
 {
 	inline CPed *get_local_ped()
 	{

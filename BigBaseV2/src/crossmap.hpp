@@ -1,7 +1,7 @@
 #pragma once
 #include "gta/natives.hpp"
 
-namespace big
+namespace zyko
 {
 	inline constexpr const rage::scrNativeMapping g_crossmap[]
 	{

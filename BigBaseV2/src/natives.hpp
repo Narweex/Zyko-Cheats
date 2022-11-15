@@ -7,7 +7,7 @@
 template <typename Ret, typename ...Args>
 FORCEINLINE Ret invoke(rage::scrNativeHash hash, Args&& ...args)
 {
-	using namespace big;
+	using namespace zyko;
 
 	g_native_invoker.begin_call();
 	(g_native_invoker.push_arg(std::forward<Args>(args)), ...);
@@ -3735,7 +3735,7 @@ namespace PED
 	NATIVE_DECL Ped _CLONE_PED_EX(Ped ped, float heading, BOOL isNetwork, BOOL thisScriptCheck, Any p4) { return invoke<Ped>(0x668FD40BCBA5DE48, ped, heading, isNetwork, thisScriptCheck, p4); } // 0x668FD40BCBA5DE48 b463
 	NATIVE_DECL void CLONE_PED_TO_TARGET(Ped ped, Ped targetPed) { invoke<Void>(0xE952D6431689AD9A, ped, targetPed); } // 0xE952D6431689AD9A 0xFC70EEC7 b323
 	NATIVE_DECL void _CLONE_PED_TO_TARGET_EX(Ped ped, Ped targetPed, Any p2) { invoke<Void>(0x148B08C2D2ACB884, ped, targetPed, p2); } // 0x148B08C2D2ACB884 b463
-	NATIVE_DECL BOOL IS_PED_IN_VEHICLE(Ped ped, Vehicle vehicle, BOOL atGetIn) { return invoke<BOOL>(0xA3EE4A07279BB9DB, ped, vehicle, atGetIn); } // 0xA3EE4A07279BB9DB 0x7DA6BC83 b323
+	//NATIVE_DECL BOOL IS_PED_IN_VEHICLE(Ped ped, Vehicle vehicle, BOOL atGetIn) { return invoke<BOOL>(0xA3EE4A07279BB9DB, ped, vehicle, atGetIn); } // 0xA3EE4A07279BB9DB 0x7DA6BC83 b323
 	NATIVE_DECL BOOL IS_PED_IN_MODEL(Ped ped, Hash modelHash) { return invoke<BOOL>(0x796D90EFB19AA332, ped, modelHash); } // 0x796D90EFB19AA332 0xA6438D4B b323
 	NATIVE_DECL BOOL IS_PED_IN_ANY_VEHICLE(Ped ped, BOOL atGetIn) { return invoke<BOOL>(0x997ABD671D25CA0B, ped, atGetIn); } // 0x997ABD671D25CA0B 0x3B0171EE b323
 	NATIVE_DECL BOOL IS_COP_PED_IN_AREA_3D(float x1, float y1, float z1, float x2, float y2, float z2) { return invoke<BOOL>(0x16EC4839969F9F5E, x1, y1, z1, x2, y2, z2); } // 0x16EC4839969F9F5E 0xB98DB96B b323
@@ -4277,7 +4277,7 @@ namespace PED
 	NATIVE_DECL void _0x0B3E35AC043707D9(Any p0, Any p1) { invoke<Void>(0x0B3E35AC043707D9, p0, p1); } // 0x0B3E35AC043707D9 b573
 	NATIVE_DECL BOOL _0x46B05BCAE43856B0(Ped ped, int flag) { return invoke<BOOL>(0x46B05BCAE43856B0, ped, flag); } // 0x46B05BCAE43856B0 0x79543043 b323
 	NATIVE_DECL int GET_PED_NEARBY_VEHICLES(Ped ped, int* sizeAndVehs) { return invoke<int>(0xCFF869CBFA210D82, ped, sizeAndVehs); } // 0xCFF869CBFA210D82 0xCB716F68 b323
-	NATIVE_DECL int GET_PED_NEARBY_PEDS(Ped ped, int* sizeAndPeds, int ignore) { return invoke<int>(0x23F8F5FC7E8C4A6B, ped, sizeAndPeds, ignore); } // 0x23F8F5FC7E8C4A6B 0x4D3325F4 b323
+	NATIVE_DECL int GET_PED_NEARBY_PEDS(Ped ped, int sizeAndPeds, int ignore) { return invoke<int>(0x23F8F5FC7E8C4A6B, ped, sizeAndPeds, ignore); } // 0x23F8F5FC7E8C4A6B 0x4D3325F4 b323
 	NATIVE_DECL BOOL _HAS_STREAMED_PED_ASSETS_LOADED(Ped ped) { return invoke<BOOL>(0x7350823473013C02, ped); } // 0x7350823473013C02 0xF9FB4B71 b323
 	NATIVE_DECL BOOL IS_PED_USING_ACTION_MODE(Ped ped) { return invoke<BOOL>(0x00E73468D085F745, ped); } // 0x00E73468D085F745 0x5AE7EDA2 b323
 	NATIVE_DECL void SET_PED_USING_ACTION_MODE(Ped ped, BOOL p1, int p2, const char* action) { invoke<Void>(0xD75ACCF5E0FB5367, ped, p1, p2, action); } // 0xD75ACCF5E0FB5367 0x8802F696 b323

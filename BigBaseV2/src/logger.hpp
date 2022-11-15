@@ -7,7 +7,7 @@
 #include <fstream>
 #include <iostream>
 
-namespace big
+namespace zyko
 {
 	template <typename TP>
 	std::time_t to_time_t(TP tp)

@@ -4,7 +4,7 @@
 #include "logger.hpp"
 #include "pointers.hpp"
 
-namespace big
+namespace zyko
 {
 	native_call_context::native_call_context()
 	{

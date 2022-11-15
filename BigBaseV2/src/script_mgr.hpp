@@ -2,7 +2,7 @@
 #include "common.hpp"
 #include "script.hpp"
 
-namespace big
+namespace zyko
 {
 	class script_mgr
 	{

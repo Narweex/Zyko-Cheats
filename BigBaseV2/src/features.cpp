@@ -1,41 +1,34 @@
-#include "common.hpp"
 #include "features.hpp"
 #include "logger.hpp"
 #include "natives.hpp"
 #include "script.hpp"
-#include "gta_util.hpp"
 #include "helpers/player_info.h"
 #include "script_global.hpp"
 #include "gta_util.hpp"
-#include <script_local.hpp>
-#include <sstream>
-#include "../../BigBaseV2/src/memory/all.hpp"
-#include "gui/player_list.h"
 #include <imgui.h>
-#include <helpers/imgui_notify.h>
-#include "gui/list/Lists.hpp"
-#include "auth/auth.hpp"
+#include "gui/player_list.h"
 #include "fiber_pool.hpp"
 
 
 
-namespace big
-{
 
+namespace zyko
+{
 	void features::on_present()
 	{
 		TRY_CLAUSE
 		{
 			show_fps(fps);
 			show_watermark(watermark);
-		   
+			sessioninfo(features::session_info);
+
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 5.f); // Round borders
 			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.04f, 0.14f, 100.f / 255.f)); // Background color
 			ImGui::RenderNotifications(); // <-- Here we render all notifications
 			ImGui::PopStyleVar(1); // Don't forget to Pop()
 			ImGui::PopStyleColor(1);
 		}
-		EXCEPT_CLAUSE
+			EXCEPT_CLAUSE
 	}
 
 
@@ -43,11 +36,11 @@ namespace big
 	{
 		if (toggle)
 		{
-		
+
 			ImGui::SetNextWindowSize(ImVec2(100.f, 40.f), ImGuiCond_Always);
 			ImGui::SetNextWindowPos(ImVec2(13.5f, 250.f), ImGuiCond_Always);
 			ImGui::Begin(xorstr_("##fps"), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBringToFrontOnFocus);
-			int fps = ImGui::GetIO().Framerate/2;
+			int fps = ImGui::GetIO().Framerate / 2;
 			std::string tostring = (std::to_string(fps));
 			ImGui::Text(xorstr_("FPS: %s"), tostring.c_str());
 		}
@@ -59,7 +52,7 @@ namespace big
 		auto end = std::chrono::system_clock::now();
 
 		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-		
+
 
 		if (enable)
 		{
@@ -72,16 +65,41 @@ namespace big
 
 			// Window
 			if (ImGui::Begin(xorstr_("##watermark"), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse /*| ImGuiWindowFlags_NoNav*/ | ImGuiWindowFlags_NoResize | /*ImGuiWindowFlags_NoFocusOnAppearing |*/ ImGuiWindowFlags_NoBringToFrontOnFocus))
-			{	
+			{
 				ImGui::Text(xorstr_("zykocheats.org"));
-				ImGui::Text(fmt::format(xorstr_("Time: {}"), std::ctime(&end_time)).c_str()); 
-				
+				ImGui::Text(fmt::format(xorstr_("Time: {}"), std::ctime(&end_time)).c_str());
 			}
 			ImGui::End();
 		}
 	}
 
-	
+	void features::sessioninfo(bool toggle)
+	{
+		if (toggle/* && *g_pointers->m_is_session_started*/)
+		{
+			ImVec2 size = ImVec2(300.f, 100.f);
+
+			// Position
+			ImGui::SetNextWindowSize(size, ImGuiCond_Always);
+			ImGui::SetNextWindowPos(ImVec2(300.f, 900.f));
+
+			if (ImGui::Begin(xorstr_("##sessionInfo"), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoBackground))
+			{
+				if (*g_pointers->m_is_session_started)
+				{
+					static int connected_players = gta_util::get_connected_players();
+					
+					ImGui::Text(xorstr_("Players: %d"), connected_players); 
+					ImGui::Text(xorstr_("Free slots: %d"), 32 - connected_players);
+				}
+				
+				
+			}
+		}
+
+	}
+
+
 	void features::show_info_pool(bool enable)
 	{
 		if (enable)
@@ -129,57 +147,16 @@ namespace big
 			ImGui::End();
 		}
 	}
-	
+
 	///////////////////////////////////////////////////////   HELP VOIDS   ///////////////////////////////////////////////////////
 
-	void features::notify_success(const char* text, const char* title, int duration)
+	std::string features::Keyboard()
 	{
-		ImGuiToast toast(ImGuiToastType_Success, duration);
-
-		toast.set_title(text);
-		toast.set_content(title);
-
-		ImGui::InsertNotification(toast);
+		MISC::DISPLAY_ONSCREEN_KEYBOARD(1, "Input", "", "", "", "", "", 32);
+		
+		return MISC::GET_ONSCREEN_KEYBOARD_RESULT();
 
 	}
-	void features::notify(const char* title, const char* text, int duration)
-	{
-		ImGuiToast toast(ImGuiToastType_Info, duration);
-
-		toast.set_title(title);
-		toast.set_content(text);
-
-		ImGui::InsertNotification(toast);
-
-	}
-	void features::notify_error(const char* title, const char* text, int duration)
-	{
-		ImGuiToast toast(ImGuiToastType_Error, duration);
-
-		toast.set_title(title);
-		toast.set_content(text);
-
-		ImGui::InsertNotification(toast);
-
-	}
-	void features::notify_protections(const char* title, const char* text, int duration)
-	{
-		ImGuiToast toast(ImGuiToastType_Warning, duration);
-
-		toast.set_title(title);
-		toast.set_content(text);
-
-		ImGui::InsertNotification(toast);
-
-	}
-	//void features::notify_error(const char* text)
-	//{
-	//	ImGui::InsertNotification({ ImGuiToastType_Error, 4000, text });
-	//}
-	//void features::notify_warning(const char* text)
-	//{
-	//	ImGui::InsertNotification({ ImGuiToastType_Warning, 4000, text });
-	//}
 
 
 	void drawstring(char* text, float X, float Y)
@@ -231,8 +208,8 @@ namespace big
 		}
 		return retKey;
 	}
-	
-	
+
+
 	void features::setOpenKey() {
 
 		int key = pressedKey();
@@ -264,14 +241,14 @@ namespace big
 	}
 	void features::duplicatecar()
 	{
-		Vehicle handle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true);
-		const char* vehicle = HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(handle));
-		features::notify(vehicle, "Nigger", 7000);
+		//Vehicle handle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true);
+		//const char* vehicle = HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(handle));
+		//features::notify(vehicle, "Nigger", 7000);
 /*
 		features::spawn_veh(rage::joaat(vehicle));*/
 	}
-	
-	
+
+
 	void features::teleport_to_objective()
 	{
 		Entity e;
@@ -328,12 +305,12 @@ namespace big
 			}
 		}
 		blipFound ? PED::SET_PED_COORDS_KEEP_VEHICLE(PLAYER::PLAYER_PED_ID(), wayp.x, wayp.y, wayp.z) : NULL;
-		
-			
-		
+
+
+
 	}
-	
-	
+
+
 
 
 
@@ -346,26 +323,26 @@ namespace big
 		OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY(obj), pos.x, pos.y, pos.z, 1, 1, 1);
 	}
 
-	
-
-	
 
 
 
-	
+
+
+
+
 	void features::changemodel(const char* model)
 	{
 		Hash model1 = MISC::GET_HASH_KEY(model);
 		STREAMING::REQUEST_MODEL(model1);
 		if (STREAMING::HAS_MODEL_LOADED(model1))
 		{
-		SYSTEM::WAIT(0);
-		PLAYER::SET_PLAYER_MODEL(PLAYER::PLAYER_ID(), (model1));
-		ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), true);
-		
+			SYSTEM::WAIT(0);
+			PLAYER::SET_PLAYER_MODEL(PLAYER::PLAYER_ID(), (model1));
+			ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), true);
+
 		}
-			
-		
+
+
 	}
 	bool features::is_modder(Player player)
 	{
@@ -383,7 +360,7 @@ namespace big
 	}
 
 	/*ATTACK FEATURES*/
-	void features::StealWeapons(){WEAPON::REMOVE_ALL_PED_WEAPONS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 1);}
+	void features::StealWeapons() { WEAPON::REMOVE_ALL_PED_WEAPONS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), 1); }
 
 	void features::kick(int player)
 	{
@@ -416,18 +393,8 @@ namespace big
 	}
 	void features::crash(int player)
 	{
-		//unsigned int player = (1 << features::g_selected_player);
-		for (int i; i < 5; i++)
-		{
-
-		
-		int nigger = rand() % -2147483647 + 2147483647;
-		uint64_t crash1[] = { -393294520, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
-		uint64_t crash2[] = { -1386010354, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
-		uint64_t crash3[] = { 962740265, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), nigger, nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger,nigger };
-		uint64_t crash[] = { *crash1, *crash2, *crash3 };
-		g_pointers->m_TriggerScriptEvent(1, crash, 4, player);
-		}
+		Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0);
+		OBJECT::CREATE_OBJECT(0x337b2b54, coords.x, coords.y, coords.z, 1, 0, 1);
 	}
 	void features::kill(int player)
 	{
@@ -451,8 +418,8 @@ namespace big
 		g_pointers->m_TriggerScriptEvent(1, event, 4, player);
 	}
 
-	
-	
+
+
 	void features::change_session(ChangeSessionID ID)
 	{
 		*script_global(SessionUNK1).as<int*>() = 0;
@@ -463,94 +430,60 @@ namespace big
 		*script_global(SessionUNK2).as<int*>() = 0;
 		*script_global(SessionUNK3).as<int*>() = -1;
 	}
-	
+
 	
 	void features::teleport_to_waypoint()
 	{
-		
-			Vector3 coords;
-			Entity e = PLAYER::PLAYER_PED_ID();
-			if (PED::IS_PED_IN_ANY_VEHICLE(e, 0))
-				e = PED::GET_VEHICLE_PED_IS_USING(e);
 
-			int WaypointHandle = HUD::GET_FIRST_BLIP_INFO_ID(8);
-			if (HUD::DOES_BLIP_EXIST(WaypointHandle))
-			{
-				Vector3 WaypointPos = HUD::GET_BLIP_COORDS(WaypointHandle);
-				WaypointPos.z += 5.0f;
-				int Handle = PLAYER::PLAYER_PED_ID();
-				if (PED::IS_PED_IN_ANY_VEHICLE(Handle, 0))
-					Handle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0);
-				ENTITY::SET_ENTITY_COORDS(Handle, WaypointPos.x, WaypointPos.y, WaypointPos.z, 0, 0, 0, 1);
-			}
+		Vector3 coords;
+		Entity e = PLAYER::PLAYER_PED_ID();
+		if (PED::IS_PED_IN_ANY_VEHICLE(e, 0))
+			e = PED::GET_VEHICLE_PED_IS_USING(e);
+
+		int WaypointHandle = HUD::GET_FIRST_BLIP_INFO_ID(8);
+		if (HUD::DOES_BLIP_EXIST(WaypointHandle))
+		{
+			Vector3 WaypointPos = HUD::GET_BLIP_COORDS(WaypointHandle);
+			WaypointPos.z += 5.0f;
+			int Handle = PLAYER::PLAYER_PED_ID();
+			if (PED::IS_PED_IN_ANY_VEHICLE(Handle, 0))
+				Handle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0);
+			ENTITY::SET_ENTITY_COORDS(Handle, WaypointPos.x, WaypointPos.y, WaypointPos.z, 0, 0, 0, 1);
+		}
 	}
 	void features::run_tick()
 	{
 		ULONGLONG now = GetTickCount64();
 
-		g_local_player = gta_util::get_local_ped();
+		//g_local_player = gta_util::get_local_ped();
 
-		if (g_player_info.player_id != PLAYER::PLAYER_ID() || g_player_info.player_id != PLAYER::PLAYER_PED_ID())
+		/*if (g_player_info.player_id != PLAYER::PLAYER_ID() || g_player_info.player_id != PLAYER::PLAYER_PED_ID())
 		{
 			g_player_info.player_id = PLAYER::PLAYER_ID();
 			g_player_info.player_ped = PLAYER::PLAYER_PED_ID();
-		}
-		if (crosshair)
-		{
-			CAM::_ENABLE_CROSSHAIR_THIS_FRAME();
-		}
-		
-		
-		if (features::novehkick)
-		{
-			*script_global(2689224).at(PLAYER::PLAYER_PED_ID()).at(317).at(10).as<int*>() = 21501;
-			*script_global(1958845).as<int*>() = 1;
-			script_global(262145).at(7478);
-
-			//Global_262145.f_7478
-		}
+		}*/
+		//if (crosshair)
+		//{
+		//	CAM::_ENABLE_CROSSHAIR_THIS_FRAME();
+		//}
 
 		
+		
+
+
+
+
+		//if (gta_util::IsKeyPressed(VK_F5))
+		//{
+		//	features::teleport_to_waypoint();
+		//}
 
 		
-		if (gta_util::IsKeyPressed(VK_F5))
-		{
-			features::teleport_to_waypoint();
-		}
+	
+		//UpdatePresence();
 
-		if (playeresp)
-		{
+		features::esp_line_all||features::esp_box_all||features::esp_name_all ||features::esp_distance_all ? features::ESP_all() : NULL;
 
-			Player playerPed = PLAYER::PLAYER_PED_ID();
-			for (int i = 0; i < 32; i++)
-			{
-				Player playerHandle = PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(i);
-				Vector3 handleCoords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(playerHandle, 0, 0, 0);
-				const char* Name = PLAYER::GET_PLAYER_NAME(PLAYER::INT_TO_PLAYERINDEX(i));
-
-				if (ENTITY::DOES_ENTITY_EXIST(playerHandle))
-				{
-					GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, 200, 94, 100, 255); // top Box
-					GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
-					GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
-					GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
-
-					GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, 200, 94, 100, 255); // bottom Box
-					GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, 200, 94, 100, 255);
-					GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, 200, 94, 100, 255);
-					GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, 200, 94, 100, 255);
-
-					GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, handleCoords.x + 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, 200, 94, 100, 255); // bottom Box
-					GRAPHICS::DRAW_LINE(handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, handleCoords.x + 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
-					GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z - 0.75, handleCoords.x - 0.5, handleCoords.y - 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
-					GRAPHICS::DRAW_LINE(handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z - 0.75, handleCoords.x - 0.5, handleCoords.y + 0.5, handleCoords.z + 0.75, 200, 94, 100, 255);
-					Vector3 locationOne = ENTITY::GET_ENTITY_COORDS(playerHandle, false);
-					Vector3 locationTwo = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), false);
-					GRAPHICS::DRAW_LINE(locationOne.x, locationOne.y, locationOne.z, locationTwo.x, locationTwo.y, locationTwo.z, 255, 0, 0, 255);
-
-				}
-			}
-		}
 		for (int i = 0; i < sizeof(tick_conf) / sizeof(ULONGLONG); i++)
 		{
 			if (now - ticks[i] > tick_conf[i])
@@ -561,77 +494,96 @@ namespace big
 				{
 				case 0:
 					//50 MS		
-					run_playerlist();	
-					notify_on_join ? features::joinNotification : NULL;
+					
+					run_playerlist();
+					features::shootpeds ? Shootpeds(true) : Shootpeds(false);
+					//notify_on_join ? features::joinNotification : NULL;
+					features::godmode ? Godmode(true) : Godmode(false);
+					neverwanted ? Neverwanted(true) : Neverwanted(false);
+					noclip ? Noclip(true) : Noclip(false);
+					instantenter ? Instantenter(true) : Instantenter(false);
+					superman ? Superman(true) : Superman(false);
+					nightvision ? Nightvision(true) : Nightvision(false);
+					thermalvision ? Thermalvision(true) : Thermalvision(false);
+					flashrun ? Flashrun(true) : Flashrun(false);
+					invisibility ? Invisibility(true) : Invisibility(false);
+					norag ? Norag(true) : Norag(false);
+					semigod ? Semigod(true) : Semigod(false);
+					bullshark ? Bullshark(true) : Bullshark(false);
+					offradar ? Offradar(true) : Offradar(false);
+					mobileradio ? Mobileradio(true) : Mobileradio(false);
+					hide_hud ? Hide_hud(true) : Hide_hud(false);
+					superjumpbool ? Superjump(true) : Superjump(false);
+					ultrajumpbool ? Ultrajumpbool(true) : Ultrajumpbool(false);
+					noidlekick ? Noidlekick(true) : Noidlekick(false);
+					superrunbool ? Superrun(true) : Superrun(false);
+					forcefield ? Forcefield(true) : Forcefield(false);
+					unlimitedstamina ? Unlimitedstamina(true) : Unlimitedstamina(false);
+					ignoreplayer ? Ignoreplayer(true) : Ignoreplayer(false);
+					ultrarunbool ? Ultrarunbool(true) : Ultrarunbool(false);
 
-					
-					
-	
+					driveitgun ? Driveitgun(true) : Driveitgun(false);
+					teleportgun ? Teleportgun(true) : Teleportgun(false);
+					aimbot ? Aimbot(true) : Aimbot(false);
+					deletegun ? Deletegun(true) : Deletegun(false);
+					airstrikegun ? Airstrikegun(true) : Airstrikegun(false);
+					exploammo ? Exploammo(true) : Exploammo(false);
+					infiniteammo ? Infiniteammo(true) : Infiniteammo(false);
+
+					cleanloop ? Cleanloop(true) : Cleanloop(false);
+					speedbypass ? Speedbypass(true) : Speedbypass(false);
+					novehkick ? Novehkick(true) : Novehkick(false);
+					fixloop ? Fixloop(true) : Fixloop(false);
+					vehgodmode ? Vehgodmode(true) : Vehgodmode(false);
+					hornboost ? Hornboost(true) : Hornboost(false);
+					fucktheircam ? Fucktheircam(true) : Fucktheircam(false);
+					spectateplayer ? Spectateplayer(true) : Spectateplayer(false);
+					ragdoll_player ? Ragdoll_player() : NULL;
+					crosshair ? Crosshair(true) : Crosshair(false);
+					stoptime ? CLOCK::PAUSE_CLOCK(true) : CLOCK::PAUSE_CLOCK(false);
+					rainbowcar ? Rainbowcar(true) : Rainbowcar(false);
+					flashrainbow ? Flashrainbow(true) : Flashrainbow(false);
+					rotating ? Rotating(true) : Rotating(false);
+					invis_car ? Invis_car(true) : Invis_car(false);
+					deadeye ? Deadeye(true) : Deadeye(false);
+
 					break;
 				case 1:
-					////////////////////////////////////////   250ms   ////////////////////////////////////////
+					////////////////////////////////////////   2500ms   ////////////////////////////////////////
+					moneynotify ? Moneynotify(true) : Moneynotify(false);
 					
-					features::player_loop();
-					if (NETWORK::NETWORK_IS_SESSION_ACTIVE())
-					{
-						features::online_loop();
-					}
+					nophone ? Nophone(true) : Nophone(false);
 					
-					features::weapons_loop();
-					if (PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), true))
-					{
-						features::vehicle_loop();
-					}
-					
-					features::misc_loop();
-					if(!invisibility){
+					if (!invisibility) {
 						ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
 					}
-					
-
-
-
-
-
-				
-
-
-					
-					
-					
 
 					break;
 				case 2:
-					features::kick_from_mk2();
-
+					kick_from_mk2 ? Kick_from_mk2(true) : Kick_from_mk2(false);
 
 					break;
 				case 3:
-					//25003ms
-					
+					features::nigger();
+
+
+
+
+
 					
 
-					rockstaradmin ? features::admindetection() : NULL;
-			
 					
 
-					stoptime ? CLOCK::PAUSE_CLOCK(true) : CLOCK::PAUSE_CLOCK(false);
-					
-					if (mobileradio)
-					{
-						AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(mobileradio);
-					}
-					else
-					{
-						AUDIO::SET_MOBILE_RADIO_ENABLED_DURING_GAMEPLAY(false);
-					}
-					
 
 					ticks[i] = now;
 				}
 			}
 		}
 	}
+			
+		
+		
+	
 
 	void features::script_func()
 	{
@@ -639,10 +591,10 @@ namespace big
 		{
 			TRY_CLAUSE
 			{
-				if (!g_first)
+				/*if (!g_first)
 				{
 					g_first = true;
-				}
+				}*/
 				run_tick();
 			}
 				EXCEPT_CLAUSE

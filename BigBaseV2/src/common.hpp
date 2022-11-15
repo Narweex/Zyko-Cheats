@@ -5,7 +5,7 @@
 #pragma comment(lib, "Crypt32.lib")
 #pragma comment(lib, "Wldap32.lib")
 #pragma comment(lib, "libcurl_a.lib")
-
+#define JM_XORSTR_DISABLE_AVX_INTRINSICS
 #include <SDKDDKVer.h>
 #include <Windows.h>
 #include <D3D11.h>
@@ -15,7 +15,6 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <chrono>
 #include <ctime>
 
 
@@ -28,7 +27,6 @@
 #include <memory>
 #include <new>
 
-#include <sstream>
 #include <string>
 #include <string_view>
 
@@ -51,7 +49,7 @@
 
 #include <fmt/format.h>
 #include <nlohmann/json.hpp>
-#define JM_XORSTR_DISABLE_AVX_INTRINSICS
+
 #include "logger.hpp"
 #include "core/xor_string.hpp"
 #include "core/config.h"
@@ -70,11 +68,11 @@
 #include <gta/ped_factory.hpp>
 #include <shellapi.h>
 #include "auth/lazy_importer.hpp"
+#include <notifications/notifications.h>
 
 
 
-
-
+#define ZykoVersion "Zyko 0.1.6"
 
 #define _PTR_MAX_VALUE ((PVOID)0x000F000000000000)
 
@@ -98,7 +96,7 @@ constexpr bool IsValidPtrWithVTable(void* p)
 	return false;
 }
 
-namespace big
+namespace zyko
 {
 	using namespace std::chrono_literals;
 	

@@ -1,8 +1,8 @@
 #pragma once
 #include "common.hpp"
-#include "../../BigBaseV2/src/core/config.h"
 
-namespace big::features
+
+namespace zyko::features
 {
 	inline int OpenKey = VK_INSERT;
 	void run_tick();
@@ -10,106 +10,195 @@ namespace big::features
 	void on_present();
 
 	inline ULONGLONG ticks[] = { 0, 0, 0, 0 };
-	inline ULONGLONG tick_conf[] = { 50, 250, 5000, 25003 };
+	inline ULONGLONG tick_conf[] = { 50, 2500, 5000, 25003 };
 	inline int g_current_tick_job{};
 
 
-	void player_loop();
-	void online_loop();
-	void weapons_loop();
-	void vehicle_loop();
-	void misc_loop();
 
 	/* Self */
-	inline bool godmode;
-	inline bool neverWanted = false;
-	inline bool instartenter = false;
-	inline bool superman = false;
-	inline bool noclip = false;
-	inline bool nightvision = false;
-	inline bool thermalvision = false;
-	inline bool invisibility = false;
-	inline bool norag = false;
-	inline bool semigod = false;
-	inline bool bullshark = false;
-	inline bool offradar = false;
+	extern bool godmode;
+	void Godmode(bool toggle);
+
+	extern bool neverwanted;
+	void Neverwanted(bool toggle);
+
+	extern bool instantenter;
+	void Instantenter(bool toggle);
+
+	extern bool superman;
+	void Superman(bool toggle);
+
+	extern bool noclip;
+	void Noclip(bool toggle);
+
+	extern bool nightvision;
+	void Nightvision(bool toggle);
+
+	extern bool thermalvision;
+	void Thermalvision(bool toggle);
+
+	extern bool invisibility;
+	void Invisibility(bool toggle);
+
+	extern bool norag;
+	void Norag(bool toggle);
+
+	extern bool semigod;
+	void Semigod(bool toggle);
+
+	extern bool bullshark;
+	void Bullshark(bool toggle);
+
+	extern bool offradar;
+	void Offradar(bool toggle);
+
+	extern bool flashrun;
+	void Flashrun(bool toggle);
+
+	extern bool mobileradio;
+	void Mobileradio(bool toggle);
+
+	extern bool hide_hud;
+	void Hide_hud(bool toggle);
+
+	extern bool superjumpbool;
+	void Superjump(bool toggle);
+
+	extern bool ultrajumpbool;
+	void Ultrajumpbool(bool toggle);
+
 	inline float timescale;
-	inline int fieldofview;
-	inline bool modifytimecycle = false;
-	inline int playeropacity = 255;
-	inline float runspeed = 3.0;
-	inline float runspeed1 = 3.0;
-	inline bool forcefield = false;
+
+	inline bool modifytimecycle;
+	//void Modifytimecycle(bool toggle);
+
+	extern bool forcefield;
 	inline float forcefield_force = 5.0;
-	inline bool unlimitedstamina = false;
-	inline bool flashrun = false;
-	inline bool mobileradio = false;
-	inline bool hide_hud = false;
+	void Forcefield(bool toggle);
+
+
+	extern bool unlimitedstamina;
+	void Unlimitedstamina(bool toggle);
+
+	extern bool noidlekick;
+	void Noidlekick(bool toggle);
+
+	extern bool ignoreplayer;
+	void Ignoreplayer(bool toggle);
+
+	extern bool superrunbool;
+	void Superrun(bool toggle);
+
+	extern bool ultrarunbool;
+	void Ultrarunbool(bool toggle);
+
+	void changemodel(const char* model);
+	void setwanted();
 	void clearwanted();
 	void resetped();
 	void suicide();
 	void maxhealth();
 	void maxarmor();
-	void noIdleKick();
-	inline bool noidlekick;
-	inline bool requestmodifier;
+	void UpdatePresence();
 	inline int wantedLevel;
 	inline int playeralpha = 255;
-	inline bool superrunbool = false;
-	inline bool ultrajumpbool = false;
-	inline bool ultrarunbool = false;
-	inline bool superjumpbool = false;
-	inline bool ignoreplayer = false;
-	void changemodel(const char* model);
-	void setwanted();
+	inline int playeropacity = 255;
+	inline float runspeed = 3.0;
+	inline float runspeed1 = 5.0;
+	void SetModifier(const char* modifier);
+	void PlayAnimation(const char* name, const char* id);
+	void StopAnimation();
+	inline float set_wetness;
+	void Set_wetness(const float& level);
 
 
 	/* Weapons */
-	inline bool driveitgun = false;
-	inline bool teleportgun;
-	inline bool aimbot = false;
-	inline bool deletegun = false;
-	inline bool airstrikegun = false;
-	inline bool exploammo = false;
+	extern bool driveitgun;
+	void Driveitgun(bool toggle);
+
+	extern bool teleportgun;
+	void Teleportgun(bool toggle);
+
+	extern bool aimbot;
+	void Aimbot(bool toggle);
+
+	extern bool deletegun;
+	void Deletegun(bool toggle);
+
+	extern bool airstrikegun;
+	void Airstrikegun(bool toggle);
+
+	extern bool exploammo;
+	void Exploammo(bool toggle);
+
+	extern bool infiniteammo;
+	void Infiniteammo(bool toggle);
+
+	extern bool deadeye;
+	void Deadeye(bool toggle);
+
 	void GiveAllWeapons();
 	void RemoveAllWeapons();
 	void MaxAmmo();
-	inline bool infiniteammo = false;
 
 
 	/* Vehicle */
-	void spawn_veh(Hash hash);
-	void maxvehicle(int VehicleHandle);
+	void spawn_veh(const Hash& hash);
+	void maxvehicle(const int& VehicleHandle);
 	inline bool vehicle_godmode = false;
 	inline bool vehicle_blip = false;
 	inline bool in_vehicle = true;
 	inline bool full_stats = true;
-	inline bool cleanloop = false;
-	inline bool speedbypass = false;
-	inline bool novehkick = false;
-	inline bool fixloop = false;
-	inline int red = 0;
-	inline int green = 0;
-	inline int blue = 0;
-	inline int red2 = 0;
-	inline int green2 = 0;
-	inline int blue2 = 0;
-	inline bool vehgodmode = false;
-	inline bool hornboost = false;
+
+	extern bool cleanloop;
+	void Cleanloop(bool toggle);
+
+	extern bool speedbypass;
+	void Speedbypass(bool toggle);
+
+	extern bool novehkick;
+	void Novehkick(bool toggle);
+
+	extern bool fixloop;
+	void Fixloop(bool toggle);
+
+	extern bool vehgodmode;
+	void Vehgodmode(bool toggle);
+
+	extern bool hornboost;
+	void Hornboost(bool toggle);
+
+	extern bool seatbelt;
+	void Seatbelt(bool toggle);
+
+	extern bool invis_car;
+	void Invis_car(bool toggle);
+
+	extern bool flashrainbow;
+	void Flashrainbow(bool toggle);
+
+	extern bool smoothhornboost;
+	void Smoothhornbbost(bool toggle);
+
+	extern bool rainbowcar;
+	void Rainbowcar(bool toggle);
+
+	inline int VEHr = 255, VEHg = 0, VEHb = 0;
+	inline int r1, g1, b1;
+
+
 	inline bool hornboosteffect = false;
 	inline int hornboostvalue = 50;
-	inline bool seatbelt = false;
 	inline int vehiclespeed = 100;
-	inline bool smoothhornboost = false;
-	inline bool rainbowcar = false;
-	inline bool invis_car = false;
+
+	inline char number_plate[10] = " ";
+	void SetNumberplate(const char* text);
 	void repairVehicle();
 	void cleanVehicle();
 	void duplicatecar();
-	inline bool flashrainbow = false;
 	void colour_spam();
-	
-
+	void acrobatics(int i);
+	void AddRamp();
 
 	/* Teleport */
 	void teleport_to_objective();
@@ -133,17 +222,46 @@ namespace big::features
 	void eight_years_playtime();
 
 	/* Online */
-	inline bool playeresp = false;
-	inline bool fucktheircam = false;
-	inline bool spectateplayer = false;
-	inline bool moneynotify = false;
-	void kick_from_mk2();
-	inline bool kick_from_oppressor = false;
-	inline bool freeze_player = false;
-	void ragdoll_player();
-	inline bool notify_on_join = true;
-	void joinNotification();
-	inline bool crosshair = true;
+	extern bool esp_line_all;
+	extern bool esp_box_all;
+	extern bool esp_name_all;
+	extern bool esp_distance_all;
+	void ESP_all();
+
+	extern bool boxesp;
+	extern bool line_esp;
+
+	void Playeresp(bool toggle, uint32_t players);
+
+	extern bool fucktheircam;
+	void Fucktheircam(bool toggle);
+
+	extern bool spectateplayer;
+	void Spectateplayer(bool toggle);
+
+	extern bool moneynotify;
+	void Moneynotify(bool toggle);
+
+	extern bool kick_from_mk2;
+	void Kick_from_mk2(bool toggle);
+
+	extern bool freeze_player;
+	void Freeze_player(bool toggle);
+
+	extern bool ragdoll_player;
+	void Ragdoll_player();
+
+	extern bool notify_on_join;
+	void Notify_on_join(bool toggle);
+
+	extern bool crosshair;
+	void Crosshair(bool toggle);
+
+	extern bool nophone;
+	void Nophone(bool toggle);
+
+	inline bool streamer_mode = false;
+
 
 	/* World*/
 	inline int worldgravity = 0;
@@ -154,28 +272,32 @@ namespace big::features
 	inline int clearradius = 300;
 
 	/* Utility */
-	void notify(const char* text, const char* title, int duration);
-	void notify_success(const char* text, const char* title, int duration);
-	void notify_error(const char* text, const char* title, int duration);
-	void notify_protections(const char* title, const char* text, int duration);
 	void spawn_obj(const char* object);
 	void play_particle(const char* particle);
 	inline bool numpadcontrol = false;
 
-
+	void boostPlayer();
 
 
 	/* Misc*/
 	void setOpenKey();
-	inline bool nophone = false;
 	void RequestControlOfEnt(Entity entity);
 	void ApplyForceToEntity(Entity e, float x, float y, float z);
 	void coordsDisplay(bool toggle);
-	//inline bool coords_display = false;
 	void rainbowloop();
+	void Clearall();
+	void Clearcars();
+	void Clearpeds();
+	void Clearcops();
+	void nigger();
+	void Spawn_companion();
 
-	void isDev();
-	void check();
+	std::string Keyboard();
+
+	extern bool rotating;
+	void Rotating(bool toggle);
+
+
 	void isRunning(LPCWSTR name);
 	inline bool traffic_folow = false;
 
@@ -225,15 +347,23 @@ namespace big::features
 	inline bool g_scripted_game_event = false;
 	inline bool g_crash_protex = false;
 	inline bool g_kick_protex = false;
-	inline bool rockstaradmin = false;
 	inline bool g_spoof_username = false;
 	inline bool g_spoof_ip = false;
 	inline bool g_spoof_rockstar_id = false;
 	inline bool leaveondetect;
 	inline bool crashgame;
+
+	extern bool rockstaradmin;
 	inline bool notifyadmin;
-	void admindetection();
 	inline bool detectionnotify = true;
+	void admindetection(bool toggle);
+
+	extern bool shootpeds;
+	void Shootpeds(bool toggle);
+	
+
+	
+
 	inline std::string g_username = "";
 	inline int g_ip_address[4] = { 109, 237, 104, 255 };
 	inline uint64_t g_rockstar_id;
@@ -243,10 +373,9 @@ namespace big::features
 
 	void show_watermark(bool enable);
 	void show_info_pool(bool enable);
-	void show_playerinfo();
 	void show_fps(bool enable);
-	
+	void sessioninfo(bool toggle);
 
-	inline bool watermark = true, pools = false, fps = true, playerinfo_toggle = false; 
+	inline bool watermark = true, pools = false, fps = true, session_info = true; 
 	
 }

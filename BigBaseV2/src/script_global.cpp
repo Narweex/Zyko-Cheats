@@ -2,7 +2,7 @@
 #include "pointers.hpp"
 #include "script_global.hpp"
 
-namespace big
+namespace zyko
 {
 	script_global::script_global(std::size_t index) :
 		m_index(index)

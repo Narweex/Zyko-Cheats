@@ -5,7 +5,7 @@
 #include "gta/natives.hpp"
 #include "vmt_hook.hpp"
 
-namespace big
+namespace zyko
 {
 	class script_hook
 	{

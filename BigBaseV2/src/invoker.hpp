@@ -2,7 +2,7 @@
 #include "common.hpp"
 #include "gta/natives.hpp"
 
-namespace big
+namespace zyko
 {
 	class native_call_context : public rage::scrNativeCallContext
 	{

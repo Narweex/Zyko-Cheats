@@ -7,7 +7,7 @@
 #include "pointers.hpp"
 #include "script_mgr.hpp"
 
-namespace big
+namespace zyko
 {
 	void script_mgr::add_script(std::unique_ptr<script> script)
 	{

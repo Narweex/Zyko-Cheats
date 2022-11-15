@@ -5,7 +5,7 @@
 #include "function_types.hpp"
 #include "Pools.h"
 
-namespace big
+namespace zyko
 {
 	class pointers
 	{

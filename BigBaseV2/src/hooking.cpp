@@ -15,11 +15,11 @@
 #include "helpers/player_info.h"
 #include <MinHook.h>
 #include "fiber_pool.hpp"
-
+#include <notifications/notifications.h>
 #include "../GTAV-Classes/CNetGamePlayer.hpp"
 
 
-namespace big
+namespace zyko
 {
 	static GtaThread* find_script_thread(rage::joaat_t hash)
 	{
@@ -222,7 +222,7 @@ namespace big
 							{
 							//4000
 							//persist_modder::save(4000, 2, event_name);
-							g_fiber_pool->queue_job([=] { features::notify_protections("Received Event", event_name, 4000); });
+							g_fiber_pool->queue_job([=] { zyko::Notify("Received Event", event_name, 4000, Protections); });
 							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 							return false;
 							}
@@ -238,7 +238,7 @@ namespace big
 							{
 								//4000
 								//persist_modder::save(4000, 2, event_name);
-								g_fiber_pool->queue_job([=] { features::notify_protections("Received Scripted Game Event", event_name, 4000); });
+								g_fiber_pool->queue_job([=] { zyko::Notify("Received Scripted Game Event", event_name, 4000, Protections); });
 								g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 								return false;
 							}
@@ -255,14 +255,14 @@ namespace big
 						
 						//persist_modder::save(4000, 2, event_name);
 						LOG(HACKER) << xorstr_("Detected Cash drop from: ") << source_player->get_name();
-						g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
+						g_fiber_pool->queue_job([=] { zyko::Notify(xorstr_("Received Event"), event_name, 4000, Protections); });
 						break;
 					}
 					}
 					case (int)RockstarEvent::NETWORK_CHECK_CODE_CRCS_EVENT:
 					{
 						const char* name = source_player->get_name();
-						g_fiber_pool->queue_job([=] { features::notify_protections((*name + "Is possible modder"+ *name), event_name, 4000); });
+						g_fiber_pool->queue_job([=] { zyko::Notify((*name + "Is possible modder"+ *name), event_name, 4000, Protections); });
 						break;
 					}
 					
@@ -277,7 +277,7 @@ namespace big
 						if(features::no_freeze_event)
 						/*if (g_player_info.is_in_vehicle())*/
 						{
-							g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Someone tried to freeze you"), event_name, 4000); });
+							g_fiber_pool->queue_job([=] { zyko::Notify(xorstr_("Someone tried to freeze you"), event_name, 4000, Protections); });
 
 							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 							return false;
@@ -290,7 +290,7 @@ namespace big
 					if (features::no_weather_event)
 					{						
 						//persist_modder::save(4000, 3, event_name);
-						g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
+						g_fiber_pool->queue_job([=] { zyko::Notify(xorstr_("Received Event"), event_name, 4000, Protections); });
 						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 						return false;
 					}
@@ -300,7 +300,7 @@ namespace big
 						if (features::no_weather_event)
 						{
 							//persist_modder::save(4000, 3, event_name);
-							g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
+							g_fiber_pool->queue_job([=] { zyko::Notify(xorstr_("Received Event"), event_name, 4000, Protections); });
 							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 							return false;
 						}
@@ -309,7 +309,7 @@ namespace big
 					{
 						if (features::no_votekick_event)
 						{						
-						g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
+						g_fiber_pool->queue_job([=] { zyko::Notify(xorstr_("Received Event"), event_name, 4000, Protections); });
 						LOG(RAW_GREEN_TO_CONSOLE) << source_player->get_name() << xorstr_(" voted to kick the: ") << target_player->get_name();
 						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 						return false;
@@ -319,7 +319,7 @@ namespace big
 					{
 						if (features::g_scripted_game_event)
 						{
-							g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
+							g_fiber_pool->queue_job([=] { zyko::Notify(xorstr_("Received Event"), event_name, 4000, Protections); });
 							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 							return false;
 						}
@@ -329,7 +329,7 @@ namespace big
 						if (features::no_weapons_event)
 						{						
 						//persist_modder::save(4000, 2, event_name);
-						g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });					
+						g_fiber_pool->queue_job([=] { zyko::Notify(xorstr_("Received Event"), event_name, 4000, Protections); });
 						g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 						return false;
 						}
@@ -339,7 +339,7 @@ namespace big
 						if (features::no_weapons_event)
 						{
 							//persist_modder::save(4000, 2, event_name);
-							g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Received Event"), event_name, 4000); });
+							g_fiber_pool->queue_job([=] { zyko::Notify(xorstr_("Received Event"), event_name, 4000, Protections); });
 							g_pointers->m_send_event_ack(event_manager, source_player, target_player, event_index, event_handled_bitset);
 							return false;
 						}
@@ -409,7 +409,7 @@ namespace big
 							{
 						case 844746317: case 1228916411: //put your hashes like that
 							LOG(RAW_GREEN_TO_CONSOLE) << xorstr_("Blocked crash from: ") << sender->get_name();
-	/*Crashes*/				g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Blocked crash"), sender->get_name(), 2000); });
+	/*Crashes*/				g_fiber_pool->queue_job([=] { zyko::Notify(xorstr_("Blocked crash"), sender->get_name(), 2000, Protections); });
 							return true;
 							}
 						
@@ -417,7 +417,7 @@ namespace big
 							{
 						case -1386010354: case 1757755807: case -393294520: case -371781708: case 1514515570:  case 911179316: case 846342319: case 2085853000: case -1970125962: case -1013679841: case -1767058336: case -1892343528: case 1494472464: case 296518236: case 998716537://put your hashes like that
 							LOG(RAW_GREEN_TO_CONSOLE) << xorstr_("Blocked crash from: ") << sender->get_name();
-	/*Kicks*/				g_fiber_pool->queue_job([=] { features::notify_protections(xorstr_("Blocked crash"), sender->get_name(), 2000); });
+	/*Kicks*/				g_fiber_pool->queue_job([=] { zyko::Notify(xorstr_("Blocked crash"), sender->get_name(), 2000, Protections); });
 							return true;
 							}
 						

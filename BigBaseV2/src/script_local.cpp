@@ -3,7 +3,7 @@
 #include "script_local.hpp"
 #include "gta\script_thread.hpp"
 
-namespace big
+namespace zyko
 {
 	script_local::script_local(rage::scrThread* thread, std::size_t index) :
 		m_index(index), m_stack(thread->m_stack)

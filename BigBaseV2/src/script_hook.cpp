@@ -5,7 +5,7 @@
 #include "pointers.hpp"
 #include "script_hook.hpp"
 
-namespace big
+namespace zyko
 {
 	inline std::unordered_map<rage::scrProgram*, script_hook*> script_hook::s_map;
 

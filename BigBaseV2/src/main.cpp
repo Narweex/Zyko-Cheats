@@ -1,5 +1,4 @@
-﻿#include "common.hpp"
-#include "features.hpp"
+﻿#include "notifications/notifications.h"
 #include "fiber_pool.hpp"
 #include "gui.hpp"
 #include "logger.hpp"
@@ -10,11 +9,23 @@
 #include "gui/list/script/MainScript.hpp"
 #include "gui/list/UIManager.hpp"
 #include "features.hpp"
-#include "natives.hpp"
+#include "../discord_rpc.h"
+
+
+void zyko::features::UpdatePresence()
+{
+	DiscordRichPresence discordPresence;
+	memset(&discordPresence, 0, sizeof(discordPresence));
+	discordPresence.state = "Zyko Cheats";
+	discordPresence.details = "Playing GTAV With Zyko";
+	discordPresence.largeImageKey = "logo";
+	discordPresence.largeImageText = "zykocheats.org";
+	Discord_UpdatePresence(&discordPresence);
+}
 
 BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 {
-	using namespace big;
+	using namespace zyko;
 	if (reason == DLL_PROCESS_ATTACH)
 	{
 
@@ -36,6 +47,8 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
                                  / /__ / / /| / /_/ /  / /___/ __  / /___/ ___ |/ /  ___/ / 
                                 /____//_/_/ |_\____/   \____/_/ /_/_____/_/  |_/_/  /____/  
                                                                                              )kek";
+			
+				//Discord_Initialize("SJHK9gtX_oXcUwG_v1ZlUM_CaxhhIVc9", nullptr, 1, NULL);
 				
 				auto pointers_instance = std::make_unique<pointers>();
 				LOG(INFO) << "Pointers initialized.";
@@ -52,12 +65,15 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 				auto uimanager_instance = std::make_unique<UserInterface::UIManager>();
 				LOG(INFO) << "UIManager initialized.";
 
-				/*g_settings.load();
-				LOG(INFO) << "Settings Loaded.";*/
+				
 
-				g_script_mgr.add_script(std::make_unique<script>(&features::script_func));
+
+				
+
+				
 				g_script_mgr.add_script(std::make_unique<script>(&gui::script_func));
 				g_script_mgr.add_script(std::make_unique<script>(&MainScript::script_func));
+				g_script_mgr.add_script(std::make_unique<script>(&features::script_func));
 				LOG(INFO) << "Scripts registered.";
 
 				g_hooking->enable();
@@ -67,16 +83,15 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 				
 				
 
-				
-				features::notify("Welcome to Zyko Cheats!", "", 15000);
-				features::notify("INSERT to Open ", "", 15000);
+				Notify("Welcome to 0.1.5", "", 7000, None);
+				Notify("Open With INSERT", "", 7000, Protections);
 				while (g_running)
 				{
-					// LI_FN(OutputDebugStringA)("hello world");
+					
 
 					std::this_thread::sleep_for(500ms);
 				}
-
+				//Discord_Shutdown();
 				g_hooking->disable();
 				LOG(INFO) << "Hooking disabled.";
 

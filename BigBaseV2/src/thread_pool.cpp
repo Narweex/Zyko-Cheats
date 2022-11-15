@@ -1,6 +1,6 @@
 #include "thread_pool.hpp"
 
-namespace big
+namespace zyko
 {
 	thread_pool::thread_pool() : m_accept_jobs(true), m_data_condition(), m_job_stack(), m_lock()
 	{

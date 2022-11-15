@@ -2,7 +2,7 @@
 #include "common.hpp"
 #include "imgui.h"
 
-namespace big
+namespace zyko
 {
 	class gui
 	{
@@ -18,7 +18,10 @@ namespace big
 		int g_tab = 0;
 		ImVec2 g_window;
 		float height = 0.f, width = 0.f;
+
+	
 	};
+
 
 	inline gui g_gui;
 }

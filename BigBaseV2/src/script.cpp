@@ -3,7 +3,7 @@
 #include "logger.hpp"
 #include "script.hpp"
 
-namespace big
+namespace zyko
 {
 	void script::script_exception_handler(PEXCEPTION_POINTERS exp)
 	{

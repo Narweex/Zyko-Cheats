@@ -1,7 +1,7 @@
 #include "common.hpp"
 #include "vmt_hook.hpp"
 
-namespace big
+namespace zyko
 {
 	vmt_hook::vmt_hook(void* obj, std::size_t num_funcs) :
 		m_object(static_cast<void***>(obj)),
