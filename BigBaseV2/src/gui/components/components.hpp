@@ -1,7 +1,7 @@
 #pragma once
 #include "imgui.h"
 
-namespace big
+namespace zyko
 {
 	class components
 	{

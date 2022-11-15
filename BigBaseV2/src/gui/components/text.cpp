@@ -2,7 +2,7 @@
 #include "renderer.hpp"
 #include "imgui.h"
 
-namespace big
+namespace zyko
 {
 	void components::small_text(const std::string_view text)
 	{

@@ -1,7 +1,7 @@
 #include "gui/components/components.hpp"
 #include "fiber_pool.hpp"
 
-namespace big
+namespace zyko
 {
 	bool components::button(const std::string_view text) {
 		return ImGui::Button(text.data());
