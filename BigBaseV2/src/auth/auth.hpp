@@ -24,6 +24,6 @@ namespace auth
 {
 	static char username[28];
 	static char password[28];
-	inline bool login = false;
+	inline bool login = true;
 }
 
