@@ -22,17 +22,11 @@
     <Filter Include="gui\list\script">
       <UniqueIdentifier>{aafe0e69-d6d4-4247-976a-f209e3abcbbc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="persist">
-      <UniqueIdentifier>{5de052e0-a974-4468-b629-8aa455475494}</UniqueIdentifier>
-    </Filter>
     <Filter Include="gui\components">
       <UniqueIdentifier>{45310b70-eec3-4854-a1f7-062929296042}</UniqueIdentifier>
     </Filter>
     <Filter Include="auth">
       <UniqueIdentifier>{60cb060a-f954-4983-9fd7-8356063fb193}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="looped">
-      <UniqueIdentifier>{a9a87494-e2be-41f4-918b-70723f88273d}</UniqueIdentifier>
     </Filter>
     <Filter Include="auth\anti_debug">
       <UniqueIdentifier>{9c5e5924-169b-4969-b2ba-1ab099be574c}</UniqueIdentifier>
@@ -46,8 +40,17 @@
     <Filter Include="auth\anti_debug\ADebug">
       <UniqueIdentifier>{100742bf-74ca-4454-9684-82980fc91448}</UniqueIdentifier>
     </Filter>
-    <Filter Include="playerinfo">
-      <UniqueIdentifier>{6e0f0850-67fe-4995-94ba-97701206eb9a}</UniqueIdentifier>
+    <Filter Include="auth\include">
+      <UniqueIdentifier>{4d5fd37b-a0fe-4efd-b0c5-e67181f7668b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="notifications">
+      <UniqueIdentifier>{1c1ff819-6cc9-4411-9db4-82d142124273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features">
+      <UniqueIdentifier>{a9a87494-e2be-41f4-918b-70723f88273d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core\Discord">
+      <UniqueIdentifier>{1788d1a4-351f-4729-8d63-e6e8b78bc6af}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -306,13 +309,41 @@
       <Filter>auth\anti_debug\ADebug</Filter>
     </ClInclude>
     <ClInclude Include="src\looped\teleports.hpp">
-      <Filter>looped</Filter>
-    </ClInclude>
-    <ClInclude Include="src\playerinfo\playerinfo_gui.h">
-      <Filter>playerinfo</Filter>
+      <Filter>features</Filter>
     </ClInclude>
     <ClInclude Include="src\gui\imgui_tabs.h">
       <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\auth\includes\httplib.h">
+      <Filter>auth\include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\notifications\notifications.h">
+      <Filter>notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="src\notifications\fa_solid_900.h">
+      <Filter>notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="src\notifications\icons.h">
+      <Filter>notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="src\notifications\imgui_notify.h">
+      <Filter>notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="src\notifications\tahoma.h">
+      <Filter>notifications</Filter>
+    </ClInclude>
+    <ClInclude Include="discord_register.h">
+      <Filter>core\Discord</Filter>
+    </ClInclude>
+    <ClInclude Include="discord_rpc.h">
+      <Filter>core\Discord</Filter>
+    </ClInclude>
+    <ClInclude Include="src\looped\gtaData.hpp">
+      <Filter>features</Filter>
+    </ClInclude>
+    <ClInclude Include="src\style.hpp" />
+    <ClInclude Include="src\gui\list\BetterBoolOption.hpp">
+      <Filter>gui\list</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -368,9 +399,6 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="src\shv_runner.cpp" />
-    <ClCompile Include="src\gui\self_tab.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="src\thread_pool.cpp" />
     <ClCompile Include="src\gui\components\button.cpp">
       <Filter>gui\components</Filter>
@@ -388,16 +416,16 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="src\looped\player.cpp">
-      <Filter>looped</Filter>
+      <Filter>features</Filter>
     </ClCompile>
     <ClCompile Include="src\looped\misc.cpp">
-      <Filter>looped</Filter>
+      <Filter>features</Filter>
     </ClCompile>
     <ClCompile Include="src\looped\online.cpp">
-      <Filter>looped</Filter>
+      <Filter>features</Filter>
     </ClCompile>
     <ClCompile Include="src\looped\weapons.cpp">
-      <Filter>looped</Filter>
+      <Filter>features</Filter>
     </ClCompile>
     <ClCompile Include="src\gui\lobby_tab.cpp">
       <Filter>gui</Filter>
@@ -406,10 +434,10 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="src\looped\recovery.cpp">
-      <Filter>looped</Filter>
+      <Filter>features</Filter>
     </ClCompile>
     <ClCompile Include="src\looped\vehicle.cpp">
-      <Filter>looped</Filter>
+      <Filter>features</Filter>
     </ClCompile>
     <ClCompile Include="src\auth\auth.cpp">
       <Filter>auth</Filter>
@@ -427,8 +455,20 @@
     <ClCompile Include="src\gui\misc_tab.cpp">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="src\playerinfo\playerinfo_gui.cpp">
-      <Filter>playerinfo</Filter>
+    <ClCompile Include="src\notifications\notifications.cpp">
+      <Filter>notifications</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\list\BreakOption.hpp">
+      <Filter>gui\list</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\spawn_tab.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\settings_tab.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\world_tab.cpp">
+      <Filter>gui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -438,5 +478,8 @@
     </Library>
     <Library Include="src\auth\libs\libcrypto.lib" />
     <Library Include="src\auth\libs\libssl.lib" />
+    <Library Include="discord-rpc.lib">
+      <Filter>core\Discord</Filter>
+    </Library>
   </ItemGroup>
 </Project>

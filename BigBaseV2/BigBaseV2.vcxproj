@@ -170,6 +170,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="discord_register.h" />
+    <ClInclude Include="discord_rpc.h" />
     <ClInclude Include="src\auth\anti_debug\ADebug\crc32.hpp" />
     <ClInclude Include="src\auth\anti_debug\ADebug\Hash.hpp" />
     <ClInclude Include="src\auth\anti_debug\ADebug\Helpers.hpp" />
@@ -187,6 +189,7 @@
     <ClInclude Include="src\auth\anti_debug\winapi_hash\hash_work.hpp" />
     <ClInclude Include="src\auth\anti_debug\winapi_hash\PointerHashFunc.hpp" />
     <ClInclude Include="src\auth\auth.hpp" />
+    <ClInclude Include="src\auth\includes\httplib.h" />
     <ClInclude Include="src\auth\lazy_importer.hpp" />
     <ClInclude Include="src\common.hpp" />
     <ClInclude Include="src\core\config.h" />
@@ -233,6 +236,7 @@
     <ClInclude Include="src\gui\list\AbstractSubmenu.hpp" />
     <ClInclude Include="src\gui\list\BaseOption.hpp" />
     <ClInclude Include="src\gui\list\BaseSubmenu.hpp" />
+    <ClInclude Include="src\gui\list\BetterBoolOption.hpp" />
     <ClInclude Include="src\gui\list\BoolOption.hpp" />
     <ClInclude Include="src\gui\list\ChooseOption.hpp" />
     <ClInclude Include="src\gui\list\Lists.hpp" />
@@ -252,6 +256,7 @@
     <ClInclude Include="src\hooking.hpp" />
     <ClInclude Include="src\invoker.hpp" />
     <ClInclude Include="src\logger.hpp" />
+    <ClInclude Include="src\looped\gtaData.hpp" />
     <ClInclude Include="src\looped\teleports.hpp" />
     <ClInclude Include="src\memory\all.hpp" />
     <ClInclude Include="src\memory\fwddec.hpp" />
@@ -261,7 +266,11 @@
     <ClInclude Include="src\memory\pattern_batch.hpp" />
     <ClInclude Include="src\memory\range.hpp" />
     <ClInclude Include="src\natives.hpp" />
-    <ClInclude Include="src\playerinfo\playerinfo_gui.h" />
+    <ClInclude Include="src\notifications\fa_solid_900.h" />
+    <ClInclude Include="src\notifications\icons.h" />
+    <ClInclude Include="src\notifications\imgui_notify.h" />
+    <ClInclude Include="src\notifications\notifications.h" />
+    <ClInclude Include="src\notifications\tahoma.h" />
     <ClInclude Include="src\pointers.hpp" />
     <ClInclude Include="src\Pools.h" />
     <ClInclude Include="src\renderer.hpp" />
@@ -271,6 +280,7 @@
     <ClInclude Include="src\script_local.hpp" />
     <ClInclude Include="src\script_mgr.hpp" />
     <ClInclude Include="src\shv_runner.h" />
+    <ClInclude Include="src\style.hpp" />
     <ClInclude Include="src\thread_pool.hpp" />
     <ClInclude Include="src\vmt_hook.hpp" />
   </ItemGroup>
@@ -286,6 +296,7 @@
     <ClCompile Include="src\gui\components\button.cpp" />
     <ClCompile Include="src\gui\components\child.cpp" />
     <ClCompile Include="src\gui\components\text.cpp" />
+    <ClCompile Include="src\gui\list\BreakOption.hpp" />
     <ClCompile Include="src\gui\list\script\MainScript.cpp" />
     <ClCompile Include="src\gui\list\UIManager.cpp" />
     <ClCompile Include="src\gui\lobby_tab.cpp" />
@@ -294,10 +305,12 @@
     <ClCompile Include="src\gui\player_list.cpp" />
     <ClCompile Include="src\gui\protections_tab.cpp" />
     <ClCompile Include="src\gui\recovery_tab.cpp" />
-    <ClCompile Include="src\gui\self_tab.cpp" />
+    <ClCompile Include="src\gui\settings_tab.cpp" />
+    <ClCompile Include="src\gui\spawn_tab.cpp" />
     <ClCompile Include="src\gui\teleport_tab.cpp" />
     <ClCompile Include="src\gui\vehicle_tab.cpp" />
     <ClCompile Include="src\gui\weapons_tab.cpp" />
+    <ClCompile Include="src\gui\world_tab.cpp" />
     <ClCompile Include="src\helpers\other.cpp" />
     <ClCompile Include="src\helpers\player_info.cpp" />
     <ClCompile Include="src\hooking.cpp" />
@@ -313,7 +326,7 @@
     <ClCompile Include="src\memory\pattern.cpp" />
     <ClCompile Include="src\memory\pattern_batch.cpp" />
     <ClCompile Include="src\memory\range.cpp" />
-    <ClCompile Include="src\playerinfo\playerinfo_gui.cpp" />
+    <ClCompile Include="src\notifications\notifications.cpp" />
     <ClCompile Include="src\pointers.cpp" />
     <ClCompile Include="src\Pools.cpp" />
     <ClCompile Include="src\renderer.cpp" />
@@ -341,6 +354,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Library Include="discord-rpc.lib" />
     <Library Include="src\auth\anti_debug\t1ha-static.lib" />
     <Library Include="src\auth\libs\libcrypto.lib" />
     <Library Include="src\auth\libs\libssl.lib" />
