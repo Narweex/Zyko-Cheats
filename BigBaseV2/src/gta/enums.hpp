@@ -3,6 +3,16 @@
 
 constexpr auto MAX_PLAYERS = 32;
 
+enum VehicleAcrobatics {
+	Frontflip = 1,
+	Backflip,
+	LeftFlip,
+	RightFlip,
+	JumpUp,
+	LaunchUp
+
+
+};
 enum class ControllerInputs : std::uint32_t
 {
 	INPUT_NEXT_CAMERA,
