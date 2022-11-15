@@ -1,8 +1,18 @@
 #pragma once
 #include "UIManager.hpp"
 
-namespace big::Lists
+namespace zyko::Lists
 {
+	inline const char* TestTypes[]
+	{
+		"nigger1",
+		"nigger2"
+	};
+	
+	
+
+
+
 	inline const char* HeaderTypesFrontend[]
 	{
 		"Static",
@@ -30,12 +40,21 @@ namespace big::Lists
 		"Nine",
 		"Ten"
 	};
-	inline std::vector<const char*> models1
+
+	inline std::size_t ImpactPos = 0;
+	inline const char* ImpactNames[]
 	{
-		"Acult01AMY",
-		"A_C_Pigeon",
-		"Acult01AMY"
+		"cat",
+		"random"
 	};
+
+	inline std::vector<std::string> Impacts
+	{
+		"random ped",
+		"cat"
+	};
+
+
 	inline const char* R1Admins[]
 	{
 "Spartanian123_yt",
@@ -416,7 +435,7 @@ namespace big::Lists
 		"TITAN", "VELUM", "VELUM2", "VESTRA", "ALPHAZ1",
 		"STARLING", "TULA", "MOLOTOK", "ROGUE", "HOWARD", "PYRO",
 		"MOGUL", "BOMBUSHKA", "NOKOTA", "SEABREEZE", "VOLATOL",
-		"STRIKEFORCE"
+		"STRIKEFORCE", "alkonost"
 	};
 
 	inline std::vector<std::string> Sedans1

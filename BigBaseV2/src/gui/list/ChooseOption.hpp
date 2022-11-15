@@ -1,7 +1,7 @@
 #pragma once
 #include "BaseOption.hpp"
 
-namespace big::UserInterface
+namespace zyko::UserInterface
 {
 	template <typename DataType, typename PositionType>
 	class ChooseOption : public BaseOption<ChooseOption<DataType, PositionType>>

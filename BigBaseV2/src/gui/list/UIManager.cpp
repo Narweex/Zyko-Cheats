@@ -6,8 +6,9 @@
 #include "../../BigBaseV2/src/gui/list/Lists.hpp"
 #include <sstream>
 #include "features.hpp"
+#include "SubOption.hpp"
 
-namespace big::UserInterface
+namespace zyko::UserInterface
 {
 	UIManager::UIManager()
 	{
@@ -32,6 +33,28 @@ namespace big::UserInterface
 
 		CheckForInput();
 		HandleInput();
+
+		/*if (opt->GetFlag(OptionFlag::Break) && selected)
+		{
+			if (m_DownKeyPressed)
+			{
+				while (sub->GetOption(sub.GetSelectedOption())->GetFlag(OptionFlag::Break))
+				{
+					sub.SetSelectedOption(sub.GetSelectedOption() + 1);
+				}
+
+
+			}
+			else if (m_UpKeyPressed)
+			{
+				
+				while (sub.GetOption(sub.GetSelectedOption())->GetFlag(OptionFlag::Break))
+				{
+					sub.SetSelectedOption(sub.GetSelectedOption() - 1);
+				}
+			}
+
+		}*/
 
 		if (m_Opened && g_list)
 		{
@@ -302,7 +325,7 @@ namespace big::UserInterface
 	void UIManager::DrawFooter()
 	{
 		
-		DrawLeftText("0.1.0.Beta",
+		DrawLeftText(ZykoVersion,
 			m_PosX + (m_Width / m_OptionPadding) - 0.04f,/*m_PosX + 0.08f*/
 			m_DrawBaseY,
 			0.24f,

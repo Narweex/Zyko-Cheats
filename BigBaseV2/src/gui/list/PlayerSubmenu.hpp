@@ -2,7 +2,7 @@
 #include "BaseSubmenu.hpp"
 #include "natives.hpp"
 
-namespace big::UserInterface
+namespace zyko::UserInterface
 {
 	class PlayerSubmenu : public BaseSubmenu<PlayerSubmenu>
 	{

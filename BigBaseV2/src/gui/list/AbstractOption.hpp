@@ -1,6 +1,6 @@
 #pragma once
 
-namespace big::UserInterface
+namespace zyko::UserInterface
 {
 	enum class OptionAction
 	{
@@ -12,7 +12,8 @@ namespace big::UserInterface
 	enum class OptionFlag
 	{
 		Horizontal = (1 << 0),
-		Enterable = (1 << 1)
+		Enterable = (1 << 1),
+		Break
 	};
 
 	class AbstractOption

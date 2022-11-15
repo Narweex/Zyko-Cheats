@@ -2,7 +2,7 @@
 #include "AbstractSubmenu.hpp"
 #include "AbstractOption.hpp"
 
-namespace big::UserInterface
+namespace zyko::UserInterface
 {
 	template <typename T>
 	class BaseSubmenu : public AbstractSubmenu

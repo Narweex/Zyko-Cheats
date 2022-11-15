@@ -1,7 +1,7 @@
 #pragma once
 #include "BaseOption.hpp"
 
-namespace big::UserInterface
+namespace zyko::UserInterface
 {
 	class RegularOption : public BaseOption<RegularOption>
 	{

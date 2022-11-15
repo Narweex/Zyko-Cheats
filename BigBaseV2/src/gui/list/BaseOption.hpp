@@ -2,7 +2,7 @@
 #include "common.hpp"
 #include "AbstractOption.hpp"
 
-namespace big::UserInterface
+namespace zyko::UserInterface
 {
 	template <typename T>
 	class BaseOption : public AbstractOption

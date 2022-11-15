@@ -2,12 +2,12 @@
 #include "common.hpp"
 #include "AbstractOption.hpp"
 
-namespace big::UserInterface
+namespace zyko::UserInterface
 {
 	class AbstractSubmenu
 	{
 	public:
-		virtual ~AbstractSubmenu() noexcept = default;
+		//virtual ~AbstractSubmenu() noexcept = default;
 
 		virtual const char* GetName() = 0;
 		virtual std::uint32_t GetId() = 0;

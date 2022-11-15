@@ -2,7 +2,7 @@
 #include "BaseOption.hpp"
 #include "UIManager.hpp"
 
-namespace big::UserInterface
+namespace zyko::UserInterface
 {
 	enum class BoolDisplay
 	{

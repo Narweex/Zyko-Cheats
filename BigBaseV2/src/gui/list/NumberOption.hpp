@@ -3,7 +3,7 @@
 #include "UIManager.hpp"
 #include "script/Util.hpp"
 
-namespace big::UserInterface
+namespace zyko::UserInterface
 {
 	template <typename NumberType>
 	class NumberOption : public BaseOption<NumberOption<NumberType>>

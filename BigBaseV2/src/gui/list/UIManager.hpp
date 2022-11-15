@@ -5,7 +5,7 @@
 #include "TextBox.hpp"
 #include "AbstractSubmenu.hpp"
 
-namespace big::UserInterface
+namespace zyko::UserInterface
 {
 	enum class Font : std::int32_t
 	{
@@ -184,7 +184,7 @@ namespace big::UserInterface
 	};
 }
 
-namespace big
+namespace zyko
 {
 	inline UserInterface::UIManager* g_UiManager{};
 }
