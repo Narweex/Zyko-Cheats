@@ -1,6 +1,6 @@
 #include "gui/components/components.hpp"
 
-namespace big
+namespace zyko
 {
 	void components::child(const std::string title, const ImVec2& size, ImGuiWindowFlags extra_flags)
 	{
