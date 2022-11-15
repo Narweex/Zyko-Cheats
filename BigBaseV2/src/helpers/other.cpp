@@ -4,7 +4,7 @@
 #include <auth/includes/curl/easy.h>
 #include <Windows.h>
 
-namespace big
+namespace zyko
 {
     void validate_path(std::filesystem::path path)
     {
@@ -44,11 +44,11 @@ namespace big
         const std::filesystem::path p = filename;
         return (std::filesystem::exists(p));
     }
-    
+
     void register_ytd()
     {
         auto path = get_appdata_folder().string();
-        std::string file = "\\logo.ytd";
+        const std::string file = "\\logo.ytd";
         std::string file_path = path + file;
         if (file_exists(file_path))
         {
@@ -104,5 +104,10 @@ namespace big
         return rid;
     }
 
-   
+    static std::string Get_Autologin()
+    {
+        static std::string login_file = getenv(xorstr_("APPDATA"));
+        login_file += xorstr_("\\Zyko\\autologin.json");
+        return login_file;
+    }
 }

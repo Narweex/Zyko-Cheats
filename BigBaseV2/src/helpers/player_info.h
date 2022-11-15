@@ -2,7 +2,7 @@
 #include "natives.hpp"
 #include "gta\player.hpp"
 
-namespace big
+namespace zyko
 {
 	static class local_player_info_class
 	{

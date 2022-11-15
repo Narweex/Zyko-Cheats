@@ -6,12 +6,12 @@
 #include "gta_util.hpp"
 #include "fiber_pool.hpp"
 
-namespace big
+namespace zyko
 {
-	bool local_player_info_class::is_in_vehicle()
+	/*bool local_player_info_class::is_in_vehicle()
 	{
 		return PED::IS_PED_IN_VEHICLE(player_ped, PED::GET_VEHICLE_PED_IS_IN(player_ped, 0), 0);
-	}
+	}*/
 
 	bool local_player_info_class::network_is_activity_session()
 	{

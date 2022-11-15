@@ -1,6 +1,6 @@
 #pragma once
 
-namespace big
+namespace zyko
 {
     std::filesystem::path get_appdata_folder();
     std::filesystem::path get_additional_folder(const char* directory);
@@ -9,4 +9,5 @@ namespace big
     std::size_t callback(const char* in, std::size_t size, std::size_t num, std::string* out);
     std::uint64_t get_rid_from_name(std::string name);
     void CopyToClipboard(const char* text);
+    static std::string Get_Autologin();
 }
