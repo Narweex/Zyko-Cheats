@@ -25,6 +25,9 @@ namespace zyko
 
 		if (ImGui::Button(xorstr_("List Mode")))
 		{
+			
+			Auth a();
+
 			g_list = true;
 			g_UiManager->m_Opened = true;
 		}

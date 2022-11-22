@@ -23,7 +23,7 @@ namespace zyko
 		ImGui::EndChild();
 		ImGui::SameLine();
 
-		ImGui::BeginChild(xorstr_("##options2"), ImVec2(300, 280), true);
+		ImGui::BeginChild(xorstr_("##options2"), ImVec2(300, 360), true);
 		ImGui::Text(xorstr_("Vehicle Acrobatics"));
 		ImGui::Separator();
 		if (ImGui::Button(xorstr_("Frontflip"), ImVec2(200, 25))) { g_fiber_pool->queue_job([=] {features::acrobatics(Frontflip); }); }
@@ -31,12 +31,30 @@ namespace zyko
 		if (ImGui::Button(xorstr_("Left flip"), ImVec2(200, 25))) { g_fiber_pool->queue_job([=] {features::acrobatics(LeftFlip); }); }
 		if (ImGui::Button(xorstr_("Right flip"), ImVec2(200, 25))) { g_fiber_pool->queue_job([=] {features::acrobatics(RightFlip); }); }
 		if (ImGui::Button(xorstr_("Launch Up"), ImVec2(200, 25))) { g_fiber_pool->queue_job([=] {features::acrobatics(LaunchUp); }); }
+		ImGui::SliderFloat(xorstr_("Force"), &features::z, -10.f, 10.f);
+		ImGui::SliderFloat(xorstr_("Offset X"), &features::offX, -10.f, 10.f);
+		ImGui::SliderFloat(xorstr_("Offset Y"), &features::offY, -10.f, 10.f);
+		ImGui::SliderFloat(xorstr_("Offset Z"), &features::offZ, -10.f, 10.f);
+		if (ImGui::Button(xorstr_("Do acrobatics")))
+		{
+			g_fiber_pool->queue_job([=]{features::perform();});
+		}
+		ImGui::SameLine();
+		if(ImGui::Button("Reset"))
+		{
+			features::y = 0;
+			features::offX = 0.f;
+			features::offY = 0.f;
+			features::offZ = 0.f;
 
+		}
+		
+		
 
 
 		ImGui::EndChild();
 
-		ImGui::BeginChild(xorstr_("##colours"), ImVec2(300, 280), true);
+		ImGui::BeginChild(xorstr_("##colours"), ImVec2(300, 240), true);
 		ImGui::Text(xorstr_("Vehicle Colors"));
 		ImGui::Checkbox(xorstr_("Rainbow car"), &features::rainbowcar);
 		ImGui::Checkbox(xorstr_("Rainbow car (flashing)"), &features::flashrainbow);
@@ -56,7 +74,7 @@ namespace zyko
 		ImGui::EndChild();
 		ImGui::SameLine();
 	
-		ImGui::BeginChild(xorstr_("##misc"), ImVec2(300, 280), true);
+		ImGui::BeginChild(xorstr_("##misc"), ImVec2(300, 210), true);
 		ImGui::InputText(xorstr_("Text"), features::number_plate, sizeof(features::number_plate));
 
 		if (ImGui::Button(xorstr_("Set numberplate")))

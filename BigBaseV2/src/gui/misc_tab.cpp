@@ -8,23 +8,31 @@ namespace zyko
 {
 	void ImGuiTabs::render_misc_tab()
 	{
-		ImGui::BeginChild(xorstr_("##optionstimecycle"), ImVec2(300, 280), true);
-		if (ImGui::TreeNode(xorstr_("Timecycle Modifiers")))
+		int selected_modifier = 0;
+		ImGui::PushItemWidth(200);
+		if (ImGui::BeginCombo(xorstr_("Timecycle modifiers"), TimecycleModifiers[selected_modifier]))
 		{
-			if (ImGui::Button(xorstr_("Clear")))
+			if (ImGui::Selectable("clear"))
 			{
-				GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+				g_fiber_pool->queue_job([=] {
+					GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
+					});
 			}
-			for (auto modifiers : TimecycleModifiers)
+			for (int i = 0; i < 32; i++)
 			{
-				if (ImGui::Button(modifiers))
+				if (ImGui::Selectable(TimecycleModifiers[i]))
 				{
-					g_fiber_pool->queue_job([=] {features::SetModifier(modifiers);	});
-				}
+					selected_modifier = i;
+					LOG(INFO) << TimecycleModifiers[i];
+					g_fiber_pool->queue_job([=] {
+						GRAPHICS::SET_TIMECYCLE_MODIFIER((TimecycleModifiers[selected_modifier]));
+						});
 
+				}
 			}
 		}
-		ImGui::EndChild();
+
+		ImGui::EndCombo();
 
 
 		ImGui::SameLine();
@@ -68,7 +76,7 @@ namespace zyko
 				});
 		}
 
-		const char* sample[]
+		/*const char* sample[]
 		{
 			"Sample1",
 			"Sample2",
@@ -87,21 +95,9 @@ namespace zyko
 				}
 			}
 		}
-
-		/*static int selected = 0;
-		ImGui::BeginCombo(xorstr_("Timecycle modifiers"), TimecycleModifiers[selected]);
-		for (int i = 0; i < sizeof(TimecycleModifiers); i++)
-		{
-			if (ImGui::Selectable(TimecycleModifiers[i]), selected == i ? true : false)
-			{
-				selected = i;
-				g_fiber_pool->queue_job([=] {
-					features::SetModifier(TimecycleModifiers[selected]);
-					});
-			}
-		}*/
-
-		ImGui::EndCombo();
-
+		ImGui::EndCombo();*/
+		
+		
+		
 	}
 }
