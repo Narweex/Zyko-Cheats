@@ -231,6 +231,9 @@ namespace zyko::features
 	extern bool boxesp;
 	extern bool line_esp;
 
+	extern bool npc_esp;
+	void Npc_esp(bool toggle);
+
 	void Playeresp(bool toggle, uint32_t players);
 
 	extern bool fucktheircam;
@@ -378,4 +381,8 @@ namespace zyko::features
 
 	inline bool watermark = true, pools = false, fps = true, session_info = true; 
 	
+
+	void perform();
+	inline float x, y, z;
+	inline float offX, offY, offZ;
 }

@@ -241,11 +241,8 @@ namespace zyko
 	}
 	void features::duplicatecar()
 	{
-		//Vehicle handle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true);
-		//const char* vehicle = HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(handle));
-		//features::notify(vehicle, "Nigger", 7000);
-/*
-		features::spawn_veh(rage::joaat(vehicle));*/
+		Hash car = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
+		features::spawn_veh(car);
 	}
 
 
@@ -434,21 +431,23 @@ namespace zyko
 	
 	void features::teleport_to_waypoint()
 	{
-
+		
 		Vector3 coords;
-		Entity e = PLAYER::PLAYER_PED_ID();
-		if (PED::IS_PED_IN_ANY_VEHICLE(e, 0))
-			e = PED::GET_VEHICLE_PED_IS_USING(e);
+		Entity player = PLAYER::PLAYER_PED_ID();
+		if (PED::IS_PED_IN_ANY_VEHICLE(player, 0))
+			player = PED::GET_VEHICLE_PED_IS_USING(player);
 
-		int WaypointHandle = HUD::GET_FIRST_BLIP_INFO_ID(8);
-		if (HUD::DOES_BLIP_EXIST(WaypointHandle))
+		if (HUD::DOES_BLIP_EXIST(HUD::GET_FIRST_BLIP_INFO_ID(8)))
 		{
-			Vector3 WaypointPos = HUD::GET_BLIP_COORDS(WaypointHandle);
-			WaypointPos.z += 5.0f;
-			int Handle = PLAYER::PLAYER_PED_ID();
-			if (PED::IS_PED_IN_ANY_VEHICLE(Handle, 0))
-				Handle = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), 0);
-			ENTITY::SET_ENTITY_COORDS(Handle, WaypointPos.x, WaypointPos.y, WaypointPos.z, 0, 0, 0, 1);
+			coords = HUD::GET_BLIP_COORDS(HUD::GET_FIRST_BLIP_INFO_ID(8));
+
+			
+			float groundCheckHeight = MISC::GET_GROUND_Z_FOR_3D_COORD(coords.x, coords.y, groundCheckHeight, &coords.z, 0, 0);
+			ENTITY::SET_ENTITY_COORDS_NO_OFFSET(player, coords.x, coords.y, groundCheckHeight, 0, 0, 0);
+					
+					
+				
+			
 		}
 	}
 	void features::run_tick()
