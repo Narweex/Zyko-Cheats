@@ -393,19 +393,19 @@ namespace zyko
 		const int veh = PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false);
 		if (i == 1) {
 			// forward flip
-			ENTITY::APPLY_FORCE_TO_ENTITY(veh, true, 0, 0, 10.f, 0, 0, 0, true, true, true, true, false, true);
+			ENTITY::APPLY_FORCE_TO_ENTITY(veh, true, 0, 0, 17.f, 0, -1.f, 2.f, true, true, true, true, false, true);
 		}
 		else if (i == 2) {
 			// Back flip
-			ENTITY::APPLY_FORCE_TO_ENTITY(veh, true, 0, 0, 5.0f, 0, 15.0f, 0, true, true, true, true, false, true);
+			ENTITY::APPLY_FORCE_TO_ENTITY(veh, true, 0, 0, 17.f, 0, 1.f, 2.f, true, true, true, true, false, true);
 		}
 		else if (i == 3) {
 			// left flip
-			ENTITY::APPLY_FORCE_TO_ENTITY(veh, true, 0, 0, 10.0f, 0, 0, 0, true, true, true, true, false, true);
+			ENTITY::APPLY_FORCE_TO_ENTITY(veh, true, 0, 0, 10.f, 10.f, 0, 0, true, true, true, true, false, true);
 		}
 		else if (i == 4) {
 			// right flip
-			ENTITY::APPLY_FORCE_TO_ENTITY(veh, true, 0, 0, 10.0f, 0, 0, 0, true, true, true, true, false, true);
+			ENTITY::APPLY_FORCE_TO_ENTITY(veh, true, 0, 0, 10.f, -10.f, 0, 0, true, true, true, true, false, true);
 		}
 		else if (i == 5) {
 			// jump up
@@ -420,5 +420,10 @@ namespace zyko
 	void features::SetNumberplate(const char* text)
 	{
 		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), text);
+	}
+
+	void features::perform()
+	{
+		ENTITY::APPLY_FORCE_TO_ENTITY(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), true, features::x, features::y, features::z, features::offX, features::offY, features::offZ, true, true, true, true, false, true);
 	}
 }

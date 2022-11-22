@@ -48,7 +48,7 @@ namespace zyko
 		Hash hash = MISC::GET_HASH_KEY("GADGET_PARACHUTE");
 		WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), hash, 1, 1);
 
-		if (ENTITY::IS_ENTITY_IN_AIR(PLAYER::PLAYER_PED_ID()) && !PED::IS_PED_RAGDOLL(PLAYER::PLAYER_PED_ID()))
+		if (ENTITY::IS_ENTITY_IN_AIR(PLAYER::PLAYER_PED_ID())&& toggle && !PED::IS_PED_RAGDOLL(PLAYER::PLAYER_PED_ID()))
 		{
 			if (gta_util::IsKeyPressed(0x57)) // W key
 			{
@@ -292,12 +292,9 @@ namespace zyko
 	bool features::ultrajumpbool = false;
 	void features::Ultrajumpbool(bool toggle)
 	{
-		if (toggle)
+		if (toggle && PED::IS_PED_JUMPING(PLAYER::PLAYER_PED_ID()))
 		{
-			if (PED::IS_PED_JUMPING(PLAYER::PLAYER_PED_ID()))
-			{
-				ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), true, 0, 0, 150, 0, 0, true, true, true, true, false, true, false);
-			}
+			ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), true, 0, 0, 150, 0, 0, true, true, true, true, false, true, false);
 		}
 	}
 

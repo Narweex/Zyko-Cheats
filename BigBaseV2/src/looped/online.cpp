@@ -20,6 +20,19 @@ namespace zyko
 		}	
 	}
 	
+	bool features::npc_esp = false;
+	void features::Npc_esp(bool toggle)
+	{
+		static int peds;
+		PED::GET_PED_NEARBY_PEDS(PLAYER::PLAYER_PED_ID(), peds, 0);
+		for (int i = 0; i < peds; i++)
+		{
+			Vector3 buffer = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PED::GET_PED_NEARBY_PEDS(PLAYER::PLAYER_PED_ID(), peds, 0), 0, 0, 0);
+			Vector3 playerCoords = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 0, 0, 0);
+
+			GRAPHICS::DRAW_LINE(playerCoords.x, playerCoords.y, playerCoords.z, buffer.x, buffer.y, buffer.z, 255, 0, 0, 255);
+		}
+	}
 	
 	bool features::esp_line_all = false;
 	bool features::esp_box_all = false;
