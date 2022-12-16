@@ -28,9 +28,9 @@ namespace zyko
 		style.IndentSpacing = 21.f;
 		style.ScrollbarSize = 15.f;
 		style.GrabMinSize = 8.f;
-		style.WindowBorderSize = 4.f;
-		style.ChildBorderSize = 4.f;
-		style.PopupBorderSize = 4.f;
+		style.WindowBorderSize = 2.f;
+		style.ChildBorderSize = 2.f;
+		style.PopupBorderSize = 2.f;
 		style.FrameBorderSize = 0.f;
 		style.TabBorderSize = 0.f;
 		style.WindowRounding = 4.f;
@@ -224,7 +224,7 @@ namespace zyko
 						}
 							break;
 
-						
+
 					}
 				}
 				ImGui::EndGroup();
@@ -252,30 +252,30 @@ namespace zyko
 					{ ICON_FK_BOMB" Weapon", 1 },
 					{ ICON_FK_CAR" Vehicle", 2 },
 					{ ICON_FK_MAP_MARKER" Teleport", 3 },
-					
+
 				};
 
 				std::vector<tabs> tabs_e
 				{
-					
+
 					{ ICON_FK_SITEMAP" Lobby", 4 },
 					{ ICON_FK_USERS" Players", 5 },
 					{ ICON_FA_ETHERNET" Online", 6 },
 					{ ICON_FA_SHIELD_ALT" Protections", 7 },
 					{ ICON_FA_MONEY_BILL" Recovery", 8 },
-					
+
 				};
 
 				std::vector<tabs> tabs_b
 				{
 					{ ICON_FA_ELLIPSIS_H" Misc", 9 },
 					{ ICON_FK_COG" Settings", 10 },
-					
+
 					{ ICON_FK_PLUS_CIRCLE" Spawn", 11 },
 					{ ICON_FA_GLOBE" World", 12 },
 				};
 
-				
+
 
 
 				components::small_text(xorstr_("Self/Basic"));
@@ -286,7 +286,7 @@ namespace zyko
 					if (ImGui::Selectable(rs.icon, g_gui.g_tab == rs.num, NULL))
 					{
 						g_gui.g_tab = rs.num;
-					}	
+					}
 				}
 
 				components::small_text(xorstr_("Online"));
@@ -297,7 +297,7 @@ namespace zyko
 					if (ImGui::Selectable(rs.icon, g_gui.g_tab == rs.num, NULL))
 					{
 						g_gui.g_tab = rs.num;
-					}	
+					}
 				}
 
 				components::small_text(xorstr_("Other"));
@@ -328,7 +328,7 @@ namespace zyko
 			}
 			ImGui::End();
 		}
-		EXCEPT_CLAUSE
+			EXCEPT_CLAUSE
 	}
 
 	void gui::script_init()
@@ -371,7 +371,7 @@ namespace zyko
 				PAD::DISABLE_CONTROL_ACTION(2, 331, true);
 			}
 		}
-		EXCEPT_CLAUSE
+			EXCEPT_CLAUSE
 	}
 
 	void gui::script_func()

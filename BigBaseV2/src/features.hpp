@@ -137,13 +137,16 @@ namespace zyko::features
 	extern bool deadeye;
 	void Deadeye(bool toggle);
 
+	extern bool rapid_fire;
+	void RapidFire(bool toggle);
+
 	void GiveAllWeapons();
 	void RemoveAllWeapons();
 	void MaxAmmo();
 
 
 	/* Vehicle */
-	void spawn_veh(const Hash& hash);
+	void spawn_veh(const Hash& vehicle);
 	void maxvehicle(const int& VehicleHandle);
 	inline bool vehicle_godmode = false;
 	inline bool vehicle_blip = false;
@@ -183,6 +186,13 @@ namespace zyko::features
 	extern bool rainbowcar;
 	void Rainbowcar(bool toggle);
 
+	extern bool driftmode;
+	void Driftmode(bool toggle);
+
+	void set_vehicle_mod(const int& category, const int& level);
+
+
+
 	inline int VEHr = 255, VEHg = 0, VEHb = 0;
 	inline int r1, g1, b1;
 
@@ -199,6 +209,7 @@ namespace zyko::features
 	void colour_spam();
 	void acrobatics(int i);
 	void AddRamp();
+	void Tune(const int& category, const int& level);
 
 	/* Teleport */
 	void teleport_to_objective();
@@ -263,10 +274,13 @@ namespace zyko::features
 	extern bool nophone;
 	void Nophone(bool toggle);
 
+	void saveplayer(const char* name);
+
 	inline bool streamer_mode = false;
 
 
 	/* World*/
+	void changeweather(const char* weather);
 	inline int worldgravity = 0;
 	inline float rainlevelint = 0.0;
 	inline bool stoptime = false;
@@ -385,4 +399,6 @@ namespace zyko::features
 	void perform();
 	inline float x, y, z;
 	inline float offX, offY, offZ;
+	inline float fov = 90.f;
+
 }

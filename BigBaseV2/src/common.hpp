@@ -72,7 +72,7 @@
 
 
 
-#define ZykoVersion "Zyko 0.1.6"
+#define ZykoVersion "Zyko 0.1.9"
 
 #define _PTR_MAX_VALUE ((PVOID)0x000F000000000000)
 

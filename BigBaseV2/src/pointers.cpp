@@ -8,24 +8,28 @@ namespace zyko
 	pointers::pointers()
 	{
 		memory::pattern_batch main_batch;
-
-		main_batch.add("Game state", "83 3D ? ? ? ? ? 75 17 8B 43 20", [this](memory::handle ptr)
+									
+		main_batch.add("Game state", "83 3D ? ? ? ? ? 75 17 8B 43 20 25", [this](memory::handle ptr)
 		{
 			m_game_state = ptr.add(2).rip().as<eGameState*>();
 		});
+		
 
 		main_batch.add("Is session started", "40 38 35 ? ? ? ? 75 0E 4C 8B C3 49 8B D7 49 8B CE", [this](memory::handle ptr)
 		{
 			m_is_session_started = ptr.add(3).rip().as<bool*>();
 		});
+		
 		main_batch.add("SEA", "48 89 6C 24 ? 48 89 74 24 ? 57 48 83 EC 20 80 7A", [this](memory::handle ptr)
 			{
 				m_send_event_ack = ptr.sub(5).as<decltype(m_send_event_ack)>();
 			});
+		LOG(INFO) << " 1";
 		main_batch.add("REH", "66 41 83 F9 ? 0F 83", [this](memory::handle ptr)
 			{
 				m_received_event = ptr.as<decltype(m_received_event)>();
 			});
+		LOG(INFO) << " 1";
 		main_batch.add("RBA", "48 89 5C 24 ? 57 48 83 EC 30 41 8B F8 4C", [this](memory::handle ptr)
 			{
 				m_read_bitbuf_array = ptr.as<decltype(m_read_bitbuf_array)>();
@@ -55,16 +59,22 @@ namespace zyko
 			m_fix_vectors = ptr.as<functions::fix_vectors_t>();
 		});
 
-		main_batch.add("Script threads", "45 33 F6 8B E9 85 C9 B8", [this](memory::handle ptr)
-		{
-			m_script_threads = ptr.sub(4).rip().sub(8).as<decltype(m_script_threads)>();
-			m_run_script_threads = ptr.sub(0x1F).as<functions::run_script_threads_t>();
-		});
+		//main_batch.add("Script threads", "45 33 F6 8B E9 85 C9 B8", [this](memory::handle ptr)
+		//{
+		//	m_script_threads = ptr.sub(4).rip().sub(8).as<decltype(m_script_threads)>();
+		//	m_run_script_threads = ptr.sub(0x1F).as<functions::run_script_threads>();
+		//	/*m_script_threads = ptr.sub(4).rip().sub(8).as<decltype(m_script_threads)>();
+		//	m_run_script_threads = ptr.sub(0x1F).as<functions::run_script_threads_t>();*/
+		//});
 
-		main_batch.add("Script programs", "44 8B 0D ? ? ? ? 4C 8B 1D ? ? ? ? 48 8B 1D ? ? ? ? 41 83 F8 FF 74 3F 49 63 C0 42 0F B6 0C 18 81 E1", [this](memory::handle ptr)
+		/*main_batch.add("Script programs", "44 8B 0D ? ? ? ? 4C 8B 1D ? ? ? ? 48 8B 1D ? ? ? ? 41 83 F8 FF 74 3F 49 63 C0 42 0F B6 0C 18 81 E1", [this](memory::handle ptr)
 		{
 			m_script_program_table = ptr.add(17).rip().as<decltype(m_script_program_table)>();
-		});
+		});*/
+		main_batch.add("Script programs", "48 8B 1D ? ? ? ? 41 83 F8 FF", [this](memory::handle ptr)
+			{
+				m_script_program_table = ptr.add(17).rip().as<decltype(m_script_program_table)>();
+			});
 
 		main_batch.add("Script globals", "48 8D 15 ? ? ? ? 4C 8B C0 E8 ? ? ? ? 48 85 FF 48 89 1D", [this](memory::handle ptr)
 		{
@@ -86,7 +96,7 @@ namespace zyko
 				m_TriggerScriptEvent = ptr.as<decltype(m_TriggerScriptEvent)>();
 			});
 
-		main_batch.add("Model Spawn Bypass", "48 8B C8 FF 52 30 84 C0 74 05 48", [this](memory::handle ptr)
+		main_batch.add("Model Spawn Bypass", "48 85 C0 0F 84 ? ? ? ? 8B 48 50", [this](memory::handle ptr)
 		{
 			m_model_spawn_bypass = ptr.add(8).as<PVOID>();
 		});
@@ -106,10 +116,10 @@ namespace zyko
 			m_add_item_to_basket = ptr.as<decltype(m_add_item_to_basket)>();
 		});
 
-		/*main_batch.add("PT", "48 89 5C 24 ? 57 48 83 EC 20 48 8B 59 20 45", [this](memory::handle ptr)
-		{
-			m_process_transaction = ptr.as<decltype(m_process_transaction)>();
-		});*/
+		//main_batch.add("PT", "48 89 5C 24 ? 57 48 83 EC 20 48 8B 59 20 45", [this](memory::handle ptr)
+		//{
+		//	m_process_transaction = ptr.as<decltype(m_process_transaction)>();
+		//});
 
 		main_batch.add("FR", "48 89 5C 24 ? 48 89 6C 24 ? 48 89 7C 24 ? 41 54 41 56 41 57 48 83 EC 50 48 8B EA 4C 8B FA 48 8B D9 4D 85 C9", [this](memory::handle ptr)
 		{

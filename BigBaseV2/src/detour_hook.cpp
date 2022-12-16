@@ -11,6 +11,7 @@ namespace zyko
 		m_target(target),
 		m_detour(detour)
 	{
+		LOG(INFO_TO_FILE) << m_name;
 		fix_hook_address();
 
 		if (auto status = MH_CreateHook(m_target, m_detour, &m_original); status == MH_OK)
@@ -81,6 +82,7 @@ namespace zyko
 			[this]()
 			{
 				throw std::runtime_error(fmt::format("Failed to fix hook address for '{}'", m_name));
+				LOG(INFO) << "Failed to fix hook address for '{}'", m_name;
 			}();
 		}
 	}

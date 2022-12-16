@@ -14,6 +14,8 @@
 
 namespace zyko
 {
+	
+
 	void features::on_present()
 	{
 		TRY_CLAUSE
@@ -297,7 +299,6 @@ namespace zyko
 			if (HUD::DOES_BLIP_EXIST(i) != 0) {
 				wayp = HUD::GET_BLIP_INFO_ID_COORD(i);
 				blipFound = true;
-				//notifyMap("color is: %d, type is: %d",
 				HUD::GET_BLIP_COLOUR(i), HUD::GET_BLIP_INFO_ID_TYPE(i);
 			}
 		}
@@ -315,9 +316,9 @@ namespace zyko
 	///////////////////////////////////////////////////////   SPAWN VOIDS   ///////////////////////////////////////////////////////
 	void features::spawn_obj(const char* object)
 	{
-		const char* obj = (const char*)object;
+		
 		Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true);
-		OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY(obj), pos.x, pos.y, pos.z, 1, 1, 1);
+		OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY(object), pos.x, pos.y, pos.z, 1, 1, 1);
 	}
 
 
@@ -388,10 +389,33 @@ namespace zyko
 		uint64_t notification[] = { 802133775, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 21000, 21000, 21000 };
 		//g_pointers->m_TriggerScriptEvent(1, notification, 4, player);
 	}
+
+	const char* invalid_objects[] = {
+		"0xb54ed098", "0x2d7030f3", "0x3f039cba", "0xdf9841d7", "0xceea3f4b", "0x2592b5cf", "0x9cf21e0f", "0xc1ce1183", "0x49863e9c", "0xcd93a7db", "0x82cac433", "0x74f24de",  "0x1c725a1",
+		"0x79b41171", "0x781e451d", "0xa5e3d471", "0x6a27feb1", "0x861d914d", "0x8c049d17", "0xffba70aa", "0xe65ec0e4", "0xc3c00861", "0x5f5dd65c",
+		"0xc07792d4", "0x53cfe80a", "0xd9f4474c", "0xcb2acc8",  "0xc6899cde", "0xd14b5ba3", "0x32a9996c", "0x69d4f974", "0xc2e75a21", "0x1075651",
+		"0xe1aeb708", "0xcbbb6c39", "0x6fa03a5e", "0xcf7a9a9d", "0x34315488", "0x45ef7804", "0xac3de147", "0xcafc1ec3", "0xd971bbae", "0xe764d794",
+		"0xf51f7309", "0x1e78c9d",  "0xa49658fc", "0x4f2526da", "0x576ab4f6", "0xd20b1778", "0x54bc1cd8", "0xce109c5c", "0xe049c0ce", "0x78de93d1",
+		"0xe5b89d31", "0x5850e7b3", "0x6aed0e4b", "0xc50a4285", "0xb648a502", "0x5e497511", "0x47c14801", "0xfd8bb397", "0xef541728", "0xc2cc99d8",
+		"0x8fb233a4", "0x24e08e1f", "0x337b2b54", "0x7367d224", "0x919d9255", "0x4484243f", "0x3c91d42d", "0x3353525a", "0xc175f658", "0x762657c6",
+		"0x94ac15b3", "0x28014a56", "0xe0a8bfc9", "0x3a559c31", "0x5fc8a70",  "0x3b545487", "0xb9402f87", "0x81fb3ff0", "0x364998971", "0x3f039cba"
+	};
+
 	void features::crash(int player)
 	{
 		Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0);
-		OBJECT::CREATE_OBJECT(0x337b2b54, coords.x, coords.y, coords.z, 1, 0, 1);
+		LOG(INFO) << coords.x;
+		LOG(INFO) << coords.y;
+		LOG(INFO) << coords.z;
+		for (auto& objects : invalid_objects)
+		{
+			
+			OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY(objects), coords.x, coords.y, coords.z, 1, 1, 1);
+			LOG(INFO) << objects;
+		}
+	
+		uint64_t crashevent[] = {1, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 21000, 21000, 21000 };
+		g_pointers->m_TriggerScriptEvent(1, crashevent, 1, 1);
 	}
 	void features::kill(int player)
 	{
@@ -472,11 +496,7 @@ namespace zyko
 
 
 
-		//if (gta_util::IsKeyPressed(VK_F5))
-		//{
-		//	features::teleport_to_waypoint();
-		//}
-
+		
 		
 	
 		//UpdatePresence();
@@ -496,10 +516,9 @@ namespace zyko
 					
 					run_playerlist();
 					features::shootpeds ? Shootpeds(true) : Shootpeds(false);
-					//notify_on_join ? features::joinNotification : NULL;
+					////notify_on_join ? features::joinNotification : NULL;
 					features::godmode ? Godmode(true) : Godmode(false);
 					neverwanted ? Neverwanted(true) : Neverwanted(false);
-					noclip ? Noclip(true) : Noclip(false);
 					instantenter ? Instantenter(true) : Instantenter(false);
 					superman ? Superman(true) : Superman(false);
 					nightvision ? Nightvision(true) : Nightvision(false);
@@ -520,7 +539,7 @@ namespace zyko
 					unlimitedstamina ? Unlimitedstamina(true) : Unlimitedstamina(false);
 					ignoreplayer ? Ignoreplayer(true) : Ignoreplayer(false);
 					ultrarunbool ? Ultrarunbool(true) : Ultrarunbool(false);
-
+					rapid_fire ? RapidFire(true) : RapidFire(false);
 					driveitgun ? Driveitgun(true) : Driveitgun(false);
 					teleportgun ? Teleportgun(true) : Teleportgun(false);
 					aimbot ? Aimbot(true) : Aimbot(false);
@@ -528,7 +547,7 @@ namespace zyko
 					airstrikegun ? Airstrikegun(true) : Airstrikegun(false);
 					exploammo ? Exploammo(true) : Exploammo(false);
 					infiniteammo ? Infiniteammo(true) : Infiniteammo(false);
-
+					driftmode ? Driftmode(true) : Driftmode(false);
 					cleanloop ? Cleanloop(true) : Cleanloop(false);
 					speedbypass ? Speedbypass(true) : Speedbypass(false);
 					novehkick ? Novehkick(true) : Novehkick(false);
@@ -538,7 +557,7 @@ namespace zyko
 					fucktheircam ? Fucktheircam(true) : Fucktheircam(false);
 					spectateplayer ? Spectateplayer(true) : Spectateplayer(false);
 					ragdoll_player ? Ragdoll_player() : NULL;
-					crosshair ? Crosshair(true) : Crosshair(false);
+					//crosshair ? Crosshair(true) : Crosshair(false);
 					stoptime ? CLOCK::PAUSE_CLOCK(true) : CLOCK::PAUSE_CLOCK(false);
 					rainbowcar ? Rainbowcar(true) : Rainbowcar(false);
 					flashrainbow ? Flashrainbow(true) : Flashrainbow(false);
@@ -549,22 +568,20 @@ namespace zyko
 					break;
 				case 1:
 					////////////////////////////////////////   2500ms   ////////////////////////////////////////
-					moneynotify ? Moneynotify(true) : Moneynotify(false);
 					
-					nophone ? Nophone(true) : Nophone(false);
 					
 					if (!invisibility) {
 						ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
 					}
-
+					noclip ? Noclip(true) : Noclip(false);
 					break;
 				case 2:
-					kick_from_mk2 ? Kick_from_mk2(true) : Kick_from_mk2(false);
+					
 
 					break;
 				case 3:
-					features::nigger();
-
+					
+					//Auth();
 
 
 

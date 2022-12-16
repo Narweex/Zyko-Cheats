@@ -63,15 +63,24 @@ namespace zyko
 
 	void hooking::enable()
 	{
-		m_send_net_info_to_lobby.enable();
-		m_scripted_game_event_hook.enable();
-		m_received_event.enable();
-		m_swapchain_hook.enable();
-		m_og_wndproc = reinterpret_cast<WNDPROC>(SetWindowLongPtrW(g_pointers->m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&hooks::wndproc)));
-		m_set_cursor_pos_hook.enable();
-
-		m_run_script_threads_hook.enable();
-		m_convert_thread_to_fiber_hook.enable();
+		LOG(INFO_TO_FILE) << "Enabling";
+		//m_send_net_info_to_lobby.enable();
+		LOG(INFO_TO_FILE) << "Enabling SNITL";
+		//m_scripted_game_event_hook.enable();	
+		LOG(INFO_TO_FILE) << "Enabling SGE";
+		//m_received_event.enable();	
+		LOG(INFO_TO_FILE) << "Enabling REvent";
+		//m_swapchain_hook.enable();	
+		LOG(INFO_TO_FILE) << "Enabling swapchain";
+		//m_og_wndproc = reinterpret_cast<WNDPROC>(SetWindowLongPtrW(g_pointers->m_hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&hooks::wndproc)));		
+		LOG(INFO_TO_FILE) << "Enabling wndproc";
+		//m_set_cursor_pos_hook.enable();
+		LOG(INFO_TO_FILE) << "Enabling SCP";
+		//m_run_script_threads_hook.enable();
+		LOG(INFO_TO_FILE) << "Enabling Run Script Threads";
+		//m_convert_thread_to_fiber_hook.enable();
+		LOG(INFO_TO_FILE) << "Enabling Convert thread to fber";
+		
 
 		m_enabled = true;
 	}
