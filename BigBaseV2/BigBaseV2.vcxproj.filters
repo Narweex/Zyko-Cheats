@@ -22,9 +22,6 @@
     <Filter Include="gui\list\script">
       <UniqueIdentifier>{aafe0e69-d6d4-4247-976a-f209e3abcbbc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="gui\components">
-      <UniqueIdentifier>{45310b70-eec3-4854-a1f7-062929296042}</UniqueIdentifier>
-    </Filter>
     <Filter Include="auth">
       <UniqueIdentifier>{60cb060a-f954-4983-9fd7-8356063fb193}</UniqueIdentifier>
     </Filter>
@@ -49,8 +46,11 @@
     <Filter Include="features">
       <UniqueIdentifier>{a9a87494-e2be-41f4-918b-70723f88273d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="core\Discord">
-      <UniqueIdentifier>{1788d1a4-351f-4729-8d63-e6e8b78bc6af}</UniqueIdentifier>
+    <Filter Include="gui\components">
+      <UniqueIdentifier>{e27dc65d-d22e-4c3e-aeb2-260f1e62ebfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="discord">
+      <UniqueIdentifier>{f77ba07c-0365-4ca7-96d0-1cd8970ef8a0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -182,9 +182,6 @@
     <ClInclude Include="src\core\fonts.hpp">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\config.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="src\core\xor_string.hpp">
       <Filter>core</Filter>
     </ClInclude>
@@ -245,21 +242,14 @@
     <ClInclude Include="src\helpers\other.h">
       <Filter>helpers</Filter>
     </ClInclude>
-    <ClInclude Include="src\gui\player_list.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="src\shv_runner.h" />
     <ClInclude Include="src\thread_pool.hpp" />
-    <ClInclude Include="src\gui\components\components.hpp">
-      <Filter>gui\components</Filter>
-    </ClInclude>
     <ClInclude Include="src\auth\auth.hpp">
       <Filter>auth</Filter>
     </ClInclude>
     <ClInclude Include="src\auth\lazy_importer.hpp">
       <Filter>auth</Filter>
     </ClInclude>
-    <ClInclude Include="src\Pools.h" />
     <ClInclude Include="src\auth\anti_debug\helper.h">
       <Filter>auth\anti_debug</Filter>
     </ClInclude>
@@ -332,18 +322,21 @@
     <ClInclude Include="src\notifications\tahoma.h">
       <Filter>notifications</Filter>
     </ClInclude>
-    <ClInclude Include="discord_register.h">
-      <Filter>core\Discord</Filter>
-    </ClInclude>
-    <ClInclude Include="discord_rpc.h">
-      <Filter>core\Discord</Filter>
-    </ClInclude>
     <ClInclude Include="src\looped\gtaData.hpp">
       <Filter>features</Filter>
     </ClInclude>
     <ClInclude Include="src\style.hpp" />
-    <ClInclude Include="src\gui\list\BetterBoolOption.hpp">
-      <Filter>gui\list</Filter>
+    <ClInclude Include="src\gui\components\components.hpp">
+      <Filter>gui\components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\player_list.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\discord\discord_register.h">
+      <Filter>discord</Filter>
+    </ClInclude>
+    <ClInclude Include="src\discord\discord_rpc.h">
+      <Filter>discord</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -392,23 +385,11 @@
     <ClCompile Include="src\helpers\other.cpp">
       <Filter>helpers</Filter>
     </ClCompile>
-    <ClCompile Include="src\gui\player_list.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="src\gui\players_tab.cpp">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="src\shv_runner.cpp" />
     <ClCompile Include="src\thread_pool.cpp" />
-    <ClCompile Include="src\gui\components\button.cpp">
-      <Filter>gui\components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gui\components\text.cpp">
-      <Filter>gui\components</Filter>
-    </ClCompile>
-    <ClCompile Include="src\gui\components\child.cpp">
-      <Filter>gui\components</Filter>
-    </ClCompile>
     <ClCompile Include="src\gui\recovery_tab.cpp">
       <Filter>gui</Filter>
     </ClCompile>
@@ -442,7 +423,6 @@
     <ClCompile Include="src\auth\auth.cpp">
       <Filter>auth</Filter>
     </ClCompile>
-    <ClCompile Include="src\Pools.cpp" />
     <ClCompile Include="src\auth\anti_debug\winapi_hash\hash_work.cpp">
       <Filter>auth\anti_debug\winapi_hash</Filter>
     </ClCompile>
@@ -470,6 +450,21 @@
     <ClCompile Include="src\gui\world_tab.cpp">
       <Filter>gui</Filter>
     </ClCompile>
+    <ClCompile Include="src\gui\components\button.cpp">
+      <Filter>gui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\components\child.cpp">
+      <Filter>gui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\components\text.cpp">
+      <Filter>gui\components</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\player_list.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\discord\rpc.cpp">
+      <Filter>discord</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Library Include="src\libcurl_a.lib" />
@@ -478,8 +473,5 @@
     </Library>
     <Library Include="src\auth\libs\libcrypto.lib" />
     <Library Include="src\auth\libs\libssl.lib" />
-    <Library Include="discord-rpc.lib">
-      <Filter>core\Discord</Filter>
-    </Library>
   </ItemGroup>
 </Project>

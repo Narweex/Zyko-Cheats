@@ -8,9 +8,8 @@ namespace zyko
 	bool features::instantenter = false;
 	void features::Instantenter(bool toggle)
 	{
-		if (!toggle)
-			return;
-		if (PED::IS_PED_GETTING_INTO_A_VEHICLE(PLAYER::PLAYER_PED_ID()))
+		
+		if (toggle && PED::IS_PED_GETTING_INTO_A_VEHICLE(PLAYER::PLAYER_PED_ID()))
 		{	
 		Vehicle vehicle = PED::GET_VEHICLE_PED_IS_TRYING_TO_ENTER(PLAYER::PLAYER_PED_ID());
 		Ped del = VEHICLE::GET_PED_IN_VEHICLE_SEAT(vehicle, -1, 0);
@@ -91,10 +90,7 @@ namespace zyko
 					VEHICLE::SET_VEHICLE_FORWARD_SPEED(Veh, ENTITY::GET_ENTITY_SPEED(Veh) + 1);
 					if (hornboosteffect)
 					{
-						if (PLAYER::IS_PLAYER_PRESSING_HORN(PLAYER::PLAYER_ID()))
-						{
-							GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 1, false);
-						}
+						GRAPHICS::_START_SCREEN_EFFECT("RaceTurbo", 0, 0);
 					}
 				}
 			}
@@ -194,6 +190,17 @@ namespace zyko
 		}
 	}
 
+	bool features::driftmode = false;
+	void features::Driftmode(bool toggle)
+	{
+		if (gta_util::IsKeyPressed(VK_SHIFT)&& toggle)
+		{
+			VEHICLE::SET_VEHICLE_REDUCE_GRIP(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true), true);
+		}
+		else
+			VEHICLE::SET_VEHICLE_REDUCE_GRIP(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true), false);
+	}
+
 	void features::AddRamp()
 	{
 		Vector3 Him = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
@@ -276,23 +283,26 @@ namespace zyko
 	}
 	void features::spawn_veh(const Hash& vehicle)
 	{
-		
-		if (!STREAMING::HAS_MODEL_LOADED(vehicle))
+	
+		for (uint8_t i = 0; !STREAMING::HAS_MODEL_LOADED(vehicle) && i < 100; i++)
 		{
 			STREAMING::REQUEST_MODEL(vehicle);
 			script::get_current()->yield();
 		}
+		
 
-		auto pos = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+		Vector3 pos = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_PED_ID(), true);
+		
 		*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x9090;
-		auto veh = VEHICLE::CREATE_VEHICLE(vehicle, pos.x + 5, pos.y + 5, pos.z, 0.f, TRUE, FALSE, FALSE);
+		//g_pointers->m_model_spawn_bypass;
+		Vehicle veh = VEHICLE::CREATE_VEHICLE(vehicle, pos.x + 3, pos.y + 3, pos.z, 0.f, true, false, false);
 		*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x0574;
-
-
-
-		script::get_current()->yield();
+		
+		
 		STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(vehicle);
-		if (*g_pointers->m_is_session_started)
+		
+
+		if (NETWORK::NETWORK_IS_SESSION_STARTED())
 		{
 			DECORATOR::DECOR_SET_INT(veh, xorstr_("MPBitset"), 0);
 			ENTITY::_SET_ENTITY_SOMETHING(veh, TRUE);
@@ -300,10 +310,11 @@ namespace zyko
 			if (NETWORK::NETWORK_GET_ENTITY_IS_NETWORKED(veh))
 				NETWORK::SET_NETWORK_ID_EXISTS_ON_ALL_MACHINES(networkId, true);
 			VEHICLE::SET_VEHICLE_IS_STOLEN(veh, FALSE);
-			//VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(veh, "Zyko");
+			
 		}
 
 		if (features::in_vehicle) {
+			PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), veh, -1);
 			if (VEHICLE::IS_THIS_MODEL_A_HELI(vehicle) || VEHICLE::IS_THIS_MODEL_A_PLANE(vehicle))
 				VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, true, true);
 			VEHICLE::SET_HELI_BLADES_FULL_SPEED(veh);
@@ -313,10 +324,13 @@ namespace zyko
 				VEHICLE::SET_VEHICLE_ENGINE_ON(veh, true, true, true);
 				VEHICLE::_SET_VEHICLE_JET_ENGINE_ON(veh, true);
 				Vector3 position = (ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID()), true));
-				teleport(position.x, position.y, position.z + 50);
-
+				if (PED::IS_PED_IN_ANY_PLANE(PLAYER::PLAYER_PED_ID()))
+				{
+					teleport(position.x, position.y, position.z + 50);
+				}
 			}
-			PED::SET_PED_INTO_VEHICLE(PLAYER::PLAYER_PED_ID(), veh, -1);
+			
+			
 			Entity entity = (PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false));
 			ENTITY::SET_ENTITY_MAX_SPEED(entity, 5000);
 		}
@@ -378,6 +392,10 @@ namespace zyko
 			HUD::BEGIN_TEXT_COMMAND_SET_BLIP_NAME(xorstr_("Alliance's Vehicle"));
 			HUD::END_TEXT_COMMAND_SET_BLIP_NAME(vBlip);
 		}
+		if (features::vehicle_saveable)
+		{
+			VEHICLE::SET_VEHICLE_CAN_SAVE_IN_GARAGE(veh, true);
+		}
 	}
 	void features::cleanVehicle()
 	{
@@ -385,6 +403,7 @@ namespace zyko
 	}
 	void features::repairVehicle()
 	{
+		Auth();
 		VEHICLE::SET_VEHICLE_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
 		VEHICLE::SET_VEHICLE_DEFORMATION_FIXED(PED::GET_VEHICLE_PED_IS_USING(PLAYER::GET_PLAYER_PED(PLAYER::PLAYER_ID())));
 	}
@@ -425,5 +444,16 @@ namespace zyko
 	void features::perform()
 	{
 		ENTITY::APPLY_FORCE_TO_ENTITY(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), false), true, features::x, features::y, features::z, features::offX, features::offY, features::offZ, true, true, true, true, false, true);
+	}
+
+	void features::set_vehicle_mod(const int& category, const int& level)
+	{
+		if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), true))
+		{
+			Notify("Error", "You are not in vehicle", 7000, NotifyLevel::Error);
+			return;
+		}
+			
+		VEHICLE::SET_VEHICLE_MOD(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true), category, level, 0);
 	}
 }

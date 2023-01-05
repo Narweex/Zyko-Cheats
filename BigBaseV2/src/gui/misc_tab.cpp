@@ -6,96 +6,106 @@
 
 namespace zyko
 {
+	static int selected_modifier = 0;
+	static int selected_model = 0;
 	void ImGuiTabs::render_misc_tab()
 	{
-		int selected_modifier = 0;
+		
 		ImGui::PushItemWidth(200);
-		if (ImGui::BeginCombo(xorstr_("Timecycle modifiers"), TimecycleModifiers[selected_modifier]))
+		if (ImGui::BeginCombo(xorstr_("Timecycles"), TimecycleModifiers[selected_modifier]))
 		{
-			if (ImGui::Selectable("clear"))
+			if (ImGui::Selectable(xorstr_("Clear")))
 			{
 				g_fiber_pool->queue_job([=] {
 					GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 					});
 			}
-			for (int i = 0; i < 32; i++)
+			for (int i = 0; std::size(TimecycleModifiers); i++)
 			{
 				if (ImGui::Selectable(TimecycleModifiers[i]))
 				{
 					selected_modifier = i;
-					LOG(INFO) << TimecycleModifiers[i];
 					g_fiber_pool->queue_job([=] {
-						GRAPHICS::SET_TIMECYCLE_MODIFIER((TimecycleModifiers[selected_modifier]));
+						features::SetTimecycleModifier(TimecycleModifiers[selected_modifier]);
+						
 						});
 
 				}
 			}
-		}
-
 		ImGui::EndCombo();
+		}
+		
+		
+
 
 
 		ImGui::SameLine();
 
-		ImGui::BeginChild(xorstr_("##modelchanger"), ImVec2(300, 280), true);
-		if (ImGui::TreeNode(xorstr_("Model Changer")))
+		ImGui::PushItemWidth(200);
+		if (ImGui::BeginCombo(xorstr_("Models"), PedModels[selected_model]))
 		{
-			for (auto models : PedModels)
+			
+			for (int i = 0; i < std::size(PedModels); i++)
 			{
-				if (ImGui::Button(models))
+				if (ImGui::Selectable(PedModels[i]))
 				{
-					g_fiber_pool->queue_job([=] {features::changemodel(models);	});
+					selected_model = i;
+					g_fiber_pool->queue_job([=] {
+						features::changemodel(PedModels[selected_model]);
+						});
+
 				}
 			}
+			ImGui::EndCombo();
 		}
-		ImGui::EndChild();
+		ImGui::NewLine();
+		if (ImGui::BeginCombo(xorstr_("Animations"), xorstr_("Animations")))
+		{
+			for (auto& anims : animations)
+			{
+				if (ImGui::Selectable(anims.label))
+				{
+					g_fiber_pool->queue_job([=] {features::PlayAnimation(anims.name, anims.id);	});
+				}
+
+			}
+			ImGui::EndCombo();
+		}
+		ImGui::SameLine();
+		if (ImGui::BeginCombo(xorstr_("Scenarios"), xorstr_("Scenarios")))
+		{
+			for (auto& scenes : scenarioslol)
+			{
+				if (ImGui::Selectable(scenes.id))
+				{
+					g_fiber_pool->queue_job([=] {features::PlayScenario(scenes.id);	});
+				}
+
+			}
+			ImGui::EndCombo();
+		}
+		
 
 		ImGui::NewLine();
-		ImGui::Text(xorstr_("In Testing"));
-		for (auto& anims : animations)
-		{
-			if (ImGui::Button(anims.name))
-			{
-				g_fiber_pool->queue_job([=] {features::PlayAnimation(anims.name, anims.id);	});
-			}
 
-		}
-
-		if (ImGui::Button(xorstr_("stop anim")))
+		if (ImGui::Button(xorstr_("Stop Animation/Scenario")))
 		{
 			g_fiber_pool->queue_job([=] {
 				features::StopAnimation();
 				});
 		}
 
-
-		if (ImGui::Button(xorstr_("Spawn cat companion")))
+		if (ImGui::Button(xorstr_("Unfreeze player")))
 		{
 			g_fiber_pool->queue_job([=] {
-				features::Spawn_companion();
+				features::Unfreeze();
 				});
 		}
 
-		/*const char* sample[]
-		{
-			"Sample1",
-			"Sample2",
-			"Sample3"
-		};
 
-		static int selected = 0;
-		if (ImGui::BeginCombo("Combo", sample[selected]))
-		{
-			for (int i = 0; i < 3; i++)
-			{
-				if (ImGui::Selectable(sample[i]))
-				{
-					selected = i;
-					LOG(INFO) << sample[i];
-				}
-			}
-		}
-		ImGui::EndCombo();*/
+	
+
+		
 		
 		
 		

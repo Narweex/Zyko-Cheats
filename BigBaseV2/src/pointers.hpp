@@ -3,7 +3,6 @@
 #include "gta/fwddec.hpp"
 #include "gta/enums.hpp"
 #include "function_types.hpp"
-#include "Pools.h"
 
 namespace zyko
 {

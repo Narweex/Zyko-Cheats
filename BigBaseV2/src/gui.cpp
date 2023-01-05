@@ -9,10 +9,10 @@
 #include "script.hpp"
 #include <imgui.h>
 #include "auth/auth.hpp"
-#include "gui/components/components.hpp"
 #include <gui/list/UIManager.hpp>
 #include "gui/imgui_tabs.h"
 #include "style.hpp"
+#include "gui/components/components.hpp"
 
 namespace zyko
 {
@@ -79,7 +79,17 @@ namespace zyko
 	{
 		TRY_CLAUSE
 		{
+			RECT rect;
+			HWND hwnd = FindWindowA(NULL, "Grand Theft Auto V");;
+			
+			if (GetWindowRect(hwnd, &rect))
+			{
+			 int width = rect.right - rect.left;
+			 int height = rect.bottom - rect.top;
+			}
 			// Main Window
+			/*ImGui::SetNextWindowSize(ImVec2(width/100*40, height/100*40), ImGuiCond_Always);
+			ImGui::SetNextWindowPos(ImVec2(400.f, 200.f), ImGuiCond_FirstUseEver); */
 			ImGui::SetNextWindowSize(ImVec2(800.f, 630.f), ImGuiCond_Always);
 			ImGui::SetNextWindowPos(ImVec2(400.f, 200.f), ImGuiCond_FirstUseEver);
 

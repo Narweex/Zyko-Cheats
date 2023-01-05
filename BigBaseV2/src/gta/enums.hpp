@@ -3,6 +3,8 @@
 
 constexpr auto MAX_PLAYERS = 32;
 
+
+
 enum VehicleAcrobatics {
 	Frontflip = 1,
 	Backflip,
@@ -1941,7 +1943,7 @@ enum class RockstarEvent : uint16_t
 
 enum eScriptGlobals : std::uint32_t 
 {
-	TransitionState = 1574980,
+	TransitionState = 1574993,
 	SessionType = 1575004,
 	InitSession = 1574587,
 	SessionUNK1 = 31506,

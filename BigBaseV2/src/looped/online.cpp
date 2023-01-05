@@ -302,4 +302,23 @@ namespace zyko
 			}
 		}
 	}
+
+	void features::saveplayer(const char* name)
+	{
+		std::string path = "C:\\Zyko\\playerlog\\";
+
+		if (!std::filesystem::exists(path))
+		{
+			std::filesystem::create_directory(path);
+		}	
+		path + (std::string)name;
+		std::ofstream playerfile(path);
+		LOG(INFO) << path + name;
+		nlohmann::json buffer;
+		buffer = name;
+		playerfile << buffer;
+
+			
+
+	}
 }

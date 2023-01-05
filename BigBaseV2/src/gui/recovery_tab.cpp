@@ -79,7 +79,16 @@ namespace zyko
 		ImGui::SliderInt(xorstr_("$"), &features::bunker_money, 1, 2500000);
 		ImGui::PopItemWidth();
 		if (ImGui::Button("Add Startup 500k")){features::startupmoney();}
-		
+
+		if (ImGui::Button("Max Single Player Money")) {
+			Hash stat0 = MISC::GET_HASH_KEY("SP0_TOTAL_CASH");
+			Hash stat1 = MISC::GET_HASH_KEY("SP1_TOTAL_CASH");
+			Hash stat2 = MISC::GET_HASH_KEY("SP2_TOTAL_CASH");
+			STATS::STAT_SET_INT(stat0, INT_MAX, 1);
+			STATS::STAT_SET_INT(stat1, INT_MAX, 1);
+			STATS::STAT_SET_INT(stat2, INT_MAX, 1);
+		}
+
 		ImGui::Spacing();
 
 		ImGui::Text(xorstr_("Level"));

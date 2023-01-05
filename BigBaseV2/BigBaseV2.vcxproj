@@ -19,7 +19,7 @@
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>BigBaseV2</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -35,6 +35,7 @@
     <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <SpectreMitigation>false</SpectreMitigation>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -127,15 +128,16 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExceptionHandling>false</ExceptionHandling>
       <SuppressStartupBanner>false</SuppressStartupBanner>
+      <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\bin\lib;..\BigBaseV2\src;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\bin\lib;..\BigBaseV2\src;C:\Users\jakub\Desktop\Zyko-Cheats-main1\BigBaseV2\src\discord;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\bin\Release\BigBaseV2.lib</ImportLibrary>
       <GenerateMapFile>true</GenerateMapFile>
-      <AdditionalDependencies>libcurl_a.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>discord-rpc.lib;libcurl_a.lib;%(AdditionalDependencies);</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
@@ -170,8 +172,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="discord_register.h" />
-    <ClInclude Include="discord_rpc.h" />
     <ClInclude Include="src\auth\anti_debug\ADebug\crc32.hpp" />
     <ClInclude Include="src\auth\anti_debug\ADebug\Hash.hpp" />
     <ClInclude Include="src\auth\anti_debug\ADebug\Helpers.hpp" />
@@ -192,11 +192,12 @@
     <ClInclude Include="src\auth\includes\httplib.h" />
     <ClInclude Include="src\auth\lazy_importer.hpp" />
     <ClInclude Include="src\common.hpp" />
-    <ClInclude Include="src\core\config.h" />
     <ClInclude Include="src\core\fonts.hpp" />
     <ClInclude Include="src\core\xor_string.hpp" />
     <ClInclude Include="src\crossmap.hpp" />
     <ClInclude Include="src\detour_hook.hpp" />
+    <ClInclude Include="src\discord\discord_register.h" />
+    <ClInclude Include="src\discord\discord_rpc.h" />
     <ClInclude Include="src\features.hpp" />
     <ClInclude Include="src\fiber_pool.hpp" />
     <ClInclude Include="src\function_types.hpp" />
@@ -236,7 +237,6 @@
     <ClInclude Include="src\gui\list\AbstractSubmenu.hpp" />
     <ClInclude Include="src\gui\list\BaseOption.hpp" />
     <ClInclude Include="src\gui\list\BaseSubmenu.hpp" />
-    <ClInclude Include="src\gui\list\BetterBoolOption.hpp" />
     <ClInclude Include="src\gui\list\BoolOption.hpp" />
     <ClInclude Include="src\gui\list\ChooseOption.hpp" />
     <ClInclude Include="src\gui\list\Lists.hpp" />
@@ -272,7 +272,6 @@
     <ClInclude Include="src\notifications\notifications.h" />
     <ClInclude Include="src\notifications\tahoma.h" />
     <ClInclude Include="src\pointers.hpp" />
-    <ClInclude Include="src\Pools.h" />
     <ClInclude Include="src\renderer.hpp" />
     <ClInclude Include="src\script.hpp" />
     <ClInclude Include="src\script_global.hpp" />
@@ -289,6 +288,7 @@
     <ClCompile Include="src\auth\auth.cpp" />
     <ClCompile Include="src\core\fonts.cpp" />
     <ClCompile Include="src\detour_hook.cpp" />
+    <ClCompile Include="src\discord\rpc.cpp" />
     <ClCompile Include="src\features.cpp" />
     <ClCompile Include="src\fiber_pool.cpp" />
     <ClCompile Include="src\gui.cpp" />
@@ -328,7 +328,6 @@
     <ClCompile Include="src\memory\range.cpp" />
     <ClCompile Include="src\notifications\notifications.cpp" />
     <ClCompile Include="src\pointers.cpp" />
-    <ClCompile Include="src\Pools.cpp" />
     <ClCompile Include="src\renderer.cpp" />
     <ClCompile Include="src\script.cpp" />
     <ClCompile Include="src\script_global.cpp" />
@@ -354,7 +353,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="discord-rpc.lib" />
     <Library Include="src\auth\anti_debug\t1ha-static.lib" />
     <Library Include="src\auth\libs\libcrypto.lib" />
     <Library Include="src\auth\libs\libssl.lib" />

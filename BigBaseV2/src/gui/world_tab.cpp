@@ -2,6 +2,7 @@
 #include "imgui_tabs.h"
 #include "features.hpp"
 #include "fiber_pool.hpp"
+#include <looped/gtaData.hpp>
 
 
 namespace zyko
@@ -38,5 +39,20 @@ namespace zyko
 
 
 		ImGui::EndChild();
+		ImGui::SameLine();
+		ImGui::PushItemWidth(200.f);
+		
+		if (ImGui::BeginCombo(xorstr_(""), "Weather Types"))
+		{
+			for (auto& weathertypes : WeatherTypes)
+			{
+				if (ImGui::Selectable(weathertypes))
+				{
+					g_fiber_pool->queue_job([=] {	features::changeweather(weathertypes); });
+				}
+
+			}
+			ImGui::EndCombo();
+		}
 	}
 }

@@ -25,7 +25,7 @@ namespace zyko::UserInterface
 		{
 			return PLAYER::GET_PLAYER_NAME(*m_SelectedPlayer);
 		}
-	private:
+	
 		std::uint32_t* m_SelectedPlayer;
 	};
 }

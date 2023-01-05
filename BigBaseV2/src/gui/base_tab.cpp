@@ -1,4 +1,3 @@
-//#include "common.hpp"
 #include "imgui_tabs.h"
 #include "features.hpp"
 #include "fiber_pool.hpp"
@@ -8,38 +7,9 @@ namespace zyko
 {
 	void ImGuiTabs::render_base_tab()
 	{
-		if (!auth::login)
+		if (!auth::login && !auth::login1)
 		{		
-			std::string login_file = getenv("APPDATA");
-			login_file += "\\Zyko\\autologin.json";
-			const char* logfil = login_file.c_str();
-
-			if (std::filesystem::exists(login_file))
-			{
-				
-				std::string username2;
-				std::string password2;
-				nlohmann::json login;
-
-				std::ifstream login_file(logfil, std::ifstream::binary);
-				login_file >> login;
-				
-				username2 = login["Username"];
-				password2 = login["Password"];
-				Auth(username2, password2);
-			}
-			else
-			{		
-				ImGui::InputText(xorstr_("Username"), auth::username, sizeof(auth::username));
-				ImGui::InputText(xorstr_("Password"), auth::password, sizeof(auth::password), ImGuiInputTextFlags_Password);
-			}
-		
-			if (ImGui::Button(xorstr_("Log In")))
-			{
-				std::string username1(auth::username);
-				std::string password1(auth::password);
-				Auth(username1, password1);	
-			}
+			exit(0);
 		}
 		else
 		{	

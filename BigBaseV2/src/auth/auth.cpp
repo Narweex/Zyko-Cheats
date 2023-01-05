@@ -1,5 +1,6 @@
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #define jwtkey xorstr_("-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmt0Muy8v3rH4qU5Bj7Ae\nf0qdNe/rBkzsWYr23kbja1ZU78j+3Ou6MZtXPIWSpZChFKeeL/9c66amDG4kWd4U\n6ROtrQaBDSTZk4iN95UNZIPR0kotNygxNuv/3Yvqq119gMoC9aVjmZE6OS9Mviof\nW5ysZtWzK7He36ZQbMTsiHJz3PIOU99Pw2Nl6tQid56N2/eue1X2gvbTYtXTUL2X\nDLQxhxOoIAKd8FhuWjoKaMbEXgU1Qt1hSpocxtF9F+bEuSs08dZa1WRkVTl6vQp5\njkhVhrZfKlNQk+vtbF+tjnJZS2fhWHzIr+FVbGJlGZBZkhX2nSB3eChdNMcZTU5o\nIwIDAQAB\n-----END PUBLIC KEY-----") //encrypt this
+
 #define WIN32_LEAN_AND_MEAN
 #include <notifications/notifications.h>
 #include <filesystem>
@@ -14,6 +15,7 @@
 #pragma comment (lib, "urlmon.lib")  
 #pragma comment(lib, "libssl.lib")
 #pragma comment(lib, "libcrypto.lib")
+#include "lazy_importer.hpp"
 
 HW_PROFILE_INFOA hwProfileInfo; 
 
@@ -25,11 +27,12 @@ using namespace jwt;
 
 
 
-void Auth::auth(const std::string& username, const std::string& password)
+void auth3(const std::string& username, const std::string& password)
 {
-    static std::string login_file = getenv("APPDATA");
+    std::string login_file = getenv("APPDATA");
     login_file += "\\Zyko\\autologin.json";
     const char* logfil = login_file.c_str();
+    
 
     if (std::filesystem::exists(login_file))
     {
@@ -59,39 +62,51 @@ void Auth::auth(const std::string& username, const std::string& password)
 
     if (payloadJson["result"] == "successpaid") {
         auth::login = true;
-        auth::login1 = 69;
-        zyko::Notify("Logged in", auth::username, 7000, zyko::Success);
+        auth::login1 = true;
+       
+       
         
     }
     else if (payloadJson["result"] == "invalid credentials") {
         LOG(INFO) << xorstr_("Invalid credentials!");
         zyko::Notify(xorstr_("Your credentials are invalid!"), auth::username, 7000, zyko::Error);
-       
+        Sleep(5000);
+        exit(420);
 
     }
     else if (payloadJson["result"] == "invalid hwid") {
         LOG(INFO) << xorstr_("You Got Bad HWID");
-        zyko::Notify(xorstr_("Invalid HWID Please open a ticker to reset it"), auth::username, 7000, zyko::Error);
+        zyko::Notify(xorstr_("Invalid HWID Please open a ticket to reset it"), auth::username, 7000, zyko::Error);
+        Sleep(5000);
+        exit(420);
     }
     else  if (payloadJson["result"] == "banned") {
         zyko::Notify(xorstr_("You have been banned from the menu"), auth::username, 7000, zyko::Error);
         LOG(INFO) << xorstr_("You are banned.");
+        Sleep(5000);
+        exit(420);
 
     }
     else if (payloadJson["result"] == "success") {
         LOG(INFO) << xorstr_("You dont have license radeemed");
         zyko::Notify(xorstr_("You forgot to radeem a license"), auth::username, 7000, zyko::Error);
-
+        Sleep(5000);
+        exit(420);
     }
    
 }
 
-//void Auth::Authenticate(const std::string& username, const std::string& password)
-//{
-//    void (*nigger)(const std::string & username, const std::string & password);
-//    nigger = &auth;
-//    LI_FN(nigger)(username, password);
-//}
+
+int Auth::auth(const std::string& username, const std::string& password)
+{
+    void (*nigger)(const std::string&username, const std::string&password);
+    nigger = &auth3;
+    LI_FN(nigger);
+    (nigger)(username, password);
+    return 1;
+}
+
+
 
 
 

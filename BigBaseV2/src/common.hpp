@@ -15,7 +15,7 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <ctime>
+//#include <ctime>
 
 
 #include <iomanip>
@@ -25,7 +25,7 @@
 #include <thread>
 
 #include <memory>
-#include <new>
+//#include <new>
 
 #include <string>
 #include <string_view>
@@ -48,16 +48,14 @@
 #include <variant>
 
 #include <fmt/format.h>
-#include <nlohmann/json.hpp>
+//#include <nlohmann/json.hpp>
 
 #include "logger.hpp"
 #include "core/xor_string.hpp"
-#include "core/config.h"
 #include "auth/auth.hpp"
 #include "auth/auth.hpp"
 #include "gui/imgui_tabs.h"
 #include "gui/self_tab.h"
-#include "gui/components/components.hpp"
 #include <gui/list/UIManager.hpp>
 #include "gui/list/Lists.hpp"
 #include "natives.hpp"
@@ -72,7 +70,7 @@
 
 
 
-#define ZykoVersion "Zyko 0.1.9"
+#define ZykoVersion "Zyko 0.2.0"
 
 #define _PTR_MAX_VALUE ((PVOID)0x000F000000000000)
 

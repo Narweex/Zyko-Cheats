@@ -6,7 +6,6 @@
 #include "script_global.hpp"
 #include "gta_util.hpp"
 #include <imgui.h>
-#include "gui/player_list.h"
 #include "fiber_pool.hpp"
 
 
@@ -331,20 +330,17 @@ namespace zyko
 	void features::changemodel(const char* model)
 	{
 		Hash model1 = MISC::GET_HASH_KEY(model);
-		STREAMING::REQUEST_MODEL(model1);
-		if (STREAMING::HAS_MODEL_LOADED(model1))
+		
+		for (uint8_t i = 0; !STREAMING::HAS_MODEL_LOADED(model1) && i < 100; i++)
 		{
-			SYSTEM::WAIT(0);
+			STREAMING::REQUEST_MODEL(model1);
+		}
 			PLAYER::SET_PLAYER_MODEL(PLAYER::PLAYER_ID(), (model1));
 			ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), true);
-
-		}
-
-
 	}
 	bool features::is_modder(Player player)
 	{
-		if (auto plyr = g_pointers->m_get_net_player(player))
+		/*if (auto plyr = g_pointers->m_get_net_player(player))
 		{
 			if (plyr->m_player_info->m_ped->m_god == 0x01 && !INTERIOR::GET_INTERIOR_FROM_ENTITY(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player)))
 			{
@@ -352,7 +348,7 @@ namespace zyko
 			}
 
 
-		}
+		}*/
 
 		return false;
 	}
@@ -404,14 +400,12 @@ namespace zyko
 	void features::crash(int player)
 	{
 		Vector3 coords = ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 0);
-		LOG(INFO) << coords.x;
-		LOG(INFO) << coords.y;
-		LOG(INFO) << coords.z;
+	
 		for (auto& objects : invalid_objects)
 		{
-			
+			//*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x9090;
 			OBJECT::CREATE_OBJECT(MISC::GET_HASH_KEY(objects), coords.x, coords.y, coords.z, 1, 1, 1);
-			LOG(INFO) << objects;
+			//*(unsigned short*)g_pointers->m_model_spawn_bypass = 0x0574;
 		}
 	
 		uint64_t crashevent[] = {1, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(player), 21000, 21000, 21000 };
@@ -491,16 +485,7 @@ namespace zyko
 		//}
 
 		
-		
-
-
-
-
-		
-		
-	
-		//UpdatePresence();
-
+		DiscordInit();
 		features::esp_line_all||features::esp_box_all||features::esp_name_all ||features::esp_distance_all ? features::ESP_all() : NULL;
 
 		for (int i = 0; i < sizeof(tick_conf) / sizeof(ULONGLONG); i++)
@@ -514,9 +499,9 @@ namespace zyko
 				case 0:
 					//50 MS		
 					
-					run_playerlist();
+					//run_playerlist();
 					features::shootpeds ? Shootpeds(true) : Shootpeds(false);
-					////notify_on_join ? features::joinNotification : NULL;
+					
 					features::godmode ? Godmode(true) : Godmode(false);
 					neverwanted ? Neverwanted(true) : Neverwanted(false);
 					instantenter ? Instantenter(true) : Instantenter(false);
@@ -564,16 +549,18 @@ namespace zyko
 					rotating ? Rotating(true) : Rotating(false);
 					invis_car ? Invis_car(true) : Invis_car(false);
 					deadeye ? Deadeye(true) : Deadeye(false);
-
 					break;
 				case 1:
 					////////////////////////////////////////   2500ms   ////////////////////////////////////////
 					
 					
+						
+					
+					/*
 					if (!invisibility) {
 						ENTITY::SET_ENTITY_ALPHA(PLAYER::PLAYER_PED_ID(), features::playeralpha, false);
-					}
-					noclip ? Noclip(true) : Noclip(false);
+					}*/
+					//noclip ? Noclip(true) : Noclip(false);
 					break;
 				case 2:
 					
@@ -607,10 +594,10 @@ namespace zyko
 		{
 			TRY_CLAUSE
 			{
-				/*if (!g_first)
+				if (!g_first)
 				{
 					g_first = true;
-				}*/
+				}
 				run_tick();
 			}
 				EXCEPT_CLAUSE

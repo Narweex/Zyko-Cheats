@@ -1,5 +1,5 @@
 #pragma once
-
+#include <nlohmann/json.hpp>
 
 class Auth
 {
@@ -51,8 +51,8 @@ namespace auth
 {
 	static char username[28];
 	static char password[28];
-	inline bool login = true;
-	inline bool login1 = true;
+	inline bool login = false;
+	inline bool login1 = false;
 
 }
 

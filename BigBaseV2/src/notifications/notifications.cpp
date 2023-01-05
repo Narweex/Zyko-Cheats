@@ -13,6 +13,7 @@ namespace zyko
 			toast.set_title(title);
 			toast.set_content(text);
 			ImGui::InsertNotification(toast);
+			
 			break;
 
 		case 2:

@@ -99,7 +99,6 @@ namespace zyko::features
 	void suicide();
 	void maxhealth();
 	void maxarmor();
-	void UpdatePresence();
 	inline int wantedLevel;
 	inline int playeralpha = 255;
 	inline int playeropacity = 255;
@@ -108,6 +107,8 @@ namespace zyko::features
 	void SetModifier(const char* modifier);
 	void PlayAnimation(const char* name, const char* id);
 	void StopAnimation();
+	void PlayScenario(const char* name);
+	void SetTimecycleModifier(const char* modifier);
 	inline float set_wetness;
 	void Set_wetness(const float& level);
 
@@ -152,6 +153,7 @@ namespace zyko::features
 	inline bool vehicle_blip = false;
 	inline bool in_vehicle = true;
 	inline bool full_stats = true;
+	inline bool vehicle_saveable = false;
 
 	extern bool cleanloop;
 	void Cleanloop(bool toggle);
@@ -209,7 +211,6 @@ namespace zyko::features
 	void colour_spam();
 	void acrobatics(int i);
 	void AddRamp();
-	void Tune(const int& category, const int& level);
 
 	/* Teleport */
 	void teleport_to_objective();
@@ -308,6 +309,7 @@ namespace zyko::features
 	void Clearcops();
 	void nigger();
 	void Spawn_companion();
+	void Unfreeze();
 
 	std::string Keyboard();
 
@@ -401,4 +403,16 @@ namespace zyko::features
 	inline float offX, offY, offZ;
 	inline float fov = 90.f;
 
+	
+	 void SaveConfig();
+	 void LoadConfig();
+	
+	 /*Discord*/
+	 void DiscordInit();
+
+	 void UpdatePresence();
+	 
+	 void DiscordDestroy();
+	 inline bool discord_rpc = false;
+	
 }

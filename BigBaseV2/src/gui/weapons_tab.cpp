@@ -13,7 +13,7 @@ namespace zyko
 {
 	void ImGuiTabs::render_weapons_tab()
 	{
-		ImGui::BeginChild(xorstr_("##options1"), ImVec2(300, 280), true);
+		ImGui::BeginChild(xorstr_("##options1"), ImVec2(300, 300), true);
 
 		if (ImGui::Button(xorstr_("Give All Weapons"), ImVec2(200, 25))) { g_fiber_pool->queue_job([=] {	features::GiveAllWeapons();  }); }
 		if (ImGui::Button(xorstr_("Remove All Weapons"), ImVec2(200, 25))) { g_fiber_pool->queue_job([=] {	features::RemoveAllWeapons();  }); }
@@ -25,10 +25,12 @@ namespace zyko
 		ImGui::Checkbox(xorstr_("Airstrike Gun"), &features::airstrikegun);
 		ImGui::Checkbox(xorstr_("Teleport Gun"), &features::teleportgun);
 		ImGui::Checkbox(xorstr_("Drive It Gun"), &features::driveitgun);
+		ImGui::Checkbox(xorstr_("Rapid Fire"), &features::rapid_fire);
+
 		ImGui::EndChild();
 		ImGui::SameLine();
 		
-		ImGui::BeginChild(xorstr_("##options3"), ImVec2(300, 280), true);
+		ImGui::BeginChild(xorstr_("##options3"), ImVec2(300, 300), true);
 		ImGui::Text(xorstr_("Give Weapon"));
 		ImGui::Separator();
 		for (auto& weapon : weaponlist)

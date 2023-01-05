@@ -40,7 +40,7 @@ namespace zyko
 			g_fiber_pool->queue_job([=]{features::perform();});
 		}
 		ImGui::SameLine();
-		if(ImGui::Button("Reset"))
+		if(ImGui::Button(xorstr_("Reset")))
 		{
 			features::y = 0;
 			features::offX = 0.f;

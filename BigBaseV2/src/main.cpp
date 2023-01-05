@@ -9,19 +9,12 @@
 #include "gui/list/script/MainScript.hpp"
 #include "gui/list/UIManager.hpp"
 #include "features.hpp"
-#include "../discord_rpc.h"
 
 
-//void zyko::features::UpdatePresence()
-//{
-//	DiscordRichPresence discordPresence;
-//	memset(&discordPresence, 0, sizeof(discordPresence));
-//	discordPresence.state = "Zyko Cheats";
-//	discordPresence.details = "Playing GTAV With Zyko";
-//	discordPresence.largeImageKey = "logo";
-//	discordPresence.largeImageText = "zykocheats.org";
-//	Discord_UpdatePresence(&discordPresence);
-//}
+
+
+
+
 
 BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 {
@@ -50,7 +43,7 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 
 
 
-				//Auth();
+				Auth();
 
 				auto pointers_instance = std::make_unique<pointers>();
 				LOG(INFO) << "Pointers initialized.";
@@ -67,10 +60,8 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 				auto uimanager_instance = std::make_unique<UserInterface::UIManager>();
 				LOG(INFO) << "UIManager initialized.";
 
-				
-
-
-				
+				features::DiscordInit();
+		
 				g_hooking->enable();
 				LOG(INFO) << "Hooking enabled.";
 				
@@ -84,16 +75,18 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 				
 				
 
-				Notify("Welcome to 0.1.9", "", 7000, None);
+				Notify("Welcome to 0.2.0", "", 7000, None);
 				Notify("Open With INSERT", "", 7000, Protections);
 				while (g_running)
 				{
 					if (!auth::login)
 					{
-						//exit(420);
+						exit(420);
 					}
 					std::this_thread::sleep_for(500ms);
 				}
+
+
 				
 				g_hooking->disable();
 				LOG(INFO) << "Hooking disabled.";
@@ -103,31 +96,31 @@ BOOL APIENTRY DllMain(HMODULE hmod, DWORD reason, PVOID)
 				g_script_mgr.remove_all_scripts();
 				LOG(INFO) << "Scripts unregistered.";
 
-				//uimanager_instance.reset();
+
+				uimanager_instance.reset();
 				LOG(INFO) << "UIManager uninitialized.";
 
-				//hooking_instance.reset();
+				hooking_instance.reset();
 				LOG(INFO) << "Hooking uninitialized.";
 
-				//fiber_pool_instance.reset();
+				fiber_pool_instance.reset();
 				LOG(INFO) << "Fiber pool uninitialized.";
 
-				//renderer_instance.reset();
+				renderer_instance.reset();
 				LOG(INFO) << "Renderer uninitialized.";
 
 				pointers_instance.reset();
 				LOG(INFO) << "Pointers uninitialized.";
-
+				
 			}
 			catch (std::exception const &ex)
 			{
 				LOG(WARNING) << ex.what();
 				MessageBoxA(nullptr, ex.what(), nullptr, MB_OK | MB_ICONEXCLAMATION);
 			}
-
-			LOG(INFO) << "Farewell!";
+			features::DiscordDestroy();
+			LOG(INFO_TO_FILE) << "Uninjected Succesfully!";
 			logger_instance.reset();
-
 			CloseHandle(g_main_thread);
 			FreeLibraryAndExitThread(g_hmodule, 0);
 		}, nullptr, 0, &g_main_thread_id);

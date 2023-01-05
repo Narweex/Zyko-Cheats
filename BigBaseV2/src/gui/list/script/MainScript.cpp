@@ -19,8 +19,8 @@
 #include "helpers/other.h"
 #include <looped/teleports.hpp>
 #include "looped/gtaData.hpp"
-#include <gui/player_list.h>
 #include <gui/list/BreakOption.hpp>
+#include "gta/VehicleValues.h"
 #pragma comment(lib, "Winmm.lib")
 
 
@@ -127,7 +127,9 @@ namespace zyko
 		AnimationsSubmenu,
 		SettingsInfoWindows,
 		AllPlayersESP,
-		SelectedPlayerESP
+		SelectedPlayerESP,
+		LSCSubmenu,
+		ScenariosSubmenu
 
 	};
 
@@ -153,21 +155,18 @@ namespace zyko
 		g_UiManager->AddSubmenu<RegularSubmenu>("Home", SubmenuHome, [&](RegularSubmenu* sub)
 			{
 
-				/*sub->AddOption<ChooseOption<const char*, std::size_t>>("test", nullptr, &Lists::HeaderTypesFrontend, &Lists::HeaderTypesPosition, true, [&]
-					{
-						
-					});*/
-				sub->AddOption<SubOption>("Self", "Self Options", SubmenuSelf);
-				sub->AddOption<SubOption>("Vehicle Options", "Vehicle Options", SubmenuVehicle);
-				sub->AddOption<SubOption>("Weapons", "Weapon Options", Weaponz);
-				sub->AddOption<SubOption>("Online", "Online Options", OnlineSubmenu);
-				sub->AddOption<SubOption>("Teleport", "Teleport Options", teleports);
-				sub->AddOption<SubOption>("World Options", "World Options", WorldOptions);
-				sub->AddOption<SubOption>("Recovery", "Recovery Options", recovery);
-				sub->AddOption<SubOption>("Misc Options", "Other Options", misc);
-				sub->AddOption<SubOption>("Protections", "Protection Options", ProtectionsSubmenu);
+				
+				sub->AddOption<SubOption>(xorstr_("Self"), "Self Options", SubmenuSelf);
+				sub->AddOption<SubOption>(xorstr_("Vehicle Options"), "Vehicle Options", SubmenuVehicle);
+				sub->AddOption<SubOption>(xorstr_("Weapons"), "Weapon Options", Weaponz);
+				sub->AddOption<SubOption>(xorstr_("Online"), "Online Options", OnlineSubmenu);
+				sub->AddOption<SubOption>(xorstr_("Teleport"), "Teleport Options", teleports);
+				sub->AddOption<SubOption>(xorstr_("World Options"), "World Options", WorldOptions);
+				sub->AddOption<SubOption>(xorstr_("Recovery"), "Recovery Options", recovery);
+				sub->AddOption<SubOption>(xorstr_("Misc Options"), "Other Options", misc);
+				sub->AddOption<SubOption>(xorstr_("Protections"), "Protection Options", ProtectionsSubmenu);
 				//sub->AddOption<SubOption>("Scripthook V", "SHV Mods", scripthook);
-				sub->AddOption<SubOption>("Settings", "Menu settings", SubmenuSettings);
+				sub->AddOption<SubOption>(xorstr_("Settings"), "Menu settings", SubmenuSettings);
 
 			});
 
@@ -197,7 +196,8 @@ namespace zyko
 				sub->AddOption<SubOption>("Visions", "Change Player Visions", vis);
 				sub->AddOption<SubOption>("Model Changer", "Change your Model", SubmenuModelChanger);
 				sub->AddOption<SubOption>("Animations", nullptr, AnimationsSubmenu);
-				sub->AddOption<BreakOption>("Test", "Test");
+				
+				
 				
 
 				sub->AddOption<BoolOption<bool>>("God Mode", "You Cannot Die", &features::godmode, BoolDisplay::OnOff);
@@ -208,9 +208,12 @@ namespace zyko
 				sub->AddOption<BoolOption<bool>>("Instantly Enter Vehicles", "Come On Lets GO!!!", &features::instantenter, BoolDisplay::OnOff);
 				sub->AddOption<NumberOption<int>>("Wanted Level", nullptr, &features::wantedLevel, 0, 5, 1, 3, true, "< ", " >", [&]
 					{
+
 						PLAYER::SET_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID(), features::wantedLevel, false);
 						PLAYER::SET_PLAYER_WANTED_LEVEL_NOW(PLAYER::PLAYER_ID(), TRUE);
 					});
+
+				
 				sub->AddOption<BoolOption<bool>>("Ignore Player", "Everyone will ignore you", &features::ignoreplayer, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Super Run - Override", "Run Boiiiiiii", &features::superrunbool, BoolDisplay::OnOff);
 				if (features::superrunbool) {
@@ -220,7 +223,7 @@ namespace zyko
 				if (features::ultrarunbool) {
 					sub->AddOption<NumberOption<float>>("Run Speed", nullptr, &features::runspeed1, 0.1, 5.0, 0.1, 3, true, "< ", " >", [&] {});
 				}
-				sub->AddOption<BoolOption<bool>>("No Ragdoll", "You are invisible", &features::norag, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("No Ragdoll", "You wont fall off", &features::norag, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Flash Mode", "Run Like Flash", &features::flashrun, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Super Jump", "Ever wanted to jump higher?", &features::superjumpbool, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Ultra Jump", "Jump Really High", &features::ultrajumpbool, BoolDisplay::OnOff);
@@ -230,6 +233,8 @@ namespace zyko
 				sub->AddOption<BoolOption<bool>>("Super Man", "Just Fly", &features::superman, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Off Radar", "Players wont see you on minimap", &features::offradar, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Bullshark Testosterone", "Players wont see you on minimap", &features::bullshark, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Rotating", "Spinnin", &features::rotating, BoolDisplay::OnOff);
+
 				sub->AddOption<BoolOption<bool>>("Modify Time Scale", "Speed Of The Whole World", &features::modifytimecycle, BoolDisplay::OnOff);
 				if (features::modifytimecycle)
 				{
@@ -240,6 +245,7 @@ namespace zyko
 				sub->AddOption<RegularOption>("Clear Wanted", "Clear Player Wanted Level", [&]
 					{
 						PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_ID());
+
 					});
 
 				sub->AddOption<RegularOption>("Max Health", "Adds Health To The Player", [&]
@@ -265,10 +271,7 @@ namespace zyko
 					});
 				sub->AddOption<RegularOption>("Reset Ped", "Reset Player", [&] {features::resetped();});
 				sub->AddOption<RegularOption>("Suicide", "Kills Ped", [&]{features::suicide();});
-				/*sub->AddOption<RegularOption>(xorstr_("RegularOption_demo"), "A regular option.", [&]
-					{
-						LOG(INFO) << "Test Option pressed";
-					});
+				/*
 
 
 
@@ -295,18 +298,18 @@ namespace zyko
 				{
 					for(auto& model: PedModels)
 					{ 
-						sub->AddOption<RegularOption>(model, "Set this model", [model]
+						sub->AddOption<RegularOption>(model, xorstr_("Set this model"), [model]
 							{
 								features::changemodel(model);
 							});
 					}
 					
 				});
-		g_UiManager->AddSubmenu<RegularSubmenu>("Visions", vis, [&](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Visions"), vis, [&](RegularSubmenu* sub)
 			{
-				sub->AddOption<BoolOption<bool>>("Night Vision", "You can see cool in night", &features::nightvision, BoolDisplay::OnOff);
-				sub->AddOption<BoolOption<bool>>("Thermal Vision", "Run Boiiiiiii", &features::thermalvision, BoolDisplay::OnOff);
-				sub->AddOption<RegularOption>("Clear", "Clears Vision", [&]
+				sub->AddOption<BoolOption<bool>>(xorstr_("Night Vision"), xorstr_("You can see cool in night"), &features::nightvision, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>(xorstr_("Thermal Vision"), xorstr_("Run Boiiiiiii"), &features::thermalvision, BoolDisplay::OnOff);
+				sub->AddOption<RegularOption>(xorstr_("Clear"), xorstr_("Clears Vision"), [&]
 					{
 						GRAPHICS::CLEAR_TIMECYCLE_MODIFIER();
 					});
@@ -314,23 +317,45 @@ namespace zyko
 				{
 					sub->AddOption<RegularOption>(modifiers, "Set this modifier", [=]
 						{
-							GRAPHICS::SET_TIMECYCLE_MODIFIER(modifiers);							
+							features::SetTimecycleModifier(modifiers);						
 						});
 				}	
 			});
 
 			g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Animations"), AnimationsSubmenu, [&](RegularSubmenu* sub)
 				{
-					sub->AddOption<RegularOption>("test", "", [&]
+					sub->AddOption<SubOption>(xorstr_("Scenarios"), xorstr_("Play this animation"), ScenariosSubmenu);
+					sub->AddOption<RegularOption>(xorstr_("Stop Animation"), xorstr_("Stops any animations"), [=]
 						{
-											//TASK::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), "amb@code_human_wander_drinking@male@base", "	static", 1.f, 1.f, 1500, 1, 1, 1, 1, 1);
-							features::changemodel("A_C_Boar");
+							features::StopAnimation();
 						});
+					for (auto& anims : animations)
+					{
+						sub->AddOption<RegularOption>(anims.label, xorstr_("Play this animation"), [&]
+							{
+								features::PlayAnimation(anims.name, anims.id);
+							});
+					}
+				});
+
+			g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Scenarios"), ScenariosSubmenu, [&](RegularSubmenu* sub)
+				{
+					sub->AddOption<RegularOption>(xorstr_("Stop Scenario"), xorstr_("Stops any animations"), [=]
+						{
+							features::StopAnimation();
+						});
+					for (auto& scenarios : scenarioslol)
+					{
+						sub->AddOption<RegularOption>(scenarios.id, "Play this scenario", [&]
+							{
+								features::PlayScenario(scenarios.id);
+							});
+					}
 
 				});
-		g_UiManager->AddSubmenu<RegularSubmenu>("Vehicle Movement", SubmenuVehicleMovement, [&](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Vehicle Movement"), SubmenuVehicleMovement, [&](RegularSubmenu* sub)
 			{
-				sub->AddOption<BoolOption<bool>>("Bypass Max Speed", "Go faster then GTA allows", &features::speedbypass, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>(xorstr_("Bypass Max Speed"), xorstr_("Go faster then GTA allows"), &features::speedbypass, BoolDisplay::OnOff);
 
 				sub->AddOption<SubOption>("Vehicle Multipliers", nullptr, SubmenuVehicleMultipliers);
 				if (features::smoothhornboost) {
@@ -358,6 +383,8 @@ namespace zyko
 							VEHICLE::SET_VEHICLE_FORWARD_SPEED(Veh, features::vehiclespeed);
 						}
 					});
+				sub->AddOption<BoolOption<bool>>("Drift Mode", "Press shift to activate", &features::driftmode, BoolDisplay::OnOff);
+
 			});
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Vehicle Colors", SubmenuVehicleColors, [&](RegularSubmenu* sub)
@@ -391,6 +418,7 @@ namespace zyko
 			{
 				sub->AddOption<SubOption>("Vehicle Spawner", nullptr, SubmenuVehicleSpawner);
 				sub->AddOption<SubOption>("Vehicle Movement", nullptr, SubmenuVehicleMovement);
+				sub->AddOption<SubOption>("LS Customs", nullptr, LSCSubmenu);
 				sub->AddOption<SubOption>("Vehicle Acrobatics", nullptr, SubmenuVehicleAcrobatics);
 				sub->AddOption<SubOption>("Vehicle Colors", nullptr, SubmenuVehicleColors);
 				sub->AddOption<BoolOption<bool>>("Vehicle Godmode", nullptr, &features::vehgodmode, BoolDisplay::OnOff);
@@ -411,12 +439,7 @@ namespace zyko
 					{
 						features::duplicatecar();
 					});
-				//sub->AddOption<RegularOption>("Set License Plate", "Set Custom Text", [&]
-				//	{
-				//		CharKeyboard("Text", 21, "nig");
-				//		const char*  result = MISC::GET_ONSCREEN_KEYBOARD_RESULT();
-				//		VEHICLE::SET_VEHICLE_NUMBER_PLATE_TEXT(PED::GET_VEHICLE_PED_IS_IN(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(PLAYER::PLAYER_ID()), false), result);
-				//	});
+				
 				sub->AddOption<RegularOption>("Clean Vehicle", "Clean Currnet Vehicle", [&]
 					{features::cleanVehicle();	});
 				sub->AddOption<BoolOption<bool>>("Clean Vehicle Loop", "Cleans Vehicle Automatically When Dirty", &features::cleanloop, BoolDisplay::OnOff);
@@ -431,6 +454,65 @@ namespace zyko
 						}
 					});
 			});
+
+		g_UiManager->AddSubmenu<RegularSubmenu>(xorstr_("Vehicle"), LSCSubmenu, [&](RegularSubmenu* sub)
+			{
+				
+
+				sub->AddOption<ChooseOption<const char*, int>>(xorstr_("Front Bumper"), nullptr, &FrontBumperUpgrades, &front_bumpers, true, [&]
+					{
+						features::set_vehicle_mod(FrontBumper, front_bumpers - 1);
+					});
+
+			
+				sub->AddOption<ChooseOption<const char*, int>>(xorstr_("Armor"), nullptr, &ArmorUpgrades, &armor, true, [&]
+					{
+						features::set_vehicle_mod(Armor, armor-1);
+					});
+
+				sub->AddOption<ChooseOption<const char*, int>>("Engine", nullptr, &EngineUpgrades, &engine, true, [&]
+					{
+						features::set_vehicle_mod(Engine, engine-1);
+					});
+				sub->AddOption<ChooseOption<const char*, int>>("Windows", nullptr, &WindowsUpgrades, &windows, true, [&]
+					{
+						VEHICLE::SET_VEHICLE_WINDOW_TINT(PED::GET_VEHICLE_PED_IS_IN(PLAYER::PLAYER_PED_ID(), true), windows - 1);
+					});
+				sub->AddOption<ChooseOption<const char*, int>>("Suspension", nullptr, &SuspensionUpgrades, &suspension, true, [&]
+					{
+						features::set_vehicle_mod(Suspension, suspension-1);
+					});
+				sub->AddOption<ChooseOption<const char*, int>>("Brakes", nullptr, &BrakesUpgrades, &brakes, true, [&]
+					{
+						features::set_vehicle_mod(Brakes, brakes - 1);
+					});
+				sub->AddOption<ChooseOption<const char*, int>>("Transmission", nullptr, &TransmissionUpgrades, &transmission, true, [&]
+					{
+						features::set_vehicle_mod(Transmission, transmission - 1);
+					});
+				sub->AddOption<ChooseOption<const char*, int>>("Turbo", nullptr, &TurboUpgrades, &turbo, true, [&]
+					{
+						features::set_vehicle_mod(Turbo, turbo - 1);
+					});
+				sub->AddOption<ChooseOption<const char*, int>>("Lights", nullptr, &LightsUpgrades, &lights, true, [&]
+					{
+						features::set_vehicle_mod(Xenon, lights - 1);
+					});
+				sub->AddOption<ChooseOption<const char*, int>>("Plate types", nullptr, &PlatesUpgrades, &plates, true, [&]
+					{
+						features::set_vehicle_mod(Plates, plates - 1);
+					});
+				sub->AddOption<ChooseOption<const char*, int>>("Horns", nullptr, &HornsUpgrades, &horns, true, [&]
+					{
+						features::set_vehicle_mod(HornTypes, horns - 1);
+					});
+				sub->AddOption<ChooseOption<const char*, int>>(xorstr_("Spoilers"), nullptr, &SpoilerUpgrades, &spoilers, true, [&]
+					{
+						features::set_vehicle_mod(Spoilers, spoilers - 1);
+					});
+				
+			});
+
 		g_UiManager->AddSubmenu<RegularSubmenu>("Vehicle Spawner", SubmenuVehicleSpawner, [&](RegularSubmenu* sub)
 			{
 				sub->AddOption<SubOption>("Spawner Settings", nullptr, SubmenuVehSpawnerSettings);
@@ -487,13 +569,15 @@ namespace zyko
 				sub->AddOption<BoolOption<bool>>("Spawn Inside", "You Will Be Spawned Inside Vehicle", &features::in_vehicle, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Spawn Max Tuned", "Vehicle Will HAve Max Tuning", &features::full_stats, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Spawn With Blip", "You Will See The Vehicle On Map", &features::vehicle_blip, BoolDisplay::OnOff);
+				sub->AddOption<BoolOption<bool>>("Spawn Saveable", "Yu will be able to save the car in your garage", &features::vehicle_saveable, BoolDisplay::OnOff);
 			});
-		g_UiManager->AddSubmenu<RegularSubmenu>("Sports", SubmenuVehSpawnerSports, [](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>("Sports", SubmenuVehSpawnerSports, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Sports1) {
 					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
 						{
-							features::spawn_veh(rage::joaat(car));
+							features::spawn_veh(MISC::GET_HASH_KEY(car.c_str()));
+							
 						});
 				}
 			});
@@ -518,7 +602,7 @@ namespace zyko
 		g_UiManager->AddSubmenu<RegularSubmenu>("Sport Classics", SubmenuVehSpawnerSportClassics, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::SportsClassics1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -527,97 +611,97 @@ namespace zyko
 		g_UiManager->AddSubmenu<RegularSubmenu>("Sedans", SubmenuVehSpawnerSedans, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Sedans1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
 				}
 			});
-		g_UiManager->AddSubmenu<RegularSubmenu>("SUVs", SubmenuVehSpawnerSUVs, [&](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>("SUVs", SubmenuVehSpawnerSUVs, [=](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::SUVs1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
 				}
 			});
-		g_UiManager->AddSubmenu<RegularSubmenu>("Compacts", SubmenuVehSpawnerCompacts, [&](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>("Compacts", SubmenuVehSpawnerCompacts, [=](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Compacts1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
 				}
 			});
-		g_UiManager->AddSubmenu<RegularSubmenu>("Coupes", SubmenuVehSpawnerCoupes, [&](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>("Coupes", SubmenuVehSpawnerCoupes, [=](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Coupes1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
 				}
 			});
-		g_UiManager->AddSubmenu<RegularSubmenu>("Motorcycles", SubmenuVehSpawnerMotorcycles, [&](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>("Motorcycles", SubmenuVehSpawnerMotorcycles, [=](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Motorcycles1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
 				}
 			});
-		g_UiManager->AddSubmenu<RegularSubmenu>("Off-Road", SubmenuVehSpawnerOffRoad, [&](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>("Off-Road", SubmenuVehSpawnerOffRoad, [=](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::OffRoad1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
 				}
 			});
-		g_UiManager->AddSubmenu<RegularSubmenu>("Cycles", SubmenuVehSpawnerCycles, [&](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>("Cycles", SubmenuVehSpawnerCycles, [=](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Cycles1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
 				}
 			});
-		g_UiManager->AddSubmenu<RegularSubmenu>("Vans", SubmenuVehSpawnerVans, [&](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>("Vans", SubmenuVehSpawnerVans, [=](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Vans1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
 				}
 			});
-		g_UiManager->AddSubmenu<RegularSubmenu>("Utility", SubmenuVehSpawnerUltility, [&](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>("Utility", SubmenuVehSpawnerUltility, [=](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Utility1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
 				}
 			});
-		g_UiManager->AddSubmenu<RegularSubmenu>("Industrial", SubmenuVehSpawnerIndustrial, [&](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>("Industrial", SubmenuVehSpawnerIndustrial, [=](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Industrial1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
 				}
 			});
-		g_UiManager->AddSubmenu<RegularSubmenu>("Sevice", SubmenuVehSpawnerService, [&](RegularSubmenu* sub)
+		g_UiManager->AddSubmenu<RegularSubmenu>("Sevice", SubmenuVehSpawnerService, [=](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Service1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -626,7 +710,7 @@ namespace zyko
 		g_UiManager->AddSubmenu<RegularSubmenu>("Commercial", SubmenuVehSpawnerCommercial, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Commercial1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -635,7 +719,7 @@ namespace zyko
 		g_UiManager->AddSubmenu<RegularSubmenu>("Emergency", SubmenuVehSpawnerEmergency, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Emergency1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -644,7 +728,7 @@ namespace zyko
 		g_UiManager->AddSubmenu<RegularSubmenu>("Military", SubmenuVehSpawnerMilitary, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Military1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -653,7 +737,7 @@ namespace zyko
 		g_UiManager->AddSubmenu<RegularSubmenu>("Boats", SubmenuVehSpawnerBoats, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Boats1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -662,7 +746,7 @@ namespace zyko
 		g_UiManager->AddSubmenu<RegularSubmenu>("Planes", SubmenuVehSpawnerPlanes, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Planes1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -671,7 +755,7 @@ namespace zyko
 		g_UiManager->AddSubmenu<RegularSubmenu>("Helicopters", SubmenuVehSpawnerHelicopters, [&](RegularSubmenu* sub)
 			{
 				for (auto& car : Lists::Helicopters1) {
-					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [car]
+					sub->AddOption<RegularOption>(HUD::_GET_LABEL_TEXT(VEHICLE::GET_DISPLAY_NAME_FROM_VEHICLE_MODEL(rage::joaat(car))), "Spawn this car", [&]
 						{
 							features::spawn_veh(rage::joaat(car));
 						});
@@ -915,14 +999,14 @@ namespace zyko
 					{
 						features::RemoveAllWeapons();
 					});
-				//sub->AddOption<BoolOption<bool>>("Always Crosshair", "Bruh Read The Title", &features::croshair, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Infinite ammo", "Your gun will never be empty", &features::infiniteammo, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Delete Gun", "Your gun will never be empty", &features::deletegun, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Aimbot", "Are you a noob?", &features::aimbot, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Explosive Gun", "Your gun will never be empty", &features::exploammo, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Airstrike Gun", "A Plane Will Strike Where You Shoot", &features::airstrikegun, BoolDisplay::OnOff);
 				sub->AddOption<BoolOption<bool>>("Teleport Gun", "You Will Teleport Where You Shoot", &features::teleportgun, BoolDisplay::OnOff);
-				
+				sub->AddOption<BoolOption<bool>>("Rapid fire", "Shoot really fast", &features::rapid_fire, BoolDisplay::OnOff);
+
 				sub->AddOption<BoolOption<bool>>("Drive It Gun", "You Will Enter The Vehicle You Shoot At", &features::driveitgun, BoolDisplay::OnOff);
 				
 				sub->AddOption<BoolOption<bool>>("Shoot Peds ", "YOu will shoot pedestrians", &features::shootpeds, BoolDisplay::OnOff);
@@ -1303,13 +1387,13 @@ namespace zyko
 									features::g_selected_player = i;
 								});
 						}
-						else if (g_player_list.is_modder) {
+						/*else if (zyko::g_player_list.is_modder) {
 							char Buffer[255]; sprintf(Buffer, "%s   ~r~[MODDER]", PLAYER::GET_PLAYER_NAME(i));
 							sub->AddOption<SubOption>(Buffer, nullptr, SubmenuSelectedPlayer, [&]
 								{
 									features::g_selected_player = i;
 								});
-						}
+						}*/
 						// 
 						else
 						{
@@ -1321,13 +1405,16 @@ namespace zyko
 					}
 				}
 			});
-
-		g_UiManager->AddSubmenu<PlayerSubmenu>(&features::g_selected_player, SubmenuSelectedPlayer, [&](PlayerSubmenu* sub)
+		
+		g_UiManager->AddSubmenu<PlayerSubmenu>(&features::g_selected_player, SubmenuSelectedPlayer, [=](PlayerSubmenu* sub)
 			{
 				GRAPHICS::DRAW_MARKER(2, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 1.25, 0, 0, 0, 0, 180, 0, 0.35, 0.35, 0.35, 200, 0, 100, 255, 1, 1, 1, 0, 0, 0, 0);
 				
 				
-
+				sub->AddOption<RegularOption>("Copy details", "idk", [&]
+					{
+						
+					});
 				sub->AddOption<BoolOption<bool>>("Spectate", nullptr, &features::spectateplayer, BoolDisplay::OnOff);
 				sub->AddOption<SubOption>("Teleport Options", nullptr, SelectedPlayerTeleport);
 				sub->AddOption<SubOption>("Vehicle Options", nullptr, SelectedPlayerVehicle);
@@ -1377,6 +1464,21 @@ namespace zyko
 							//1885259 host kick global
 						});
 				}
+				sub->AddOption<RegularOption>("PU Kick", "Pickup Kick ", [&]
+					{
+						NETWORK::NETWORK_SET_IN_SPECTATOR_MODE(true, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player)); // loads area around selected player so you can spawn prop there
+						features::RequestControlOfEnt(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
+						AI::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
+						AI::CLEAR_PED_TASKS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));
+						AI::CLEAR_PED_SECONDARY_TASK(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player));  // freeze player 
+						STREAMING::REQUEST_MODEL(MISC::GET_HASH_KEY("vw_prop_vw_colle_alien"));
+						if (STREAMING::HAS_MODEL_LOADED(MISC::GET_HASH_KEY("vw_prop_vw_colle_alien")))
+						{
+							OBJECT::CREATE_AMBIENT_PICKUP(0x2C014CA6, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).x, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).y, ENTITY::GET_ENTITY_COORDS(PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player), true).z + 0, 0, 2600, MISC::GET_HASH_KEY("vw_prop_vw_colle_alien"), true, false);  // invalid value causes player to be kicked
+							STREAMING::SET_MODEL_AS_NO_LONGER_NEEDED(MISC::GET_HASH_KEY("vw_prop_vw_colle_alien"));
+						}
+						NETWORK::NETWORK_SET_IN_SPECTATOR_MODE(false, PLAYER::GET_PLAYER_PED_SCRIPT_INDEX(features::g_selected_player)); // area doesnt need to be loaded anymore
+					});
 				sub->AddOption<RegularOption>("Kick", "Kick ", [&]
 					{
 						features::kick(features::g_selected_player);
@@ -1557,16 +1659,15 @@ namespace zyko
 						CUTSCENE::STOP_CUTSCENE_IMMEDIATELY();
 					});
 
+				sub->AddOption<RegularOption>("Unfreeze player", "Might be useful sometimes", [&]
+					{
+						features::Unfreeze();
+					});
+
 				
 			});
 
-		g_UiManager->AddSubmenu<RegularSubmenu>("Miscellaneous", misc, [&](RegularSubmenu* sub)
-			{
-				sub->AddOption<BoolOption<bool>>("Mobile Radio", "Vibe to the music everywhere!", &features::mobileradio, BoolDisplay::OnOff);
-				//sub->AddOption<BoolOption<bool>>("Free Camera", "Vibe to the music everywhere!", &features::freecam, BoolDisplay::OnOff);
-				sub->AddOption<BoolOption<bool>>("Disable Phone", "English Dave wont bother you", &features::nophone, BoolDisplay::OnOff);
-
-			});
+		
 		g_UiManager->AddSubmenu<RegularSubmenu>("Protections", ProtectionsSubmenu, [&](RegularSubmenu* sub)
 			{
 				sub->AddOption<BoolOption<bool>>("Notify For Blocked Events", "", &features::g_received_event, BoolDisplay::OnOff);
@@ -1624,9 +1725,17 @@ namespace zyko
 
 		g_UiManager->AddSubmenu<RegularSubmenu>("Settings", SubmenuSettings, [&](RegularSubmenu* sub)
 			{
+				sub->AddOption<RegularOption>("Save Config", "Saves the config", [&]
+					{
+						features::SaveConfig();
+					});
+				sub->AddOption<RegularOption>("Load Config", "Loads the config", [&]
+					{
+						features::LoadConfig();
+					});
 				sub->AddOption<RegularOption>("Switch UI", "Switches to click UI.", [&]
 					{
-						Auth a();
+						Auth();
 						g_list = false;
 						g_gui.m_opened = true;
 					});
@@ -1642,6 +1751,8 @@ namespace zyko
 					{
 						exit(0);
 					});
+				sub->AddOption<BoolOption<bool>>("Discord RPC", nullptr, &features::discord_rpc, BoolDisplay::OnOff);
+
 				sub->AddOption<SubOption>("Infobar", nullptr, SubmenuSettingsSubmenuBar);
 				sub->AddOption<SubOption>("Links", nullptr, SUbmenuSettingsLinks);
 				sub->AddOption<SubOption>("Info Windows", nullptr, SettingsInfoWindows);
@@ -1812,6 +1923,7 @@ namespace zyko
 
 	void MainScript::script_func()
 	{
+	
 		g_MainScript.gui_init();
 		while (true)
 		{

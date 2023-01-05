@@ -481,9 +481,9 @@ namespace zyko::Lists
 		"HERMES", "GT500", "Z190", "VISERIS", "SENTINEL3", "HUSTLER", "CHEBUREK",
 		"MICHELLI", "FAGALOA", "SWINGER", "DYNASTY"
 
-	};
+	};	
 
-	inline std::vector<std::string> Super1
+	static const char* Super1[]
 	{
 		"ADDER", "BANSHEE2", "BULLET", "CHEETAH", "ENTITYXF",
 		"FMJ", "SHEAVA", "INFERNUS", "NERO", "NERO2","OSIRIS", "LE7B",

@@ -26,7 +26,7 @@ namespace zyko
 		if (ImGui::Button(xorstr_("List Mode")))
 		{
 			
-			Auth a();
+			Auth();
 
 			g_list = true;
 			g_UiManager->m_Opened = true;
@@ -42,13 +42,24 @@ namespace zyko
 		ImGui::Checkbox(xorstr_("Display FPS"), &features::fps);
 		ImGui::Checkbox(xorstr_("Display Watermark"), &features::watermark);
 		ImGui::Checkbox(xorstr_("Display Session Info"), &features::session_info);
-
-		ImGui::SliderInt("Menu Background", &customization.background_colour, 0, 255);
-
-		if (ImGui::Button("Set Style"))
+		if (ImGui::IsItemHovered((ImGui::Checkbox(xorstr_("Discord RPC"), &features::discord_rpc))))
 		{
-			ImVec4* colors = ImGui::GetStyle().Colors;
-			colors[ImGuiCol_WindowBg] = ImColor(19, 14, 24, customization.background_colour);
+			ImGui::BeginTooltip();
+			ImGui::Text(xorstr_("Users in discord will see you are using Zyko"));
+			ImGui::EndTooltip();
+		}
+
+		ImGui::SameLine();
+		if (ImGui::ListBoxHeader("##ThemeChanger", ImVec2(200, -1)))
+		{
+			ImGuiStyle& custom = ImGui::GetStyle();
+			for (int i = 0; i < ImGuiCol_COUNT; i++)
+			{
+				const char* name = ImGui::GetStyleColorName(i);
+				ImGui::ColorEdit4((std::string("##") + name).c_str(), (float*)&custom.Colors[i], ImGuiColorEditFlags_NoInputs);
+				ImGui::SameLine(); ImGui::Text(name);
+			}
+			ImGui::ListBoxFooter();
 		}
 
 	}

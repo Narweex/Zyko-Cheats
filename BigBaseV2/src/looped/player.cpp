@@ -8,11 +8,14 @@ namespace zyko
 	{
 		if (toggle)
 		{
-			ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), true);
+			//ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), true);
+			ENTITY::SET_ENTITY_PROOFS(PLAYER::PLAYER_PED_ID(), true, true, true, true, true, 1, 2, true);
+			ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 200, 1);
 		}
 		else
 		{
-			ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), false);
+			NULL;
+			//ENTITY::SET_ENTITY_INVINCIBLE(PLAYER::PLAYER_PED_ID(), false);
 
 		}
 
@@ -44,9 +47,10 @@ namespace zyko
 		if (toggle && gta_util::IsKeyPressed(VK_SPACE))
 		{
 			ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), 1, 0, 0, 10, 0, 0, 0, 1, true, true, true, true, true);
+			Hash hash = MISC::GET_HASH_KEY("GADGET_PARACHUTE");
+			WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), hash, 1, 1);
 		}
-		Hash hash = MISC::GET_HASH_KEY("GADGET_PARACHUTE");
-		WEAPON::GIVE_DELAYED_WEAPON_TO_PED(PLAYER::PLAYER_PED_ID(), hash, 1, 1);
+		
 
 		if (ENTITY::IS_ENTITY_IN_AIR(PLAYER::PLAYER_PED_ID())&& toggle && !PED::IS_PED_RAGDOLL(PLAYER::PLAYER_PED_ID()))
 		{
@@ -63,16 +67,13 @@ namespace zyko
 				ApplyForceToEntity(PLAYER::PLAYER_PED_ID(), 6, 0, 0);
 			}
 		}
-		else
-		{
-			NULL;
-		}
+		
 	}
 
 	bool features::noclip = false;
 	void features::Noclip(bool toggle)
 	{
-		if (noclip)
+		if (toggle)
 		{
 
 			static const int controls[] = { 21, 32, 33, 34, 35, 36 };
@@ -253,8 +254,9 @@ namespace zyko
 	void features::Offradar(bool toggle)
 	{
 		if (toggle) {
-			*script_global(2689235).at(PLAYER::GET_PLAYER_INDEX(), 453).at(208).as<int*>() = 1;
+			*script_global(2657589 + 466).at(PLAYER::GET_PLAYER_INDEX(), 453).at(208).as<int*>() = 1;
 			*script_global(2703735).at(56).as<int*>() = NETWORK::GET_NETWORK_TIME() + 1;
+			
 		}
 	}
 
@@ -292,9 +294,10 @@ namespace zyko
 	bool features::ultrajumpbool = false;
 	void features::Ultrajumpbool(bool toggle)
 	{
-		if (toggle && PED::IS_PED_JUMPING(PLAYER::PLAYER_PED_ID()))
+		if (toggle && PED::IS_PED_JUMPING(PLAYER::PLAYER_PED_ID()) && gta_util::IsKeyPressed(VK_SPACE))
 		{
-			ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), true, 0, 0, 150, 0, 0, true, true, true, true, false, true, false);
+			PED::SET_PED_CAN_RAGDOLL(PLAYER::PLAYER_PED_ID(), false);
+			ENTITY::APPLY_FORCE_TO_ENTITY(PLAYER::PLAYER_PED_ID(), true, 0, 0, 120, 0, 0, 1, true, true, true, false, true, false);
 		}
 	}
 
@@ -433,24 +436,30 @@ namespace zyko
 	}
 	void features::suicide()
 	{
-		ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0, 0);
+		features::PlayAnimation("mp_suicide", "pistol");
+		if (ENTITY::HAS_ENTITY_ANIM_FINISHED(PLAYER::PLAYER_PED_ID(), "mp_suicide", "pistol", 1))
+		{
+			ENTITY::SET_ENTITY_HEALTH(PLAYER::PLAYER_PED_ID(), 0, 0);
+		}
+		
 	}
 
 	void features::PlayAnimation(const char* name, const char* id)
 	{
 		features::RequestControlOfEnt(PLAYER::PLAYER_PED_ID());
 		ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), true);
-		STREAMING::REQUEST_ANIM_DICT(name);
-		if (STREAMING::HAS_ANIM_DICT_LOADED((name)))
+		for (uint8_t i = 0; !STREAMING::HAS_ANIM_DICT_LOADED(name) && i < 100; i++)
 		{
-			TASK::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), name, id, 8.0f, 0.0f, -1, 9, 0, 0, 0, 0);
+			STREAMING::REQUEST_ANIM_DICT(name);
+			
 		}
-		
+		TASK::TASK_PLAY_ANIM(PLAYER::PLAYER_PED_ID(), name, id, 8.0f, 0.0f, -1, 9, 0, 0, 0, 0);
 	}
 
 	void features::StopAnimation()
 	{
 		TASK::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
+		ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), false);
 	}
 
 	void features::Set_wetness(const float& level)

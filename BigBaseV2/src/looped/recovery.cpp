@@ -7,7 +7,6 @@
 #include <control.h>
 #include <script_local.hpp>
 #include "../../BigBaseV2/src/memory/all.hpp"
-#include "gui/player_list.h"
 #include <imgui.h>
 #include "gui/list/Lists.hpp"
 #include "auth/auth.hpp"

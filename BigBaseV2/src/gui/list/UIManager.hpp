@@ -87,10 +87,10 @@ namespace zyko::UserInterface
 		
 		// Input
 		std::int32_t m_OpenDelay = 350;
-		std::int32_t m_BackDelay = 150;
-		std::int32_t m_EnterDelay = 150;
-		std::int32_t m_VerticalDelay = 100;
-		std::int32_t m_HorizontalDelay = 90;
+		std::int32_t m_BackDelay = 200;
+		std::int32_t m_EnterDelay = 200;
+		std::int32_t m_VerticalDelay = 150;
+		std::int32_t m_HorizontalDelay = 150;
 
 		// Header
 		float m_HeaderHeight = 0.1f;

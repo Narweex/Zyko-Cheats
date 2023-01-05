@@ -74,6 +74,62 @@ namespace zyko
 		}
 	}
 
+	bool features::rapid_fire = false;
+	double DegreeToRadian(double n) {
+		return n * 0.017453292519943295;
+	}
+	Vector3 RotationToDirection(Vector3& rot)
+	{
+		double num = DegreeToRadian(rot.z);
+		double num2 = DegreeToRadian(rot.x);
+		double val = cos(num2);
+		double num3 = abs(val);
+		rot.x = (float)(-(float)sin(num) * num3);
+		rot.y = (float)(cos(num) * num3);
+		rot.z = (float)sin(num2);
+		return rot;
+
+	}
+
+	Vector3 addVectors(Vector3 vector, Vector3 vector2)
+	{
+		vector.x += vector2.x;
+		vector.y += vector2.y;
+		vector.z += vector2.z;
+		/*vector.paddingX += vector2.paddingX;
+		vector.paddingY += vector2.paddingY;
+		vector.paddingZ += vector2.paddingZ;*/
+		return vector;
+	}
+	Vector3 multiplyVector(Vector3 vector, float inc)
+	{
+		vector.x *= inc;
+		vector.y *= inc;
+		vector.z *= inc;
+
+		return vector;
+	}
+	void features::RapidFire(bool toggle)
+	{
+		if (toggle && gta_util::IsKeyPressed(VK_LBUTTON))
+		{
+			Player playerPed = PLAYER::PLAYER_PED_ID();
+			if (!PED::IS_PED_IN_ANY_VEHICLE(PLAYER::PLAYER_PED_ID(), 1)) {
+				//PLAYER::DISABLE_PLAYER_FIRING(PLAYER::PLAYER_PED_ID(), 1);
+				Vector3 gameplayCam = CAM::GET_GAMEPLAY_CAM_COORD();
+				Vector3 gameplayCamRot = CAM::GET_GAMEPLAY_CAM_ROT(0);
+				Vector3 gameplayCamDirection = RotationToDirection(gameplayCamRot);
+				Vector3 startCoords = addVectors(gameplayCam, (multiplyVector(gameplayCamDirection, 1.0f)));
+				Vector3 endCoords = addVectors(startCoords, multiplyVector(gameplayCamDirection, 500.0f));
+				Hash weaponhash;
+				WEAPON::GET_CURRENT_PED_WEAPON(playerPed, &weaponhash, 1);
+				if (PAD::IS_CONTROL_PRESSED(2, 208) || (GetKeyState(VK_LBUTTON) & 0x8000)) {
+					MISC::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(startCoords.x, startCoords.y, startCoords.z, endCoords.x, endCoords.y, endCoords.z, 50, 1, weaponhash, playerPed, 1, 1, 0xbf800000);
+				}
+			}
+		}
+	}
+
 	bool features::airstrikegun = false;
 	void features::Airstrikegun(bool toggle)
 	{
@@ -145,10 +201,7 @@ namespace zyko
 	bool features::crosshair = false;
 	void features::Crosshair(bool toggle)
 	{
-		if (toggle)
-		{
-			NULL;
-		}
+		
 	}
 
 	bool features::deadeye = false;

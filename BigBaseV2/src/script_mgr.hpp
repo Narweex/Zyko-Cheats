@@ -21,5 +21,5 @@ namespace zyko
 		std::vector<std::unique_ptr<script>> m_scripts;
 	};
 
-	inline script_mgr g_script_mgr;
+	 inline script_mgr g_script_mgr;
 }

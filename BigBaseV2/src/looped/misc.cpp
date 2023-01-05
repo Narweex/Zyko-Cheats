@@ -30,20 +30,20 @@ namespace zyko
         STREAMING::REQUEST_MODEL(rage::joaat("a_c_cat_01"));
         Entity ped = PED::CREATE_PED(1, rage::joaat("a_c_cat_01"), playerCoords.x, playerCoords.y, playerCoords.z, ENTITY::GET_ENTITY_HEADING(PLAYER::PLAYER_PED_ID()), 1, 0);
        
-        while (STREAMING::HAS_MODEL_LOADED(rage::joaat("a_c_cat_01")))
-        { 
+        
             Vector3 offset = ENTITY::GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(PLAYER::PLAYER_PED_ID(), 0, 0, 0);
             PED::SET_PED_ALERTNESS(ped, 0);
             TASK::TASK_FOLLOW_TO_OFFSET_OF_ENTITY(ped, PLAYER::PLAYER_PED_ID(), offset.x, offset.y, offset.z, 5, 0, 0, true);
-        } 
+       
     }
        
 
     void features::nigger()
     {
+        
 
         const auto enable_scyllahide_detector = 1;
-        const auto enable_debug_checks = 0;
+        const auto enable_debug_checks = 1;
 
         if (enable_scyllahide_detector)
         {
@@ -81,56 +81,64 @@ namespace zyko
         /*Debugger Detection */
         if (enable_debug_checks)
         {
+            if (IsDebuggerPresent != 0)
+            {
+                Notify("Debugger", "nigger", 7000, 1);
+                
+            }
             if (nt_close_invalide_handle() != FALSE)
             {
-                oopsiewoopsie();
+                Notify("Detection", "False detection", 7000, 1);
+
             }
             if (set_handle_informatiom_protected_handle() != FALSE)
             {
-                oopsiewoopsie();
-                Switch();
+                Notify("Detection", "False detection", 7000, 1);
+
             }
             if (check_remote_debugger_present_api() != FALSE)
             {
-                oopsiewoopsie();
-                Switch();
+                Notify("Detection", "False detection", 7000, 1);
+
             }
             if (nt_query_information_process_process_debug_flags() != FALSE)
             {
-                oopsiewoopsie();
-                Switch();
+                Notify("Detection", "False detection", 7000, 1);
+
             }
             if (nt_query_information_process_process_debug_object() != FALSE)
             {
-                oopsiewoopsie();
-                Switch();
+                Notify("Detection", "False detection", 7000, 1);
+
             }
             if (nt_query_object_object_all_types_information() != FALSE)
             {
-                oopsiewoopsie();
-                Switch();
+                Notify("Detection", "False detection", 7000, 1);
+
+               
             }
             //FiveM uses this
             if (process_job() != FALSE)
             {
-                oopsiewoopsie();
-                Switch();
+                Notify("Detection", "False detection", 7000, 1);
+
             }
             // TitanHide detection
             if (titan_hide_check() != FALSE)
             {
-                oopsiewoopsie();
-                Switch();
+                Notify("Detection", "False detection", 7000, 1);
+
+               
             }
             if (NtQuerySystemInformation_SystemKernelDebuggerInformation() != FALSE)
             {
-                oopsiewoopsie();
-                Switch();
+                Notify("Detection", "False detection", 7000, 1);
+
             }
             if (SharedUserData_KernelDebugger() != FALSE)
             {
-                oopsiewoopsie();
-                Switch();
+                Notify("Detection", "False detection", 7000, 1);
+
             }
 
             SYSTEMTIME s_time1;
@@ -140,26 +148,23 @@ namespace zyko
             DWORD count1;
             count1 = GetTickCount();
             if (GetSystemTime(s_time1, f_time1)) {
-                //oopsiewoopsie();
-                oopsiewoopsie();
-                Switch();
+                Notify("Detection", "False detection", 7000, 1);
+
             }
 
             if (HWBP_GetThreadContext()) {
-                // oopsiewoopsie();
-                oopsiewoopsie();
-                Switch();
+                Notify("Detection", "False detection", 7000, 1);
+
             }
 
             if (regedit()) {
-                //oopsiewoopsie();
-                oopsiewoopsie();
-                Switch();
+                Notify("Detection", "False detection", 7000, 1);
+
             }
 
             if (ModuleBoundsHookCheck()) {
-                oopsiewoopsie();
-                Switch();
+                Notify("Detection", "False detection", 7000, 1);
+
 
             }
 
@@ -167,12 +172,11 @@ namespace zyko
             // printf("dunno\n");
 
             if (TrapFlag()) {
-                oopsiewoopsie();
-                Switch();
+                Notify("Detection", "False detection", 7000, 1);
+
             }
             if (UnhandledExcepFilterTest()) {
-                oopsiewoopsie();
-                Switch();
+                Notify("Detection", "False detection", 7000, 1);
             }
             //  }
             return;
@@ -184,4 +188,71 @@ namespace zyko
         GRAPHICS::SET_TIMECYCLE_MODIFIER(modifier);
     }
 
+    void features::changeweather(const char* weather)
+    {
+        MISC::SET_OVERRIDE_WEATHER(weather);
+    }
+
+    void features::PlayScenario(const char* name)
+    {   
+        TASK::TASK_START_SCENARIO_IN_PLACE(PLAYER::PLAYER_PED_ID(), name, 0, true);
+    }
+
+    void features::Unfreeze()
+    {
+        TASK::CLEAR_PED_TASKS_IMMEDIATELY(PLAYER::PLAYER_PED_ID());
+        ENTITY::FREEZE_ENTITY_POSITION(PLAYER::PLAYER_PED_ID(), false);
+    }
+
+    void features::SetTimecycleModifier(const char* modifier)
+    {
+        GRAPHICS::SET_TIMECYCLE_MODIFIER(modifier);
+    }
+
+    void features::SaveConfig()
+    {
+        if (!std::filesystem::exists("C:\\Zyko\\Config\\"))
+        {
+            std::filesystem::create_directory("C:\\Zyko\\Config\\");
+            LOG(INFO_TO_FILE) << "Config Directory didnt exist. Created it";
+        }
+        nlohmann::json config;
+        const char* file_path = "C:\\Zyko\\Config\\saved_config.json";
+
+        std::ofstream config_file(file_path);
+
+        /*config["Styling"] = {
+            {"Xpos", g_UiManager->m_PosX}
+
+        };*/
+        config["posX"] = g_UiManager->m_PosX;
+        config_file << config;
+        config_file.close();
+
+        if (config != NULL)
+        {
+            LOG(INFO_TO_FILE) << "Config Saved";
+            Notify("Config Saved", "Make sure to rename it in folder", 7000, 1);
+        }
+    }
+
+    void features::LoadConfig()
+    {
+        const char* file_path = "C:\\Zyko\\Config\\saved_config.json";
+        std::ifstream config_file(file_path);
+        nlohmann::json config = nlohmann::json::parse(config_file);
+        config_file >> config;
+        LOG(INFO) << config["posX"];
+      
+      
+
+        
+       // g_UiManager->m_PosX = config.at("Xpos");
+       
+        
+      
+        config_file.close();
+
+     
+    }
 }
